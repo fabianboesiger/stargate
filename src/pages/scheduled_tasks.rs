@@ -356,9 +356,7 @@ pub fn ScheduledTasks(db_identity: String) -> Element {
                                                 }
                                             },
                                             _ => rsx! {
-                                                span { class: "text-xs text-yellow-400 ml-1",
-                                                    {format_countdown(&task.scheduled_at_raw, now)}
-                                                }
+                                                span { class: "text-xs text-yellow-400 ml-1", {format_countdown(&task.scheduled_at_raw, now)} }
                                             },
                                         }
                                     }
