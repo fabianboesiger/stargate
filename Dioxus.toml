@@ -1,0 +1,16 @@
+[application]
+name = "Stargate"
+default_platform = "desktop"
+
+[desktop]
+enable_file_drop = false
+
+[web.app]
+title = "Stargate"
+
+[bundle]
+identifier = "com.stargate"
+icon = ["icons/icon.icns", "icons/icon.ico", "icons/icon.png"]
+
+[css]
+tailwind = true

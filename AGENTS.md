@@ -1,0 +1,8 @@
+- Make sure that you create reusable components for app elments
+- API and UI should be cleanly separated
+- After changing something, fix all warnings and clippy lints
+- Do not use emojis, use proper icons instead
+- For API requests/responses, always consult the Spacetime API Docs
+- Always add proper logs so we can check for errors
+- All pages should have clean routing
+- Update tailwind on style changes

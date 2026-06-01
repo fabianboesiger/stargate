@@ -1,0 +1,210 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: ["Test"]
+    types: [completed]
+    branches: [master]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+permissions:
+  contents: write
+
+jobs:
+  check-version:
+    name: Check for version change
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+          # For workflow_run, checkout the commit from the test workflow
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Verify commit was tested
+        env:
+          COMMIT_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          # For workflow_run trigger, check that the triggering workflow succeeded
+          if [ "${{ github.event_name }}" == "workflow_run" ] && [ "${{ github.event.workflow_run.conclusion }}" != "success" ]; then
+            echo "::error::Test workflow did not succeed (conclusion: ${{ github.event.workflow_run.conclusion }})"
+            exit 1
+          fi
+          # Also verify the tested tag exists
+          if ! git tag --list "tested-${COMMIT_SHA}" | grep -q .; then
+            echo "::error::Commit ${COMMIT_SHA} has not been tested. Waiting for test workflow to complete."
+            exit 1
+          fi
+          echo "Commit ${COMMIT_SHA} has passed tests."
+
+      - name: Compare Cargo.toml version to latest release
+        id: check
+        run: |
+          VERSION=$(grep '^version' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Cargo.toml version: $VERSION"
+
+          LATEST_TAG=$(git tag --list 'v*' --sort=-v:refname | head -1 || true)
+          echo "Latest release tag: $LATEST_TAG"
+
+          if [ "v$VERSION" != "$LATEST_TAG" ]; then
+            echo "Version changed — will release v$VERSION"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "Version unchanged — skipping release"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-release:
+    name: Create Release
+    needs: [check-version]
+    if: needs.check-version.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ needs.check-version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Create tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag v${{ needs.check-version.outputs.version }}
+          git push origin v${{ needs.check-version.outputs.version }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.check-version.outputs.version }}
+          release_name: Release v${{ needs.check-version.outputs.version }}
+          draft: false
+          prerelease: false
+
+  build-and-upload:
+    name: Build ${{ matrix.target }}
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            asset_name: stargate-macos-aarch64
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            asset_name: stargate-linux-x86_64
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            asset_name: stargate-windows-x86_64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Dioxus CLI
+        run: |
+          DX_VERSION="v0.7.3"
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            curl -fL https://github.com/DioxusLabs/dioxus/releases/download/${DX_VERSION}/dx-x86_64-unknown-linux-gnu.tar.gz | tar xz
+            sudo mv dx /usr/local/bin/
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            curl -fL https://github.com/DioxusLabs/dioxus/releases/download/${DX_VERSION}/dx-aarch64-apple-darwin.tar.gz | tar xz
+            sudo mv dx /usr/local/bin/
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            curl -fL https://github.com/DioxusLabs/dioxus/releases/download/${DX_VERSION}/dx-x86_64-pc-windows-msvc.zip -o dx.zip
+            unzip dx.zip
+            mv dx.exe C:/Windows/System32/
+          fi
+        shell: bash
+
+      - name: Install Linux dependencies (cached)
+        if: matrix.os == 'ubuntu-latest'
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: pkg-config libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev libxdo-dev
+          version: 1.0
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build with Dioxus CLI
+        run: dx build --release --platform desktop --package stargate
+        shell: bash
+
+      - name: Sign macOS app (ad-hoc)
+        if: startsWith(matrix.os, 'macos')
+        run: |
+          # Ad-hoc sign the app bundle to prevent "damaged" message
+          codesign --force --deep --sign - target/dx/stargate/release/macos/Stargate.app
+        shell: bash
+
+      - name: Prepare artifact
+        run: |
+          mkdir -p release-artifacts
+          if [[ "${{ matrix.os }}" == macos* ]]; then
+            # macOS builds create a .app bundle
+            cp -r target/dx/stargate/release/macos/Stargate.app release-artifacts/
+            cd release-artifacts
+            # Create a zip of the .app bundle (use ditto to preserve signatures)
+            ditto -c -k --keepParent Stargate.app ${{ matrix.asset_name }}.zip
+            # Also create a tar.gz
+            tar -czf ${{ matrix.asset_name }}.tar.gz Stargate.app
+            cd ..
+          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            # Linux builds create an app directory
+            cp -r target/dx/stargate/release/linux/app release-artifacts/
+            cd release-artifacts
+            tar -czf ${{ matrix.asset_name }}.tar.gz app
+            cd ..
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            # Windows builds create an app directory
+            cp -r target/dx/stargate/release/windows/app release-artifacts/
+            cd release-artifacts
+            7z a ${{ matrix.asset_name }}.zip app
+            cd ..
+          fi
+        shell: bash
+
+      - name: Upload Release Asset (Unix Desktop)
+        if: matrix.os != 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./release-artifacts/${{ matrix.asset_name }}.tar.gz
+          asset_name: ${{ matrix.asset_name }}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Release Asset (Windows Desktop)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./release-artifacts/${{ matrix.asset_name }}.zip
+          asset_name: ${{ matrix.asset_name }}.zip
+          asset_content_type: application/zip

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stargate — Arctic Theme</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              950: '#080d11',
+              900: '#0d1419',
+              800: '#141d24',
+              700: '#1c2830',
+            },
+            accent: {
+              300: '#67e8f9',
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+    .frost { background: rgba(13, 20, 25, 0.85); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); }
+    .frost-border { border: 1px solid rgba(34, 211, 238, 0.08); }
+    .sidebar-frost { background: linear-gradient(180deg, rgba(13, 20, 25, 0.95), rgba(8, 13, 17, 1)); }
+    .top-line { position: relative; }
+    .top-line::before { content: ''; position: absolute; top: 0; left: 24px; right: 24px; height: 1px; background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.15), transparent); }
+    .active-pill { background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.12); }
+    .stat-frost { background: rgba(20, 29, 36, 0.6); border: 1px solid rgba(34, 211, 238, 0.06); }
+    .stat-frost:hover { border-color: rgba(34, 211, 238, 0.15); }
+    .divider-h { height: 1px; background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.1), transparent); }
+    @keyframes breath { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+    .breath { animation: breath 3s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-surface-950 text-gray-300 h-screen flex overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-[220px] flex flex-col sidebar-frost border-r border-cyan-500/[0.06]">
+    <!-- Logo -->
+    <div class="p-5 flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full border border-cyan-400/20 flex items-center justify-center bg-cyan-500/5">
+        <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-width="1.5"/><path stroke-linecap="round" stroke-width="1.5" d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.07-7.07l-2.83 2.83M9.76 14.24l-2.83 2.83m12.14 0l-2.83-2.83M9.76 9.76L6.93 6.93"/></svg>
+      </div>
+      <div>
+        <span class="text-white font-semibold text-base tracking-tight">Stargate</span>
+      </div>
+    </div>
+
+    <div class="divider-h mx-4"></div>
+
+    <!-- Nav -->
+    <nav class="flex-1 px-3 mt-4 space-y-1">
+      <a href="#" class="active-pill flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-cyan-300 transition-all">
+        <svg class="w-4 h-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        Info
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-300 hover:bg-cyan-500/[0.04] transition-all">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        Tables
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-300 hover:bg-cyan-500/[0.04] transition-all">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Reducers
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-300 hover:bg-cyan-500/[0.04] transition-all">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        Logs
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-300 hover:bg-cyan-500/[0.04] transition-all">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        SQL
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-300 hover:bg-cyan-500/[0.04] transition-all">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Scheduled
+      </a>
+    </nav>
+
+    <!-- Footer -->
+    <div class="px-3 py-4 space-y-1">
+      <div class="divider-h mb-3"></div>
+      <button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-amber-400 bg-amber-500/8 hover:bg-amber-500/12 transition-colors">
+        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        Read-only
+      </button>
+      <button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-300 hover:bg-cyan-500/[0.04] transition-colors">
+        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Disconnect
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <!-- Header -->
+    <header class="h-14 px-6 flex items-center justify-between border-b border-cyan-500/[0.06] top-line">
+      <div class="flex items-center gap-3">
+        <h2 class="text-white font-semibold tracking-tight">my-game-db</h2>
+        <div class="flex items-center gap-1.5 text-xs font-medium text-cyan-400">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 breath"></span>
+          Live
+        </div>
+      </div>
+      <div class="flex items-center gap-5">
+        <span class="text-xs text-gray-600 font-mono tracking-tight">maincloud.spacetimedb.com</span>
+      </div>
+    </header>
+
+    <!-- Content area -->
+    <div class="flex-1 overflow-auto p-6">
+      <!-- Stats -->
+      <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="stat-frost rounded-xl p-5 transition-colors group">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Tables</p>
+            <svg class="w-4 h-4 text-cyan-600 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          </div>
+          <p class="text-3xl font-bold text-white tracking-tight">12</p>
+        </div>
+        <div class="stat-frost rounded-xl p-5 transition-colors group">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Reducers</p>
+            <svg class="w-4 h-4 text-cyan-600 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <p class="text-3xl font-bold text-white tracking-tight">8</p>
+        </div>
+        <div class="stat-frost rounded-xl p-5 transition-colors group">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Clients</p>
+            <svg class="w-4 h-4 text-cyan-600 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <p class="text-3xl font-bold text-white tracking-tight">47</p>
+        </div>
+        <div class="stat-frost rounded-xl p-5 transition-colors group">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Identity</p>
+            <svg class="w-4 h-4 text-cyan-600 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+          </div>
+          <p class="text-sm font-mono text-gray-400 truncate mt-1">a3f8c9d1e...</p>
+        </div>
+      </div>
+
+      <!-- Data table -->
+      <div class="frost frost-border rounded-xl overflow-hidden">
+        <!-- Toolbar -->
+        <div class="px-5 py-3.5 flex items-center justify-between border-b border-cyan-500/[0.06]">
+          <div class="flex items-center gap-4">
+            <h3 class="text-sm font-medium text-white">Recent Logs</h3>
+            <div class="h-4 w-px bg-cyan-500/10"></div>
+            <span class="text-xs text-gray-500">128 entries</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" placeholder="Filter logs..." class="bg-surface-800/50 border border-cyan-500/[0.08] rounded-lg px-3 py-1.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/30 focus:border-cyan-500/20 w-52 transition-all" />
+            <button class="px-3.5 py-1.5 rounded-lg text-sm font-medium bg-cyan-600/90 hover:bg-cyan-500 text-white transition-colors shadow-sm shadow-cyan-900/30">Refresh</button>
+          </div>
+        </div>
+        <!-- Table -->
+        <div class="overflow-auto">
+          <table class="w-full text-sm text-left">
+            <thead>
+              <tr>
+                <th class="px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-surface-900/50">Timestamp</th>
+                <th class="px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-surface-900/50">Level</th>
+                <th class="px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-surface-900/50">Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t border-cyan-500/[0.04] hover:bg-cyan-500/[0.02] transition-colors">
+                <td class="px-5 py-3 font-mono text-xs text-gray-500">2026-05-25 14:32:01</td>
+                <td class="px-5 py-3">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-400 ring-1 ring-inset ring-emerald-500/20">INFO</span>
+                </td>
+                <td class="px-5 py-3 text-gray-300">Player connected: identity a3f8...</td>
+              </tr>
+              <tr class="border-t border-cyan-500/[0.04] hover:bg-cyan-500/[0.02] transition-colors">
+                <td class="px-5 py-3 font-mono text-xs text-gray-500">2026-05-25 14:31:58</td>
+                <td class="px-5 py-3">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-amber-500/10 text-amber-400 ring-1 ring-inset ring-amber-500/20">WARN</span>
+                </td>
+                <td class="px-5 py-3 text-gray-300">Reducer timeout: move_player (1200ms)</td>
+              </tr>
+              <tr class="border-t border-cyan-500/[0.04] hover:bg-cyan-500/[0.02] transition-colors">
+                <td class="px-5 py-3 font-mono text-xs text-gray-500">2026-05-25 14:31:45</td>
+                <td class="px-5 py-3">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-400 ring-1 ring-inset ring-emerald-500/20">INFO</span>
+                </td>
+                <td class="px-5 py-3 text-gray-300">Table "inventory" updated: 3 rows inserted</td>
+              </tr>
+              <tr class="border-t border-cyan-500/[0.04] hover:bg-cyan-500/[0.02] transition-colors">
+                <td class="px-5 py-3 font-mono text-xs text-gray-500">2026-05-25 14:31:30</td>
+                <td class="px-5 py-3">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-red-500/10 text-red-400 ring-1 ring-inset ring-red-500/20">ERROR</span>
+                </td>
+                <td class="px-5 py-3 text-gray-300">Reducer panic in "craft_item": index out of bounds</td>
+              </tr>
+              <tr class="border-t border-cyan-500/[0.04] hover:bg-cyan-500/[0.02] transition-colors">
+                <td class="px-5 py-3 font-mono text-xs text-gray-500">2026-05-25 14:31:12</td>
+                <td class="px-5 py-3">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-400 ring-1 ring-inset ring-emerald-500/20">INFO</span>
+                </td>
+                <td class="px-5 py-3 text-gray-300">Scheduled task "cleanup_sessions" completed in 45ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div class="px-5 py-3 border-t border-cyan-500/[0.06] flex items-center justify-between">
+          <span class="text-xs text-gray-600">1 &ndash; 5 of 128</span>
+          <div class="flex items-center gap-1">
+            <button class="px-3 py-1.5 rounded-md text-xs text-gray-600 border border-cyan-500/[0.06] bg-surface-800/50 cursor-not-allowed">Previous</button>
+            <button class="px-3 py-1.5 rounded-md text-xs text-cyan-300 border border-cyan-500/[0.12] bg-cyan-500/[0.06] hover:bg-cyan-500/[0.1] transition-colors">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
