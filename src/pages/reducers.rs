@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use crate::state::AppState;
 use crate::api::{ReducerParam, ReducerSchema};
-use crate::components::{ConfirmPopup, ConfirmStyle, DataTable, DATA_TABLE_PAGE_SIZE, ErrorMessage, Icon, IconName, PageLayout};
+use crate::components::{ConfirmPopup, ConfirmStyle, DataTable, DATA_TABLE_PAGE_SIZE, ErrorMessage, IconName, PageLayout, TableActionButton};
 use crate::Route;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -334,10 +334,10 @@ fn ReducerRow(reducer: ReducerSchema, on_select: EventHandler<String>) -> Elemen
                 }
             }
             td { class: "px-5 py-3 text-right",
-                button {
-                    class: "text-blue-400 hover:text-blue-300 p-1.5 rounded-md hover:bg-blue-500/10 transition-colors",
+                TableActionButton {
+                    label: "Call".to_string(),
+                    icon: IconName::Bolt,
                     onclick: move |_| on_select.call(name.clone()),
-                    Icon { name: IconName::Bolt, class: "w-4 h-4" }
                 }
             }
         }

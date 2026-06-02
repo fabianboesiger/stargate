@@ -52,6 +52,23 @@ pub fn LiveView(db_identity: String) -> Element {
     let mut stream_status = use_signal(|| "Connecting...".to_string());
     let mut auto_scroll = use_signal(|| true);
     let mut paused = use_signal(|| false);
+    let mut bottom_anchor = use_signal(|| Option::<std::rc::Rc<MountedData>>::None);
+    let mut events_per_sec = use_signal(|| 0.0f64);
+
+    // Snap the event list to the latest entry whenever new events arrive or
+    // auto-scroll is (re)enabled.
+    use_effect(move || {
+        // Track these signals so the effect re-runs on change.
+        let _ = events.read().len();
+        let enabled = *auto_scroll.read();
+        if enabled
+            && let Some(anchor) = bottom_anchor.read().clone()
+        {
+            spawn(async move {
+                let _ = anchor.scroll_to(ScrollBehavior::Instant).await;
+            });
+        }
+    });
 
     let connected = app_state.read().connected;
     if !connected {
@@ -189,7 +206,18 @@ pub fn LiveView(db_identity: String) -> Element {
                         }
                         _ = flush.tick() => {
                             if !pending.is_empty() {
+                                let count = pending.len() as f64;
+                                // The flush interval is 250ms, so rate = count / 0.25
+                                let rate = count / 0.25;
+                                // Exponential moving average for smooth display
+                                let prev = *events_per_sec.read();
+                                let alpha = 0.3;
+                                events_per_sec.set(prev * (1.0 - alpha) + rate * alpha);
                                 push_events(&mut events, &mut pending);
+                            } else {
+                                // Decay towards zero when idle
+                                let prev = *events_per_sec.read();
+                                events_per_sec.set(prev * 0.7);
                             }
                         }
                     }
@@ -259,6 +287,7 @@ pub fn LiveView(db_identity: String) -> Element {
                         }
                         "Auto-scroll"
                     }
+                    span { class: "text-xs text-gray-600", "{events_per_sec.read():.1} evt/s" }
                     span { class: "text-xs text-gray-600", "{all_events.len()} events" }
                 }
 
@@ -282,6 +311,8 @@ pub fn LiveView(db_identity: String) -> Element {
                             span { class: "text-gray-500 truncate", "{event.preview}" }
                         }
                     }
+                    // Bottom anchor used for auto-scrolling to the latest entry.
+                    div { onmounted: move |e: Event<MountedData>| bottom_anchor.set(Some(e.data())) }
                 }
             }
         }

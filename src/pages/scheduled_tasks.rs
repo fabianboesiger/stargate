@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 use crate::state::AppState;
 use crate::ws::{self, TableUpdate};
 
-use crate::components::{ConfirmPopup, ConfirmStyle, DataTable, DATA_TABLE_PAGE_SIZE, ErrorMessage, Icon, IconName, PageLayout};
+use crate::components::{ConfirmPopup, ConfirmStyle, DataTable, DATA_TABLE_PAGE_SIZE, ErrorMessage, Icon, IconName, PageLayout, TableActionButton, TableActionVariant};
 use crate::Route;
 
 #[derive(Debug, Clone)]
@@ -365,22 +365,17 @@ pub fn ScheduledTasks(db_identity: String) -> Element {
                                     {
                                         let tbl = task.table_name.clone();
                                         let id = task.scheduled_id.clone();
-                                        let stop_class = if readonly {
-                                            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-gray-800/60 text-gray-600 cursor-not-allowed"
-                                        } else {
-                                            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-gray-800 text-gray-400 hover:bg-red-600/80 hover:text-red-100 transition-colors"
-                                        };
                                         rsx! {
-                                            button {
-                                                class: "{stop_class}",
+                                            TableActionButton {
+                                                label: "Stop".to_string(),
+                                                icon: IconName::Trash,
+                                                variant: TableActionVariant::Danger,
                                                 disabled: readonly,
-                                                title: if readonly { "Enable write mode to stop tasks" } else { "Stop this scheduled task" },
+                                                title: if readonly { "Enable write mode to stop tasks".to_string() } else { "Stop this scheduled task".to_string() },
                                                 onclick: move |_| {
                                                     stop_error.set(None);
                                                     stopping_task.set(Some((tbl.clone(), id.clone())));
                                                 },
-                                                Icon { name: IconName::Trash, class: "w-3 h-3" }
-                                                "Stop"
                                             }
                                         }
                                     }
