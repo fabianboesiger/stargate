@@ -145,7 +145,7 @@ pub fn Reducers(db_identity: String) -> Element {
                 if let Some(ref name) = *selected_reducer.read() {
                     div { class: "bg-gray-900 border border-gray-800 rounded-xl p-5 flex flex-col gap-3 shrink-0",
                         div { class: "flex items-center justify-between",
-                            h3 { class: "text-sm font-medium text-white font-mono",
+                            h3 { class: "text-sm font-medium text-gray-50 font-mono",
                                 "{name}"
                             }
                             button {
@@ -195,7 +195,7 @@ pub fn Reducers(db_identity: String) -> Element {
                         // Execute button
                         div { class: "flex items-center gap-3 pt-1",
                             button {
-                                class: "px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap",
+                                class: "px-4 py-2 bg-blue-600 hover:bg-blue-500 text-gray-950 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap",
                                 disabled: *calling.read() || app_state.read().readonly,
                                 onclick: move |_| {
                                     confirm_action.set(Some(ConfirmAction::CallReducer));
@@ -209,12 +209,12 @@ pub fn Reducers(db_identity: String) -> Element {
                         }
 
                         if let Some(ref err) = *call_error.read() {
-                            div { class: "text-xs text-red-400 bg-red-500/10 rounded-md px-3 py-2",
+                            div { class: "text-xs text-red-600 bg-red-500/10 rounded-md px-3 py-2",
                                 "{err}"
                             }
                         }
                         if let Some(ref res) = *call_result.read() {
-                            div { class: "text-xs text-emerald-400 bg-emerald-500/10 rounded-md px-3 py-2 font-mono",
+                            div { class: "text-xs text-emerald-600 bg-emerald-500/10 rounded-md px-3 py-2 font-mono",
                                 "{res}"
                             }
                         }

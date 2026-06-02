@@ -168,7 +168,7 @@ pub fn Sql(db_identity: String) -> Element {
                                 }
                             }
                             button {
-                                class: "px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+                                class: "px-4 py-2 bg-blue-600 hover:bg-blue-500 text-gray-950 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
                                 disabled: *executing.read(),
                                 onclick: run_query,
                                 if *executing.read() {
@@ -190,7 +190,7 @@ pub fn Sql(db_identity: String) -> Element {
                             }
                             if !history.read().is_empty() {
                                 button {
-                                    class: "flex items-center gap-1.5 text-xs text-gray-500 hover:text-red-400 transition-colors",
+                                    class: "flex items-center gap-1.5 text-xs text-gray-500 hover:text-red-600 transition-colors",
                                     onclick: move |_| pending_clear_history.set(true),
                                     Icon {
                                         name: IconName::Trash,

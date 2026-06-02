@@ -286,10 +286,10 @@ pub fn ScheduledTasks(db_identity: String) -> Element {
     let end = (start + DATA_TABLE_PAGE_SIZE).min(total_rows);
 
     let header_status_color = match stream_status.read().as_str() {
-        "Live" => "text-emerald-400 bg-emerald-500/10",
-        "Error" => "text-red-400 bg-red-500/10",
+        "Live" => "text-emerald-600 bg-emerald-500/10",
+        "Error" => "text-red-600 bg-red-500/10",
         "Disconnected" => "text-gray-500 bg-gray-500/10",
-        _ => "text-yellow-400 bg-yellow-500/10",
+        _ => "text-yellow-600 bg-yellow-500/10",
     };
 
     rsx! {
@@ -356,7 +356,7 @@ pub fn ScheduledTasks(db_identity: String) -> Element {
                                                 }
                                             },
                                             _ => rsx! {
-                                                span { class: "text-xs text-yellow-400 ml-1", {format_countdown(&task.scheduled_at_raw, now)} }
+                                                span { class: "text-xs text-yellow-600 ml-1", {format_countdown(&task.scheduled_at_raw, now)} }
                                             },
                                         }
                                     }

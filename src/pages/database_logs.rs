@@ -83,10 +83,10 @@ pub fn DatabaseLogs(db_identity: String) -> Element {
     });
 
     let header_status_color = match stream_status.read().as_str() {
-        "Live" => "text-emerald-400 bg-emerald-500/10",
-        "Error" => "text-red-400 bg-red-500/10",
+        "Live" => "text-emerald-600 bg-emerald-500/10",
+        "Error" => "text-red-600 bg-red-500/10",
         "Disconnected" => "text-gray-500 bg-gray-500/10",
-        _ => "text-yellow-400 bg-yellow-500/10",
+        _ => "text-yellow-600 bg-yellow-500/10",
     };
 
     rsx! {
@@ -180,8 +180,8 @@ pub fn DatabaseLogs(db_identity: String) -> Element {
 fn LogRow(entry: LogEntry) -> Element {
     let level_upper = entry.level.to_uppercase();
     let level_class = match level_upper.as_str() {
-        "ERROR" => "text-red-400",
-        "WARN" | "WARNING" => "text-yellow-400",
+        "ERROR" => "text-red-600",
+        "WARN" | "WARNING" => "text-yellow-600",
         "INFO" => "text-blue-400",
         "DEBUG" => "text-gray-500",
         "TRACE" => "text-gray-600",

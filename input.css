@@ -1,2 +1,60 @@
 @import "tailwindcss";
 @source "./src/**/*.{rs,html,css}";
+
+/*
+  Swiss minimalist theme.
+  The UI was authored against a dark palette (dark `gray-950` page,
+  `gray-900` surfaces, `blue` accents). Instead of rewriting every utility
+  class, we remap the `gray` and `blue` color scales to a light
+  "paper / graphite" palette. Darkest tokens become the lightest paper tones
+  and the blue accent collapses to monochrome graphite, yielding the
+  editorial, high-whitespace Swiss look across the whole app.
+*/
+@theme {
+  /* gray scale inverted: dark -> light paper / graphite */
+  --color-gray-950: #fafafa; /* page background          */
+  --color-gray-900: #ffffff; /* card / sidebar surface   */
+  --color-gray-800: #e8e8e8; /* hairline borders / hover */
+  --color-gray-700: #d4d4d4; /* stronger borders         */
+  --color-gray-600: #a3a3a3; /* faint text               */
+  --color-gray-500: #737373; /* muted text               */
+  --color-gray-400: #525252; /* labels                   */
+  --color-gray-300: #2b2b2b; /* body text                */
+  --color-gray-200: #1f1f1f; /* strong text              */
+  --color-gray-100: #171717; /* near-ink text            */
+  --color-gray-50: #0a0a0a;  /* ink                      */
+
+  /* blue accent -> monochrome graphite */
+  --color-blue-300: #171717;
+  --color-blue-400: #171717;
+  --color-blue-500: #404040;
+  --color-blue-600: #171717;
+}
+
+/*
+  Dark theme override. Applied at runtime by adding the `dark` class to a
+  wrapper element (see `Theme` / `ThemeToggle`). Because Tailwind v4 utilities
+  reference the palette through CSS custom properties, re-declaring the same
+  variables on `.dark` re-themes the whole subtree without rebuilding. The
+  scale stays semantically identical to the light theme, just inverted.
+*/
+.dark {
+  /* gray scale: dark ink surfaces */
+  --color-gray-950: #0a0a0a; /* page background          */
+  --color-gray-900: #141414; /* card / sidebar surface   */
+  --color-gray-800: #262626; /* hairline borders / hover */
+  --color-gray-700: #404040; /* stronger borders         */
+  --color-gray-600: #525252; /* faint text               */
+  --color-gray-500: #8a8a8a; /* muted text               */
+  --color-gray-400: #a3a3a3; /* labels                   */
+  --color-gray-300: #d4d4d4; /* body text                */
+  --color-gray-200: #e5e5e5; /* strong text              */
+  --color-gray-100: #f5f5f5; /* near-white text          */
+  --color-gray-50: #fafafa;  /* white text               */
+
+  /* accent -> monochrome light (inverse of graphite) */
+  --color-blue-300: #fafafa;
+  --color-blue-400: #e5e5e5;
+  --color-blue-500: #e5e5e5;
+  --color-blue-600: #fafafa;
+}

@@ -20,6 +20,8 @@ pub enum IconName {
     Download,
     Clock,
     Signal,
+    Sun,
+    Moon,
 }
 
 #[component]
@@ -156,6 +158,22 @@ pub fn Icon(name: IconName, #[props(default = "w-4 h-4".to_string())] class: Str
                 width: None,
                 height: None,
                 icon: ld_icons::LdSignalHigh,
+            }
+        },
+        IconName::Sun => rsx! {
+            SvgIcon {
+                class,
+                width: None,
+                height: None,
+                icon: ld_icons::LdSun,
+            }
+        },
+        IconName::Moon => rsx! {
+            SvgIcon {
+                class,
+                width: None,
+                height: None,
+                icon: ld_icons::LdMoon,
             }
         },
         IconName::Logo => unreachable!(),

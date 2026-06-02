@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use crate::state::AppState;
 use crate::api::{self, ApiClient, DatabaseEntry};
-use crate::components::{Button, ConfirmPopup, ConfirmStyle, Icon, IconName, TextInput, Select, SelectOption, ErrorMessage};
+use crate::components::{Button, ConfirmPopup, ConfirmStyle, Icon, IconName, TextInput, Select, SelectOption, ErrorMessage, ThemeToggle};
 use crate::storage::{SavedLogin, Storage};
 use crate::Route;
 
@@ -121,7 +121,8 @@ pub fn Login() -> Element {
     });
 
     rsx! {
-        div { class: "min-h-screen flex items-center justify-center bg-gray-950 p-4",
+        div { class: "relative min-h-screen flex items-center justify-center bg-gray-950 p-4",
+            div { class: "absolute top-4 right-4 w-36", ThemeToggle {} }
             div { class: "bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md",
                 // Logo
                 div { class: "flex justify-center mb-6",
@@ -130,7 +131,7 @@ pub fn Login() -> Element {
                         class: "w-12 h-12 text-blue-400",
                     }
                 }
-                h1 { class: "text-2xl font-bold text-center text-white mb-1", "Stargate" }
+                h1 { class: "text-2xl font-bold text-center text-gray-50 mb-1", "Stargate" }
                 p { class: "text-gray-500 text-center text-sm mb-8",
                     "Connect to your SpacetimeDB instance"
                 }
@@ -395,7 +396,7 @@ fn DatabaseOption(db: DatabaseEntry) -> Element {
                         db_identity: db_identity.clone(),
                     });
             },
-            div { class: "text-sm font-medium text-gray-200 group-hover:text-white",
+            div { class: "text-sm font-medium text-gray-200 group-hover:text-gray-50",
                 "{display}"
             }
             if !db.names.is_empty() {
@@ -423,13 +424,13 @@ fn SavedLoginRow(
                 class: "flex-1 text-left px-4 py-3 min-w-0 disabled:opacity-50 disabled:cursor-not-allowed",
                 disabled,
                 onclick: move |_| on_select.call(login_for_select.clone()),
-                div { class: "text-sm font-medium text-gray-200 group-hover:text-white truncate",
+                div { class: "text-sm font-medium text-gray-200 group-hover:text-gray-50 truncate",
                     "{server}"
                 }
                 div { class: "text-xs text-gray-600 font-mono mt-0.5", "{short_identity}" }
             }
             button {
-                class: "px-3 py-3 text-gray-600 hover:text-red-400 transition-colors",
+                class: "px-3 py-3 text-gray-600 hover:text-red-600 transition-colors",
                 title: "Remove saved login",
                 onclick: move |_| on_delete.call(id),
                 Icon { name: IconName::Trash, class: "w-4 h-4" }

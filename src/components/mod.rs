@@ -8,6 +8,7 @@ mod text_input;
 mod select;
 mod error_message;
 mod sidebar;
+mod theme_toggle;
 
 pub use button::Button;
 pub use confirm_popup::{ConfirmPopup, ConfirmStyle};
@@ -19,3 +20,4 @@ pub use text_input::TextInput;
 pub use select::{Select, SelectOption};
 pub use error_message::ErrorMessage;
 pub use sidebar::{Sidebar, build_nav_items};
+pub use theme_toggle::ThemeToggle;

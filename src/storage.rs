@@ -3,6 +3,8 @@ use std::sync::{Arc, Mutex};
 
 use rusqlite::Connection;
 
+use crate::theme::Theme;
+
 /// A previously used login, persisted locally for quick reconnect.
 #[derive(Debug, Clone, PartialEq)]
 pub struct SavedLogin {
@@ -91,7 +93,11 @@ impl Storage {
                 success     INTEGER NOT NULL
             );
             CREATE INDEX IF NOT EXISTS idx_sql_history_db
-                ON sql_history(db_identity, executed_at DESC);",
+                ON sql_history(db_identity, executed_at DESC);
+            CREATE TABLE IF NOT EXISTS settings (
+                key   TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            );",
         )?;
         Ok(())
     }
@@ -232,5 +238,48 @@ impl Storage {
             )?;
             Ok(())
         });
+    }
+
+    // ----- Settings -----------------------------------------------------
+
+    /// Read a raw setting value by key.
+    pub fn get_setting(&self, key: &str) -> Option<String> {
+        self.with_conn(None, |conn| {
+            conn.query_row(
+                "SELECT value FROM settings WHERE key = ?1",
+                [key],
+                |row| row.get::<_, String>(0),
+            )
+            .map(Some)
+            .or_else(|e| match e {
+                rusqlite::Error::QueryReturnedNoRows => Ok(None),
+                other => Err(other),
+            })
+        })
+    }
+
+    /// Insert or update a setting value by key.
+    pub fn set_setting(&self, key: &str, value: &str) {
+        self.with_conn((), |conn| {
+            conn.execute(
+                "INSERT INTO settings (key, value)
+                 VALUES (?1, ?2)
+                 ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+                rusqlite::params![key, value],
+            )?;
+            Ok(())
+        });
+    }
+
+    /// The persisted UI theme, defaulting to [`Theme::default`].
+    pub fn get_theme(&self) -> Theme {
+        self.get_setting("theme")
+            .map(|v| Theme::from_str(&v))
+            .unwrap_or_default()
+    }
+
+    /// Persist the selected UI theme.
+    pub fn set_theme(&self, theme: Theme) {
+        self.set_setting("theme", theme.as_str());
     }
 }

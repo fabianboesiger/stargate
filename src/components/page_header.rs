@@ -19,7 +19,7 @@ pub fn PageHeader(
     rsx! {
         header { class: "px-8 pt-8 pb-6",
             div { class: "flex items-center gap-3",
-                h2 { class: "text-2xl font-bold text-white", "{title}" }
+                h2 { class: "text-2xl font-bold text-gray-50", "{title}" }
                 {children}
             }
             if let Some(sub) = &subtitle {

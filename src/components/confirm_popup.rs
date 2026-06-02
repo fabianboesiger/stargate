@@ -22,7 +22,7 @@ pub fn ConfirmPopup(
 ) -> Element {
     let btn_class = match style {
         ConfirmStyle::Danger => "px-3 py-1.5 text-xs text-white bg-red-600 hover:bg-red-500 rounded-md transition-colors disabled:opacity-50",
-        ConfirmStyle::Warning => "px-3 py-1.5 text-xs text-white bg-blue-600 hover:bg-blue-500 rounded-md transition-colors disabled:opacity-50",
+        ConfirmStyle::Warning => "px-3 py-1.5 text-xs text-gray-950 bg-blue-600 hover:bg-blue-500 rounded-md transition-colors disabled:opacity-50",
     };
 
     rsx! {
@@ -36,7 +36,7 @@ pub fn ConfirmPopup(
                 p { class: "text-xs text-gray-500 mb-4", "{message}" }
 
                 if let Some(ref err) = error {
-                    p { class: "text-xs text-red-400 mb-3", "{err}" }
+                    p { class: "text-xs text-red-600 mb-3", "{err}" }
                 }
 
                 div { class: "flex justify-end gap-2",

@@ -36,9 +36,9 @@ impl WsEventKind {
     fn color_class(&self) -> &'static str {
         match self {
             Self::Initial => "text-blue-400 bg-blue-500/10",
-            Self::Insert => "text-emerald-400 bg-emerald-500/10",
-            Self::Delete => "text-red-400 bg-red-500/10",
-            Self::Error => "text-red-400 bg-red-500/10",
+            Self::Insert => "text-emerald-600 bg-emerald-500/10",
+            Self::Delete => "text-red-600 bg-red-500/10",
+            Self::Error => "text-red-600 bg-red-500/10",
         }
     }
 }
@@ -204,18 +204,18 @@ pub fn LiveView(db_identity: String) -> Element {
     });
 
     let header_status_color = match stream_status.read().as_str() {
-        "Live" => "text-emerald-400 bg-emerald-500/10",
-        "Error" => "text-red-400 bg-red-500/10",
+        "Live" => "text-emerald-600 bg-emerald-500/10",
+        "Error" => "text-red-600 bg-red-500/10",
         "Disconnected" => "text-gray-500 bg-gray-500/10",
-        _ => "text-yellow-400 bg-yellow-500/10",
+        _ => "text-yellow-600 bg-yellow-500/10",
     };
 
     let all_events = events.read();
     let is_paused = *paused.read();
     let pause_class = if is_paused {
-        "bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30"
+        "bg-emerald-600/20 text-emerald-700 hover:bg-emerald-600/30"
     } else {
-        "bg-yellow-600/20 text-yellow-400 hover:bg-yellow-600/30"
+        "bg-yellow-600/20 text-yellow-700 hover:bg-yellow-600/30"
     };
 
     rsx! {

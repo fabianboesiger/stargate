@@ -3,6 +3,7 @@ mod components;
 mod config;
 mod state;
 mod storage;
+mod theme;
 mod pages;
 mod ws;
 
@@ -83,10 +84,11 @@ fn set_macos_dock_icon() {
 #[component]
 fn App() -> Element {
     use_context_provider(|| Signal::new(AppState::new()));
-    use_context_provider(Storage::open);
+    let storage = use_context_provider(Storage::open);
+    let theme = use_context_provider(|| Signal::new(storage.get_theme()));
 
     rsx! {
         document::Stylesheet { href: STYLE }
-        Router::<Route> {}
+        div { class: "{theme.read().root_class()} contents", Router::<Route> {} }
     }
 }

@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use crate::Route;
-use super::{Icon, IconName};
+use super::{Icon, IconName, ThemeToggle};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct NavItem {
@@ -72,7 +72,7 @@ pub fn Sidebar(
         aside { class: "w-56 bg-gray-900 border-r border-gray-800 flex flex-col",
             // App title
             div { class: "p-5",
-                h1 { class: "text-lg font-bold text-white flex items-center gap-2.5",
+                h1 { class: "text-lg font-bold text-gray-50 flex items-center gap-2.5",
                     Icon { name: IconName::Logo, class: "w-7 h-7 text-blue-400" }
                     "Stargate"
                 }
@@ -85,7 +85,7 @@ pub fn Sidebar(
                         let classes = if item.active {
                             "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-colors bg-blue-400/10 text-blue-300"
                         } else {
-                            "flex items-center gap-3 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors text-gray-500 hover:bg-white/[0.04]"
+                            "flex items-center gap-3 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors text-gray-500 hover:bg-gray-800/60"
                         };
                         let icon_class = if item.active {
                             "w-4 h-4 shrink-0 text-blue-400"
@@ -112,8 +112,9 @@ pub fn Sidebar(
 
             // Readonly toggle + Disconnect button
             div { class: "px-3 py-4 border-t border-gray-800 space-y-1",
+                ThemeToggle {}
                 button {
-                    class: if readonly { "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors" } else { "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 transition-colors" },
+                    class: if readonly { "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-amber-600 bg-amber-500/10 hover:bg-amber-500/20 transition-colors" } else { "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 transition-colors" },
                     onclick: move |_| on_toggle_readonly.call(()),
                     Icon {
                         name: if readonly { IconName::Lock } else { IconName::LockOpen },

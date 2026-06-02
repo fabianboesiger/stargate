@@ -139,12 +139,12 @@ fn TableRow(table: TableSchema, db_identity: String) -> Element {
         "text-xs px-2 py-0.5 rounded-full bg-gray-700/50 text-gray-400 font-medium"
     };
     let access_classes = if access == "Public" {
-        "text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-medium"
+        "text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-medium"
     } else {
-        "text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-medium"
+        "text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 font-medium"
     };
     let name_color = if table_type == "User" {
-        "font-medium text-white"
+        "font-medium text-gray-50"
     } else {
         "font-medium text-gray-400"
     };

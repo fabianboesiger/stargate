@@ -427,10 +427,10 @@ pub fn TableData(db_identity: String, table_name: String) -> Element {
     let col_names = columns.read().clone();
 
     let status_color = match live_status.read().as_str() {
-        "Live" => "text-emerald-400 bg-emerald-500/10",
+        "Live" => "text-emerald-600 bg-emerald-500/10",
         "Connected" => "text-blue-400 bg-blue-500/10",
-        "Disconnected" => "text-red-400 bg-red-500/10",
-        _ => "text-yellow-400 bg-yellow-500/10",
+        "Disconnected" => "text-red-600 bg-red-500/10",
+        _ => "text-yellow-600 bg-yellow-500/10",
     };
 
     rsx! {
@@ -600,7 +600,7 @@ pub fn TableData(db_identity: String, table_name: String) -> Element {
                         }
 
                         if let Some(err) = edit_error.read().as_ref() {
-                            p { class: "text-xs text-red-400 mt-2", "{err}" }
+                            p { class: "text-xs text-red-600 mt-2", "{err}" }
                         }
 
                         div { class: "flex justify-end gap-2 mt-4",
@@ -612,7 +612,7 @@ pub fn TableData(db_identity: String, table_name: String) -> Element {
                                 "Cancel"
                             }
                             button {
-                                class: "px-3 py-1.5 text-xs text-white bg-blue-600 hover:bg-blue-500 rounded-md transition-colors disabled:opacity-50",
+                                class: "px-3 py-1.5 text-xs text-gray-950 bg-blue-600 hover:bg-blue-500 rounded-md transition-colors disabled:opacity-50",
                                 disabled: *edit_saving.read() || app_state.read().readonly,
                                 onclick: move |_| {
                                     confirm_action.set(Some(ConfirmAction::EditCell));
@@ -644,7 +644,7 @@ pub fn TableData(db_identity: String, table_name: String) -> Element {
                         }
 
                         if let Some(err) = delete_error.read().as_ref() {
-                            p { class: "text-xs text-red-400 mb-3", "{err}" }
+                            p { class: "text-xs text-red-600 mb-3", "{err}" }
                         }
 
                         div { class: "flex justify-end gap-2",
@@ -713,7 +713,7 @@ pub fn TableData(db_identity: String, table_name: String) -> Element {
                         }
 
                         if let Some(err) = insert_error.read().as_ref() {
-                            p { class: "text-xs text-red-400 mb-3", "{err}" }
+                            p { class: "text-xs text-red-600 mb-3", "{err}" }
                         }
 
                         div { class: "flex justify-end gap-2",
@@ -725,7 +725,7 @@ pub fn TableData(db_identity: String, table_name: String) -> Element {
                                 "Cancel"
                             }
                             button {
-                                class: "px-3 py-1.5 text-xs text-white bg-blue-600 hover:bg-blue-500 rounded-md transition-colors disabled:opacity-50",
+                                class: "px-3 py-1.5 text-xs text-gray-950 bg-blue-600 hover:bg-blue-500 rounded-md transition-colors disabled:opacity-50",
                                 disabled: *insert_saving.read() || app_state.read().readonly,
                                 onclick: move |_| {
                                     confirm_action.set(Some(ConfirmAction::InsertRow));
