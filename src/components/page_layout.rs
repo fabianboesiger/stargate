@@ -16,6 +16,7 @@ pub fn PageLayout(
 ) -> Element {
     let mut app_state = use_context::<Signal<AppState>>();
     let mut confirm_readonly = use_signal(|| false);
+    let mut trial_blocked = use_signal(|| false);
 
     let nav_items = build_nav_items(&db_identity, active_page);
 
@@ -25,7 +26,10 @@ pub fn PageLayout(
                 nav_items,
                 readonly: app_state.read().readonly,
                 on_toggle_readonly: move |_| {
-                    if app_state.read().readonly {
+                    if cfg!(feature = "trial") {
+                        // Read-write mode is not available in the trial version.
+                        trial_blocked.set(true);
+                    } else if app_state.read().readonly {
                         confirm_readonly.set(true);
                     } else {
                         app_state.write().readonly = true;
@@ -60,6 +64,22 @@ pub fn PageLayout(
                     on_confirm: move |_| {
                         confirm_readonly.set(false);
                         app_state.write().readonly = false;
+                    },
+                }
+            }
+
+            // Trial mode block popup
+            if *trial_blocked.read() {
+                ConfirmPopup {
+                    title: "Trial Mode".to_string(),
+                    message: "Read-write mode is not supported in trial mode.".to_string(),
+                    confirm_label: "OK".to_string(),
+                    style: ConfirmStyle::Warning,
+                    on_cancel: move |_| {
+                        trial_blocked.set(false);
+                    },
+                    on_confirm: move |_| {
+                        trial_blocked.set(false);
                     },
                 }
             }

@@ -3,6 +3,12 @@ name = "stargate"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = []
+# When enabled, builds a limited "trial" version where write operations
+# (read-write mode) are disabled.
+trial = []
+
 [dependencies]
 dioxus = { version = "=0.7.3", features = ["desktop", "router"] }
 dioxus-free-icons = { version = "0.10", features = ["lucide"] }
