@@ -2,12 +2,14 @@ mod api;
 mod components;
 mod config;
 mod state;
+mod storage;
 mod pages;
 mod ws;
 
 use dioxus::prelude::*;
 use pages::{Login, DatabaseTables, DatabaseLogs, TableData, Sql, Reducers, Info, ScheduledTasks, LiveView};
 use state::AppState;
+use storage::Storage;
 
 const STYLE: Asset = asset!("/assets/tailwind.css");
 
@@ -81,6 +83,7 @@ fn set_macos_dock_icon() {
 #[component]
 fn App() -> Element {
     use_context_provider(|| Signal::new(AppState::new()));
+    use_context_provider(Storage::open);
 
     rsx! {
         document::Stylesheet { href: STYLE }

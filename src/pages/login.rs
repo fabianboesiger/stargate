@@ -1,12 +1,14 @@
 use dioxus::prelude::*;
 use crate::state::AppState;
 use crate::api::{self, ApiClient, DatabaseEntry};
-use crate::components::{Button, Icon, IconName, TextInput, Select, SelectOption, ErrorMessage};
+use crate::components::{Button, ConfirmPopup, ConfirmStyle, Icon, IconName, TextInput, Select, SelectOption, ErrorMessage};
+use crate::storage::{SavedLogin, Storage};
 use crate::Route;
 
 #[component]
 pub fn Login() -> Element {
     let mut app_state = use_context::<Signal<AppState>>();
+    let storage = use_context::<Storage>();
 
     let default_url = app_state.read().default_server_url().unwrap_or_default();
     let has_token = app_state.read().cli_token().is_some();
@@ -20,6 +22,11 @@ pub fn Login() -> Element {
     let mut oauth_status = use_signal(|| Option::<String>::None);
     let mut custom_auth_host = use_signal(|| false);
     let mut auth_host_url = use_signal(|| String::from("https://spacetimedb.com"));
+    let mut remember_login = use_signal(|| false);
+
+    // Saved logins (persisted locally)
+    let mut saved_logins = use_signal(|| storage.list_logins());
+    let mut pending_delete = use_signal(|| Option::<i64>::None);
 
     // Database selection state (shown after successful connect)
     let mut databases = use_signal(Vec::<DatabaseEntry>::new);
@@ -38,44 +45,80 @@ pub fn Login() -> Element {
         opts
     };
 
-    let handle_connect = move |_| {
-        let url = server_url.read().clone();
-        let tok = if *use_cli_creds.read() {
-            let state = app_state.read();
-            state.cli_token().unwrap_or("").to_string()
-        } else {
-            token.read().clone()
-        };
+    let handle_connect = {
+        let storage = storage.clone();
+        move |_| {
+            let url = server_url.read().clone();
+            let tok = if *use_cli_creds.read() {
+                let state = app_state.read();
+                state.cli_token().unwrap_or("").to_string()
+            } else {
+                token.read().clone()
+            };
 
-        if url.is_empty() {
-            error_msg.set(Some("Server URL is required".into()));
-            return;
-        }
-        if tok.is_empty() {
-            error_msg.set(Some("Token is required".into()));
-            return;
-        }
-
-        connecting.set(true);
-        error_msg.set(None);
-
-        spawn(async move {
-            let api = ApiClient::new(&url, Some(&tok));
-            let identity = extract_identity_from_token(&tok);
-
-            match api.list_databases(&identity).await {
-                Ok(dbs) => {
-                    app_state.write().connect(&url, &tok, &identity);
-                    connected_identity.set(Some(identity));
-                    databases.set(dbs);
-                }
-                Err(e) => {
-                    error_msg.set(Some(format!("Connection failed: {e}")));
-                }
+            if url.is_empty() {
+                error_msg.set(Some("Server URL is required".into()));
+                return;
             }
-            connecting.set(false);
-        });
+            if tok.is_empty() {
+                error_msg.set(Some("Token is required".into()));
+                return;
+            }
+
+            connecting.set(true);
+            error_msg.set(None);
+
+            let storage = storage.clone();
+            spawn(async move {
+                let api = ApiClient::new(&url, Some(&tok));
+                let identity = extract_identity_from_token(&tok);
+
+                match api.list_databases(&identity).await {
+                    Ok(dbs) => {
+                        app_state.write().connect(&url, &tok, &identity);
+                        if *remember_login.read() {
+                            storage.upsert_login(&url, &tok, &identity);
+                            saved_logins.set(storage.list_logins());
+                        }
+                        connected_identity.set(Some(identity));
+                        databases.set(dbs);
+                    }
+                    Err(e) => {
+                        error_msg.set(Some(format!("Connection failed: {e}")));
+                    }
+                }
+                connecting.set(false);
+            });
+        }
     };
+
+    // Connect using a previously saved login (one click).
+    let connect_saved = use_callback({
+        let storage = storage.clone();
+        move |login: SavedLogin| {
+            let storage = storage.clone();
+            connecting.set(true);
+            error_msg.set(None);
+            spawn(async move {
+                let api = ApiClient::new(&login.server_url, Some(&login.token));
+                match api.list_databases(&login.identity).await {
+                    Ok(dbs) => {
+                        app_state
+                            .write()
+                            .connect(&login.server_url, &login.token, &login.identity);
+                        storage.touch_login(login.id);
+                        saved_logins.set(storage.list_logins());
+                        connected_identity.set(Some(login.identity.clone()));
+                        databases.set(dbs);
+                    }
+                    Err(e) => {
+                        error_msg.set(Some(format!("Connection failed: {e}")));
+                    }
+                }
+                connecting.set(false);
+            });
+        }
+    });
 
     rsx! {
         div { class: "min-h-screen flex items-center justify-center bg-gray-950 p-4",
@@ -216,7 +259,10 @@ pub fn Login() -> Element {
                                             }
                                         });
                                     },
-                                    Icon { name: IconName::RightFromBracket, class: "w-4 h-4" }
+                                    Icon {
+                                        name: IconName::RightFromBracket,
+                                        class: "w-4 h-4",
+                                    }
                                     if let Some(status) = oauth_status.read().as_ref() {
                                         "{status}"
                                     } else {
@@ -266,15 +312,65 @@ pub fn Login() -> Element {
                         }
                     }
 
+                    // Remember login toggle
+                    label { class: "flex items-center gap-2 mb-4 cursor-pointer select-none",
+                        input {
+                            r#type: "checkbox",
+                            class: "w-4 h-4 rounded border-gray-600 bg-gray-800 text-blue-600 focus:ring-blue-500/20",
+                            checked: *remember_login.read(),
+                            onchange: move |evt: FormEvent| remember_login.set(evt.checked()),
+                        }
+                        span { class: "text-sm text-gray-500", "Remember login" }
+                    }
+
                     // Connect button
                     Button {
                         label: if *connecting.read() { String::from("Connecting...") } else { String::from("Connect") },
                         onclick: handle_connect,
                         disabled: *connecting.read(),
                     }
+
+                    // Saved logins
+                    if !saved_logins.read().is_empty() {
+                        div { class: "mt-6 pt-6 border-t border-gray-800",
+                            label { class: "block text-sm font-medium text-gray-400 mb-3",
+                                "Saved logins"
+                            }
+                            div { class: "flex flex-col gap-1 max-h-56 overflow-y-auto",
+                                for login in saved_logins.read().iter() {
+                                    SavedLoginRow {
+                                        key: "{login.id}",
+                                        login: login.clone(),
+                                        disabled: *connecting.read(),
+                                        on_select: move |l: SavedLogin| connect_saved.call(l),
+                                        on_delete: move |id: i64| pending_delete.set(Some(id)),
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 p { class: "text-xs text-gray-600 text-center mt-6", "SpacetimeDB Admin UI v0.1.0" }
+            }
+
+            // Confirm deletion of a saved login
+            if pending_delete.read().is_some() {
+                ConfirmPopup {
+                    title: "Remove saved login".to_string(),
+                    message: "Remove this saved login from this device? The stored token will be deleted."
+                        .to_string(),
+                    confirm_label: "Remove".to_string(),
+                    style: ConfirmStyle::Danger,
+                    on_cancel: move |_| pending_delete.set(None),
+                    on_confirm: move |_| {
+                        if let Some(id) = *pending_delete.read() {
+                            storage.delete_login(id);
+                            saved_logins.set(storage.list_logins());
+                        }
+                        pending_delete.set(None);
+                    },
+                }
             }
         }
     }
@@ -304,6 +400,39 @@ fn DatabaseOption(db: DatabaseEntry) -> Element {
             }
             if !db.names.is_empty() {
                 div { class: "text-xs text-gray-600 font-mono mt-0.5", "{short_id}" }
+            }
+        }
+    }
+}
+
+#[component]
+fn SavedLoginRow(
+    login: SavedLogin,
+    disabled: bool,
+    on_select: EventHandler<SavedLogin>,
+    on_delete: EventHandler<i64>,
+) -> Element {
+    let id = login.id;
+    let short_identity = format!("{}...", &login.identity[..16.min(login.identity.len())]);
+    let server = login.server_url.clone();
+    let login_for_select = login.clone();
+
+    rsx! {
+        div { class: "group flex items-center gap-2 rounded-lg border border-gray-800 hover:border-blue-500/50 hover:bg-gray-800/50 transition-all",
+            button {
+                class: "flex-1 text-left px-4 py-3 min-w-0 disabled:opacity-50 disabled:cursor-not-allowed",
+                disabled,
+                onclick: move |_| on_select.call(login_for_select.clone()),
+                div { class: "text-sm font-medium text-gray-200 group-hover:text-white truncate",
+                    "{server}"
+                }
+                div { class: "text-xs text-gray-600 font-mono mt-0.5", "{short_identity}" }
+            }
+            button {
+                class: "px-3 py-3 text-gray-600 hover:text-red-400 transition-colors",
+                title: "Remove saved login",
+                onclick: move |_| on_delete.call(id),
+                Icon { name: IconName::Trash, class: "w-4 h-4" }
             }
         }
     }

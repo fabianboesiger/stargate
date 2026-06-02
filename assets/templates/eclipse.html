@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stargate — Eclipse Theme</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: {
+              950: '#0a0a0a',
+              900: '#121212',
+              800: '#1a1a1a',
+              700: '#262626',
+            },
+            lime: {
+              300: '#d9f99d',
+              400: '#bef264',
+              500: '#a3e635',
+              600: '#84cc16',
+            },
+          },
+          fontFamily: {
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+    .brutal { border: 2px solid #000; box-shadow: 4px 4px 0 0 #000; }
+    .brutal-lime { border: 2px solid #a3e635; box-shadow: 4px 4px 0 0 rgba(163, 230, 53, 0.4); }
+    .brutal-flat { border: 2px solid #262626; }
+    .nav-item { border: 2px solid transparent; transition: all 0.12s ease; }
+    .nav-item:hover { border-color: #262626; transform: translate(-1px, -1px); }
+    .nav-active { border: 2px solid #a3e635; background: #a3e635; color: #0a0a0a; box-shadow: 3px 3px 0 0 rgba(163, 230, 53, 0.3); }
+    .btn-push { transition: all 0.1s ease; }
+    .btn-push:active { transform: translate(2px, 2px); box-shadow: 0 0 0 0 #000 !important; }
+    .label { font-family: '"JetBrains Mono"', monospace; letter-spacing: 0.1em; }
+    .hatch { background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(163, 230, 53, 0.06) 6px, rgba(163, 230, 53, 0.06) 7px); }
+  </style>
+</head>
+<body class="bg-ink-950 text-gray-200 h-screen flex overflow-hidden hatch">
+
+  <!-- Sidebar -->
+  <aside class="w-64 flex flex-col bg-ink-900 border-r-2 border-ink-700">
+    <!-- Logo -->
+    <div class="p-5 border-b-2 border-ink-700">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-lime-400 flex items-center justify-center brutal">
+          <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div>
+          <span class="text-white font-black text-xl tracking-tighter block leading-none uppercase">Stargate</span>
+          <span class="label text-[10px] text-lime-500 font-bold uppercase">// eclipse</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 p-4 space-y-2">
+      <a href="#" class="nav-active flex items-center gap-3 px-3 py-2.5 text-sm font-bold uppercase tracking-wide">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        Info
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-white">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        Tables
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-white">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Reducers
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-white">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        Logs
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-white">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        SQL
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-white">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Scheduled
+      </a>
+    </nav>
+
+    <!-- Footer -->
+    <div class="p-4 border-t-2 border-ink-700 space-y-2">
+      <button class="btn-push brutal-flat w-full flex items-center gap-3 px-3 py-2 text-sm font-bold uppercase text-amber-400 bg-amber-500/10">
+        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        Read-only
+      </button>
+      <button class="btn-push brutal-flat w-full flex items-center gap-3 px-3 py-2 text-sm font-bold uppercase text-gray-400 hover:text-white">
+        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Disconnect
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <!-- Header -->
+    <header class="h-16 px-6 flex items-center justify-between border-b-2 border-ink-700 bg-ink-900">
+      <div class="flex items-center gap-4">
+        <h2 class="text-white font-black text-lg uppercase tracking-tight">my-game-db</h2>
+        <span class="brutal-flat inline-flex items-center gap-2 bg-lime-400/10 px-2.5 py-1 text-xs font-bold uppercase text-lime-400 label">
+          <span class="w-2 h-2 bg-lime-400"></span>
+          Live
+        </span>
+      </div>
+      <span class="label text-xs text-gray-500 uppercase">maincloud.spacetimedb.com</span>
+    </header>
+
+    <!-- Content area -->
+    <div class="flex-1 overflow-auto p-6">
+      <!-- Stats -->
+      <div class="grid grid-cols-4 gap-5 mb-6">
+        <div class="brutal bg-ink-900 p-5">
+          <p class="label text-[11px] text-gray-500 font-bold uppercase mb-3">Tables</p>
+          <p class="text-4xl font-black text-white tracking-tighter">12</p>
+        </div>
+        <div class="brutal bg-ink-900 p-5">
+          <p class="label text-[11px] text-gray-500 font-bold uppercase mb-3">Reducers</p>
+          <p class="text-4xl font-black text-white tracking-tighter">08</p>
+        </div>
+        <div class="brutal-lime bg-lime-400 p-5">
+          <p class="label text-[11px] text-black/60 font-bold uppercase mb-3">Clients</p>
+          <p class="text-4xl font-black text-black tracking-tighter">47</p>
+        </div>
+        <div class="brutal bg-ink-900 p-5">
+          <p class="label text-[11px] text-gray-500 font-bold uppercase mb-3">Identity</p>
+          <p class="label text-sm text-gray-300 truncate mt-3">a3f8c9d1e...</p>
+        </div>
+      </div>
+
+      <!-- Data table -->
+      <div class="brutal bg-ink-900">
+        <!-- Toolbar -->
+        <div class="px-5 py-4 flex items-center justify-between border-b-2 border-ink-700">
+          <div class="flex items-center gap-4">
+            <h3 class="text-base font-black text-white uppercase tracking-tight">Recent Logs</h3>
+            <span class="label text-xs text-gray-500 font-bold">[ 128 ]</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <input type="text" placeholder="FILTER..." class="brutal-flat label bg-ink-950 px-3 py-1.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-lime-500 w-52 uppercase" />
+            <button class="btn-push brutal bg-lime-400 px-4 py-1.5 text-sm font-black text-black uppercase tracking-wide">Refresh</button>
+          </div>
+        </div>
+        <!-- Table -->
+        <div class="overflow-auto">
+          <table class="w-full text-sm text-left">
+            <thead>
+              <tr class="border-b-2 border-ink-700">
+                <th class="px-5 py-3 label text-[11px] font-bold text-gray-500 uppercase">Timestamp</th>
+                <th class="px-5 py-3 label text-[11px] font-bold text-gray-500 uppercase">Level</th>
+                <th class="px-5 py-3 label text-[11px] font-bold text-gray-500 uppercase">Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-ink-800 hover:bg-lime-400/[0.03] transition-colors">
+                <td class="px-5 py-3 label text-xs text-gray-500">2026-05-25 14:32:01</td>
+                <td class="px-5 py-3"><span class="brutal-flat label inline-block px-2 py-0.5 text-xs font-bold uppercase bg-lime-400/10 text-lime-400">Info</span></td>
+                <td class="px-5 py-3 text-gray-300">Player connected: identity a3f8...</td>
+              </tr>
+              <tr class="border-b border-ink-800 hover:bg-lime-400/[0.03] transition-colors">
+                <td class="px-5 py-3 label text-xs text-gray-500">2026-05-25 14:31:58</td>
+                <td class="px-5 py-3"><span class="brutal-flat label inline-block px-2 py-0.5 text-xs font-bold uppercase bg-amber-500/10 text-amber-400">Warn</span></td>
+                <td class="px-5 py-3 text-gray-300">Reducer timeout: move_player (1200ms)</td>
+              </tr>
+              <tr class="border-b border-ink-800 hover:bg-lime-400/[0.03] transition-colors">
+                <td class="px-5 py-3 label text-xs text-gray-500">2026-05-25 14:31:45</td>
+                <td class="px-5 py-3"><span class="brutal-flat label inline-block px-2 py-0.5 text-xs font-bold uppercase bg-lime-400/10 text-lime-400">Info</span></td>
+                <td class="px-5 py-3 text-gray-300">Table "inventory" updated: 3 rows inserted</td>
+              </tr>
+              <tr class="border-b border-ink-800 hover:bg-lime-400/[0.03] transition-colors">
+                <td class="px-5 py-3 label text-xs text-gray-500">2026-05-25 14:31:30</td>
+                <td class="px-5 py-3"><span class="brutal-flat label inline-block px-2 py-0.5 text-xs font-bold uppercase bg-red-500/10 text-red-400">Error</span></td>
+                <td class="px-5 py-3 text-gray-300">Reducer panic in "craft_item": index out of bounds</td>
+              </tr>
+              <tr class="hover:bg-lime-400/[0.03] transition-colors">
+                <td class="px-5 py-3 label text-xs text-gray-500">2026-05-25 14:31:12</td>
+                <td class="px-5 py-3"><span class="brutal-flat label inline-block px-2 py-0.5 text-xs font-bold uppercase bg-lime-400/10 text-lime-400">Info</span></td>
+                <td class="px-5 py-3 text-gray-300">Scheduled task "cleanup_sessions" completed in 45ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div class="px-5 py-4 border-t-2 border-ink-700 flex items-center justify-between">
+          <span class="label text-xs text-gray-500 font-bold uppercase">001 — 005 / 128</span>
+          <div class="flex items-center gap-2">
+            <button class="brutal-flat label px-3 py-1.5 text-xs font-bold uppercase text-gray-600">Prev</button>
+            <button class="btn-push brutal label px-3 py-1.5 text-xs font-bold uppercase text-black bg-lime-400">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

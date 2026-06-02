@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stargate — Mono Theme</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: {
+              50: '#fafafa',
+              100: '#f4f4f4',
+              200: '#e8e8e8',
+            },
+            graphite: {
+              400: '#8a8a8a',
+              600: '#525252',
+              800: '#2b2b2b',
+              900: '#171717',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+    .mono { font-family: 'ui-monospace', 'SFMono-Regular', 'Menlo', monospace; }
+    .hairline { border-color: #e8e8e8; }
+    .nav-active { color: #171717; }
+    .nav-active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 6px; height: 6px; background: #171717; border-radius: 9999px; }
+    .num { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  </style>
+</head>
+<body class="bg-paper-50 text-graphite-800 h-screen flex overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-60 flex flex-col bg-white border-r hairline">
+    <!-- Logo -->
+    <div class="px-7 py-7">
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 bg-graphite-900 rounded-full flex items-center justify-center">
+          <span class="text-white font-bold text-sm">S</span>
+        </div>
+        <span class="text-graphite-900 font-semibold text-base tracking-tight">Stargate</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 px-7 mt-4">
+      <p class="mono text-[10px] uppercase tracking-[0.2em] text-graphite-400 mb-4">Menu</p>
+      <div class="space-y-4">
+        <a href="#" class="nav-active relative flex items-center pl-5 text-sm font-medium transition-colors">Info</a>
+        <a href="#" class="relative flex items-center pl-5 text-sm text-graphite-400 hover:text-graphite-900 transition-colors">Tables</a>
+        <a href="#" class="relative flex items-center pl-5 text-sm text-graphite-400 hover:text-graphite-900 transition-colors">Reducers</a>
+        <a href="#" class="relative flex items-center pl-5 text-sm text-graphite-400 hover:text-graphite-900 transition-colors">Logs</a>
+        <a href="#" class="relative flex items-center pl-5 text-sm text-graphite-400 hover:text-graphite-900 transition-colors">SQL</a>
+        <a href="#" class="relative flex items-center pl-5 text-sm text-graphite-400 hover:text-graphite-900 transition-colors">Scheduled</a>
+      </div>
+    </nav>
+
+    <!-- Footer -->
+    <div class="px-7 py-7 border-t hairline space-y-4">
+      <button class="flex items-center gap-2 text-sm text-graphite-600 hover:text-graphite-900 transition-colors">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+        Read-only
+      </button>
+      <button class="flex items-center gap-2 text-sm text-graphite-400 hover:text-graphite-900 transition-colors">
+        Disconnect
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 flex flex-col overflow-hidden bg-paper-50">
+    <!-- Header -->
+    <header class="px-10 pt-10 pb-6 flex items-end justify-between">
+      <div>
+        <p class="mono text-[10px] uppercase tracking-[0.2em] text-graphite-400 mb-2">Database</p>
+        <h1 class="text-graphite-900 font-semibold text-2xl tracking-tight">my-game-db</h1>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2 text-sm text-graphite-600">
+          <span class="w-1.5 h-1.5 rounded-full bg-graphite-900"></span>
+          Live
+        </div>
+        <span class="mono text-xs text-graphite-400">maincloud.spacetimedb.com</span>
+      </div>
+    </header>
+
+    <!-- Content area -->
+    <div class="flex-1 overflow-auto px-10 pb-10">
+      <!-- Stats -->
+      <div class="grid grid-cols-4 border-t border-b hairline divide-x divide-paper-200 mb-12">
+        <div class="py-6 pr-6">
+          <p class="mono text-[10px] uppercase tracking-[0.2em] text-graphite-400 mb-3">Tables</p>
+          <p class="num text-4xl font-light text-graphite-900">12</p>
+        </div>
+        <div class="py-6 px-6">
+          <p class="mono text-[10px] uppercase tracking-[0.2em] text-graphite-400 mb-3">Reducers</p>
+          <p class="num text-4xl font-light text-graphite-900">08</p>
+        </div>
+        <div class="py-6 px-6">
+          <p class="mono text-[10px] uppercase tracking-[0.2em] text-graphite-400 mb-3">Clients</p>
+          <p class="num text-4xl font-light text-graphite-900">47</p>
+        </div>
+        <div class="py-6 pl-6">
+          <p class="mono text-[10px] uppercase tracking-[0.2em] text-graphite-400 mb-3">Identity</p>
+          <p class="mono text-sm text-graphite-600 truncate mt-4">a3f8c9d1e...</p>
+        </div>
+      </div>
+
+      <!-- Data table -->
+      <div>
+        <!-- Toolbar -->
+        <div class="flex items-end justify-between mb-5">
+          <div>
+            <h3 class="text-graphite-900 font-semibold text-lg tracking-tight">Recent Logs</h3>
+            <p class="mono text-xs text-graphite-400 mt-1">128 entries</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <input type="text" placeholder="Filter…" class="bg-transparent border-b hairline px-1 py-1.5 text-sm text-graphite-800 placeholder-graphite-400 focus:outline-none focus:border-graphite-900 w-44 transition-colors" />
+            <button class="text-sm font-medium text-graphite-900 border-b border-graphite-900 pb-0.5 hover:text-graphite-600 hover:border-graphite-600 transition-colors">Refresh</button>
+          </div>
+        </div>
+        <!-- Table -->
+        <div class="overflow-auto">
+          <table class="w-full text-sm text-left">
+            <thead>
+              <tr class="border-t border-b border-graphite-900">
+                <th class="py-3 pr-6 mono text-[10px] font-medium text-graphite-600 uppercase tracking-[0.15em]">Timestamp</th>
+                <th class="py-3 px-6 mono text-[10px] font-medium text-graphite-600 uppercase tracking-[0.15em]">Level</th>
+                <th class="py-3 pl-6 mono text-[10px] font-medium text-graphite-600 uppercase tracking-[0.15em]">Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b hairline hover:bg-white transition-colors">
+                <td class="py-3.5 pr-6 mono text-xs text-graphite-400">2026-05-25 14:32:01</td>
+                <td class="py-3.5 px-6"><span class="mono text-xs text-graphite-900">INFO</span></td>
+                <td class="py-3.5 pl-6 text-graphite-800">Player connected: identity a3f8...</td>
+              </tr>
+              <tr class="border-b hairline hover:bg-white transition-colors">
+                <td class="py-3.5 pr-6 mono text-xs text-graphite-400">2026-05-25 14:31:58</td>
+                <td class="py-3.5 px-6"><span class="mono text-xs text-graphite-900">WARN</span><span class="ml-2 inline-block w-1.5 h-1.5 rounded-full bg-amber-500 align-middle"></span></td>
+                <td class="py-3.5 pl-6 text-graphite-800">Reducer timeout: move_player (1200ms)</td>
+              </tr>
+              <tr class="border-b hairline hover:bg-white transition-colors">
+                <td class="py-3.5 pr-6 mono text-xs text-graphite-400">2026-05-25 14:31:45</td>
+                <td class="py-3.5 px-6"><span class="mono text-xs text-graphite-900">INFO</span></td>
+                <td class="py-3.5 pl-6 text-graphite-800">Table "inventory" updated: 3 rows inserted</td>
+              </tr>
+              <tr class="border-b hairline hover:bg-white transition-colors">
+                <td class="py-3.5 pr-6 mono text-xs text-graphite-400">2026-05-25 14:31:30</td>
+                <td class="py-3.5 px-6"><span class="mono text-xs text-graphite-900">ERROR</span><span class="ml-2 inline-block w-1.5 h-1.5 rounded-full bg-red-500 align-middle"></span></td>
+                <td class="py-3.5 pl-6 text-graphite-800">Reducer panic in "craft_item": index out of bounds</td>
+              </tr>
+              <tr class="border-b hairline hover:bg-white transition-colors">
+                <td class="py-3.5 pr-6 mono text-xs text-graphite-400">2026-05-25 14:31:12</td>
+                <td class="py-3.5 px-6"><span class="mono text-xs text-graphite-900">INFO</span></td>
+                <td class="py-3.5 pl-6 text-graphite-800">Scheduled task "cleanup_sessions" completed in 45ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div class="mt-6 flex items-center justify-between">
+          <span class="mono text-xs text-graphite-400">001–005 / 128</span>
+          <div class="flex items-center gap-6">
+            <button class="text-sm text-graphite-300 cursor-not-allowed">Previous</button>
+            <button class="text-sm font-medium text-graphite-900 hover:text-graphite-600 transition-colors">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

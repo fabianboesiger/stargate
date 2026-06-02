@@ -1,6 +1,6 @@
 """
 Generate a Stargate app icon using the exact same SVG logo as in the app.
-Uses the same paths from src/components/icon.rs (IconName::Logo).
+Uses the Lucide "orbit" icon (src/components/icon.rs IconName::Logo).
 Rendered with blue-400 (#60a5fa) on a dark slate background.
 """
 import cairosvg
@@ -10,32 +10,25 @@ import os
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# The exact same SVG as used in the app (src/components/icon.rs IconName::Logo)
+# The exact same icon as used in the app (src/components/icon.rs IconName::Logo)
+# This is the Lucide "orbit" icon, a stroke-based 24x24 glyph.
 # Color: text-blue-400 = #60a5fa, background: slate-900 = #0f172a
+# The 24x24 glyph is centered within the 24x24 viewport with padding via transform.
 SVG = """<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="1024" height="1024">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1024" height="1024">
   <!-- Background -->
   <rect x="0" y="0" width="24" height="24" rx="3.5" fill="#0f172a"/>
 
-  <!-- Outer ring -->
-  <circle cx="12" cy="12" r="10" stroke="#60a5fa" stroke-width="1.5" fill="none"/>
-
-  <!-- Inner ring -->
-  <circle cx="12" cy="12" r="6.5" stroke="#60a5fa" stroke-width="1" fill="none"/>
-
-  <!-- 9 Chevron marks around the gate -->
-  <path d="M12 2.5L13.2 4.5H10.8L12 2.5Z" fill="#60a5fa"/>
-  <path d="M17.5 4.5L17 6.8L15.2 5.5L17.5 4.5Z" fill="#60a5fa"/>
-  <path d="M20.5 9.5L18.2 9.8L18.8 7.8L20.5 9.5Z" fill="#60a5fa"/>
-  <path d="M20.5 14.5L18.8 16.2L18.2 14.2L20.5 14.5Z" fill="#60a5fa"/>
-  <path d="M17.5 19.5L15.2 18.5L17 17.2L17.5 19.5Z" fill="#60a5fa"/>
-  <path d="M6.5 19.5L7 17.2L8.8 18.5L6.5 19.5Z" fill="#60a5fa"/>
-  <path d="M3.5 14.5L5.8 14.2L5.2 16.2L3.5 14.5Z" fill="#60a5fa"/>
-  <path d="M3.5 9.5L5.2 7.8L5.8 9.8L3.5 9.5Z" fill="#60a5fa"/>
-  <path d="M6.5 4.5L8.8 5.5L7 6.8L6.5 4.5Z" fill="#60a5fa"/>
-
-  <!-- Center glow dot -->
-  <circle cx="12" cy="12" r="2" fill="#60a5fa" opacity="0.6"/>
+  <!-- Lucide "orbit" icon, scaled down and centered to leave padding -->
+  <g transform="translate(3 3) scale(0.75)"
+     fill="none" stroke="#60a5fa" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <circle cx="19" cy="5" r="2"/>
+    <circle cx="5" cy="19" r="2"/>
+    <path d="M10.4 21.9a10 10 0 0 0 9.941-15.416"/>
+    <path d="M13.5 2.1a10 10 0 0 0-9.841 15.416"/>
+  </g>
 </svg>
 """
 
@@ -60,6 +53,19 @@ img.save(ico_path, format="ICO", sizes=[(16, 16), (32, 32), (48, 48), (64, 64), 
 
 # Also save to icons/
 img.save(os.path.join(icons_dir, "icon.ico"), format="ICO", sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+
+# Create ICNS (macOS app bundle icon)
+def write_icns(dst_path):
+    icns_img = Image.open(io.BytesIO(png_data)).convert("RGBA")
+    try:
+        icns_img.save(dst_path, format="ICNS")
+        return True
+    except Exception as exc:  # pragma: no cover - environment dependent
+        print(f"Warning: could not write {dst_path}: {exc}")
+        return False
+
+for icns_dir in (os.path.join(PROJECT_ROOT, "assets"), icons_dir):
+    write_icns(os.path.join(icns_dir, "icon.icns"))
 
 print(f"Icons generated: {icon_png_path}, {ico_path}")
 print(f"Also copied to: {icons_dir}/")
