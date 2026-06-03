@@ -22,6 +22,8 @@ pub enum IconName {
     Signal,
     Sun,
     Moon,
+    Stop,
+    FileText,
 }
 
 #[component]
@@ -174,6 +176,22 @@ pub fn Icon(name: IconName, #[props(default = "w-4 h-4".to_string())] class: Str
                 width: None,
                 height: None,
                 icon: ld_icons::LdMoon,
+            }
+        },
+        IconName::Stop => rsx! {
+            SvgIcon {
+                class,
+                width: None,
+                height: None,
+                icon: ld_icons::LdSquare,
+            }
+        },
+        IconName::FileText => rsx! {
+            SvgIcon {
+                class,
+                width: None,
+                height: None,
+                icon: ld_icons::LdFileText,
             }
         },
         IconName::Logo => unreachable!(),

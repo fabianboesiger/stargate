@@ -1,3 +1,5 @@
+use std::io::{BufWriter, Write};
+use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use dioxus::prelude::*;
@@ -54,6 +56,14 @@ pub fn LiveView(db_identity: String) -> Element {
     let mut paused = use_signal(|| false);
     let mut bottom_anchor = use_signal(|| Option::<std::rc::Rc<MountedData>>::None);
     let mut events_per_sec = use_signal(|| 0.0f64);
+
+    // Recording state: when enabled, all incoming events are streamed to a
+    // JSON-lines file on disk. When stopped, `last_recording` holds the path so
+    // the user can open the resulting file.
+    let mut recording = use_signal(|| false);
+    let mut recording_path = use_signal(|| Option::<PathBuf>::None);
+    let mut last_recording = use_signal(|| Option::<PathBuf>::None);
+    let mut recorded_count = use_signal(|| 0usize);
 
     // Snap the event list to the latest entry whenever new events arrive or
     // auto-scroll is (re)enabled.
@@ -145,11 +155,22 @@ pub fn LiveView(db_identity: String) -> Element {
                 let mut flush = tokio::time::interval(tokio::time::Duration::from_millis(250));
                 flush.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
 
+                // Active recording file writer (when recording is enabled).
+                let mut recorder: Option<BufWriter<std::fs::File>> = None;
+
                 loop {
                     tokio::select! {
                         biased;
                         maybe_update = merge_rx.recv() => {
                             let Some(update) = maybe_update else { break; };
+
+                            sync_recorder(
+                                &mut recorder,
+                                *recording.read(),
+                                recording_path,
+                                last_recording,
+                                recorded_count,
+                            );
 
                             if *paused.read() {
                                 continue;
@@ -157,7 +178,7 @@ pub fn LiveView(db_identity: String) -> Element {
 
                             let now = format_now();
 
-                            match update {
+                            let event = match update {
                                 TableUpdate::InitialRows { table_name, rows } => {
                                     received_initial += 1;
                                     if received_initial >= total_tables {
@@ -165,46 +186,62 @@ pub fn LiveView(db_identity: String) -> Element {
                                         stream_status.set("Live".to_string());
                                     }
                                     let preview = rows_preview(&rows);
-                                    pending.push(WsEvent {
+                                    WsEvent {
                                         timestamp: now,
                                         kind: WsEventKind::Initial,
                                         table: table_name,
                                         row_count: rows.len(),
                                         preview,
-                                    });
+                                    }
                                 }
                                 TableUpdate::Insert { table_name, rows } => {
                                     let preview = rows_preview(&rows);
-                                    pending.push(WsEvent {
+                                    WsEvent {
                                         timestamp: now,
                                         kind: WsEventKind::Insert,
                                         table: table_name,
                                         row_count: rows.len(),
                                         preview,
-                                    });
+                                    }
                                 }
                                 TableUpdate::Delete { table_name, rows } => {
                                     let preview = rows_preview(&rows);
-                                    pending.push(WsEvent {
+                                    WsEvent {
                                         timestamp: now,
                                         kind: WsEventKind::Delete,
                                         table: table_name,
                                         row_count: rows.len(),
                                         preview,
-                                    });
+                                    }
                                 }
                                 TableUpdate::Error(e) => {
-                                    pending.push(WsEvent {
+                                    WsEvent {
                                         timestamp: now,
                                         kind: WsEventKind::Error,
                                         table: String::new(),
                                         row_count: 0,
                                         preview: e,
-                                    });
+                                    }
                                 }
+                            };
+
+                            if let Some(writer) = recorder.as_mut() {
+                                write_event_line(writer, &event);
+                                let prev = *recorded_count.read();
+                                recorded_count.set(prev + 1);
                             }
+
+                            pending.push(event);
                         }
                         _ = flush.tick() => {
+                            sync_recorder(
+                                &mut recorder,
+                                *recording.read(),
+                                recording_path,
+                                last_recording,
+                                recorded_count,
+                            );
+
                             if !pending.is_empty() {
                                 let count = pending.len() as f64;
                                 // The flush interval is 250ms, so rate = count / 0.25
@@ -221,6 +258,16 @@ pub fn LiveView(db_identity: String) -> Element {
                             }
                         }
                     }
+                }
+
+                // Ensure any in-progress recording is finalized when the stream ends.
+                if let Some(mut writer) = recorder.take() {
+                    let _ = writer.flush();
+                    if let Some(path) = recording_path.read().clone() {
+                        last_recording.set(Some(path));
+                    }
+                    recording_path.set(None);
+                    recording.set(false);
                 }
 
                 if stream_status.read().as_str() != "Disconnected" && stream_status.read().as_str() != "Error" {
@@ -245,6 +292,15 @@ pub fn LiveView(db_identity: String) -> Element {
     } else {
         "bg-yellow-600/20 text-yellow-700 hover:bg-yellow-600/30"
     };
+
+    let is_recording = *recording.read();
+    let record_class = if is_recording {
+        "bg-red-600/20 text-red-600 hover:bg-red-600/30"
+    } else {
+        "bg-gray-800 text-gray-400 hover:text-gray-200 hover:bg-gray-700"
+    };
+    let recorded = *recorded_count.read();
+    let finished_recording = last_recording.read().clone();
 
     rsx! {
         PageLayout {
@@ -277,6 +333,43 @@ pub fn LiveView(db_identity: String) -> Element {
                         class: "px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 text-gray-400 hover:text-gray-200 hover:bg-gray-700 transition-colors",
                         onclick: move |_| events.set(Vec::new()),
                         "Clear"
+                    }
+                    button {
+                        class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {record_class}",
+                        onclick: move |_| {
+                            let next = !is_recording;
+                            if next {
+                                last_recording.set(None);
+                            }
+                            recording.set(next);
+                        },
+                        if is_recording {
+                            Icon { name: IconName::Stop, class: "w-3 h-3" }
+                            "Stop ({recorded})"
+                        } else {
+                            Icon { name: IconName::Circle, class: "w-2 h-2" }
+                            "Record"
+                        }
+                    }
+                    if !is_recording && let Some(path) = finished_recording {
+                        {
+                            let file_label = path
+                                .file_name()
+                                .map(|n| n.to_string_lossy().to_string())
+                                .unwrap_or_else(|| "recording".to_string());
+                            let open_path = path.clone();
+                            rsx! {
+                                button {
+                                    class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-600/20 text-blue-500 hover:bg-blue-600/30 transition-colors",
+                                    title: "{path.display()}",
+                                    onclick: move |_| {
+                                        reveal_in_file_manager(&open_path);
+                                    },
+                                    Icon { name: IconName::FileText, class: "w-3.5 h-3.5" }
+                                    "Open {file_label}"
+                                }
+                            }
+                        }
                     }
                     label { class: "flex items-center gap-1.5 text-xs text-gray-500 ml-auto cursor-pointer select-none",
                         input {
@@ -328,6 +421,101 @@ fn push_events(events: &mut Signal<Vec<WsEvent>>, pending: &mut Vec<WsEvent>) {
         current.drain(..current.len() - 1000);
     }
     events.set(current);
+}
+
+/// Build a destination path for a new recording inside the application data
+/// directory, creating the `recordings` folder if needed.
+/// Open the file manager and select/highlight the given file.
+/// - macOS:   `open -R <file>`
+/// - Windows: `explorer /select,<file>`
+/// - Linux:   falls back to opening the parent directory with `xdg-open`
+fn reveal_in_file_manager(path: &PathBuf) {
+    #[cfg(target_os = "macos")]
+    let result = std::process::Command::new("open")
+        .arg("-R")
+        .arg(path)
+        .spawn();
+
+    #[cfg(target_os = "windows")]
+    let result = std::process::Command::new("explorer")
+        .arg(format!("/select,{}", path.display()))
+        .spawn();
+
+    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+    let result = path
+        .parent()
+        .map(|dir| std::process::Command::new("xdg-open").arg(dir).spawn())
+        .unwrap_or_else(|| {
+            Err(std::io::Error::new(std::io::ErrorKind::NotFound, "no parent dir"))
+        });
+
+    match result {
+        Ok(_) => log::info!("Revealed recording in file manager: {}", path.display()),
+        Err(e) => log::error!("Failed to reveal recording {}: {e}", path.display()),
+    }
+}
+
+fn new_recording_path() -> Option<PathBuf> {
+    let dir = dirs::data_dir()?.join("stargate").join("recordings");
+    if let Err(e) = std::fs::create_dir_all(&dir) {
+        log::error!("Failed to create recordings directory: {e}");
+        return None;
+    }
+    let ts = chrono::Local::now().format("%Y%m%d-%H%M%S");
+    Some(dir.join(format!("live-{ts}.jsonl")))
+}
+
+/// Start or stop the recording file writer to match the requested `recording`
+/// state, updating the associated signals.
+fn sync_recorder(
+    recorder: &mut Option<BufWriter<std::fs::File>>,
+    recording: bool,
+    mut recording_path: Signal<Option<PathBuf>>,
+    mut last_recording: Signal<Option<PathBuf>>,
+    mut recorded_count: Signal<usize>,
+) {
+    if recording && recorder.is_none() {
+        let Some(path) = new_recording_path() else { return; };
+        match std::fs::File::create(&path) {
+            Ok(file) => {
+                *recorder = Some(BufWriter::new(file));
+                recorded_count.set(0);
+                recording_path.set(Some(path.clone()));
+                log::info!("Started recording live events to {}", path.display());
+            }
+            Err(e) => log::error!("Failed to create recording file {}: {e}", path.display()),
+        }
+    } else if !recording && recorder.is_some() {
+        if let Some(mut writer) = recorder.take()
+            && let Err(e) = writer.flush()
+        {
+            log::error!("Failed to flush recording file: {e}");
+        }
+        if let Some(path) = recording_path.read().clone() {
+            last_recording.set(Some(path.clone()));
+            log::info!("Stopped recording live events: {}", path.display());
+        }
+        recording_path.set(None);
+    }
+}
+
+/// Serialize a single event as a JSON object and append it as one line.
+fn write_event_line(writer: &mut BufWriter<std::fs::File>, event: &WsEvent) {
+    let line = serde_json::json!({
+        "timestamp": event.timestamp,
+        "kind": event.kind.label(),
+        "table": event.table,
+        "row_count": event.row_count,
+        "preview": event.preview,
+    });
+    match serde_json::to_string(&line) {
+        Ok(s) => {
+            if let Err(e) = writeln!(writer, "{s}") {
+                log::error!("Failed to write recording line: {e}");
+            }
+        }
+        Err(e) => log::error!("Failed to serialize recording line: {e}"),
+    }
 }
 
 fn format_now() -> String {
