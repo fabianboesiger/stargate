@@ -1,3 +1,6 @@
+// The OpenAPI document in `openapi.rs` is built with deeply-nested `json!` literals.
+#![recursion_limit = "512"]
+
 mod api;
 mod components;
 mod config;

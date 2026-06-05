@@ -296,16 +296,29 @@ pub fn build_spec(
                 "tags": ["WebSocket"],
                 "summary": "Subscribe to real-time table updates (WebSocket)",
                 "description": concat!(
-                    "Upgrades the connection to a WebSocket for real-time subscriptions. ",
-                    "OpenAPI cannot natively describe WebSocket messaging, so this is documented as the upgrade handshake.\n\n",
+                    "Upgrades the connection to a WebSocket for real-time subscriptions, using the ",
+                    "**`v1.json.spacetimedb`** subprotocol (every frame is a UTF-8 JSON text frame). ",
+                    "OpenAPI cannot natively describe WebSocket messaging, so this documents the upgrade ",
+                    "handshake plus the message shapes in `components.schemas`.\n\n",
                     "**Handshake headers**\n",
                     "- `Connection: Upgrade`\n",
                     "- `Upgrade: websocket`\n",
                     "- `Sec-WebSocket-Protocol: v1.json.spacetimedb`\n",
                     "- `Authorization: Bearer <token>`\n\n",
-                    "**Client → server messages**: see `ClientMessage` (e.g. `SubscribeSingle`).\n\n",
-                    "**Server → client messages**: `InitialSubscription`, `SubscribeApplied`, ",
-                    "`TransactionUpdate`, `TransactionUpdateLight`, `SubscriptionError`, `IdentityToken`."
+                    "Both directions use **externally-tagged enums**: a message is a JSON object with a ",
+                    "single key naming the variant, e.g. `{ \"SubscribeSingle\": { … } }`.\n\n",
+                    "### Client → server (`ClientMessage`)\n",
+                    "- **`SubscribeSingle`** `{ query, request_id, query_id: [u32] }` — subscribe to one SQL query.\n\n",
+                    "### Server → client (`ServerMessage`)\n",
+                    "- **`IdentityToken`** `{ identity, token, connection_id }` — sent once on connect.\n",
+                    "- **`InitialSubscription`** `{ database_update, request_id }` — the full initial result set.\n",
+                    "- **`SubscribeApplied`** `{ query_id, rows: { table_name, table_rows } }` — a subscription was applied.\n",
+                    "- **`TransactionUpdate`** `{ status: { Committed: DatabaseUpdate } | { Failed } | { OutOfEnergy }, … }` — a committed/failed txn.\n",
+                    "- **`TransactionUpdateLight`** `{ request_id, update: DatabaseUpdate }` — a lighter row-only txn update.\n",
+                    "- **`SubscriptionError`** `{ error }` — the subscription failed.\n\n",
+                    "Inside a `DatabaseUpdate`, each `QueryUpdate` may be wrapped as `{ \"Uncompressed\": … }` ",
+                    "(or `{ \"Compressed\": … }`), and its `inserts`/`deletes` are arrays of rows where **each row ",
+                    "is itself a JSON-encoded string** that must be parsed again (see `QueryUpdate`)."
                 ),
                 "parameters": [
                     {
@@ -328,11 +341,25 @@ pub fn build_spec(
                     }
                 ],
                 "requestBody": {
-                    "description": "WebSocket client message sent after the handshake.",
-                    "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ClientMessage" } } }
+                    "description": "A WebSocket client message sent after the handshake (one JSON text frame).",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/ClientMessage" },
+                            "example": {
+                                "SubscribeSingle": {
+                                    "query": "SELECT * FROM my_table",
+                                    "request_id": 1,
+                                    "query_id": [1]
+                                }
+                            }
+                        }
+                    }
                 },
                 "responses": {
-                    "101": { "description": "Switching Protocols — the WebSocket is established." }
+                    "101": {
+                        "description": "Switching Protocols — the WebSocket is established. Subsequent frames are `ServerMessage` values.",
+                        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ServerMessage" } } }
+                    }
                 },
             }
         }),
@@ -585,22 +612,220 @@ fn component_schemas() -> Value {
             }
         },
         "ClientMessage": {
-            "type": "object",
-            "description": "Externally-tagged WebSocket client message.",
-            "properties": {
-                "SubscribeSingle": {
-                    "type": "object",
-                    "properties": {
-                        "query": { "type": "string", "example": "SELECT * FROM my_table" },
-                        "request_id": { "type": "integer" },
-                        "query_id": {
-                            "type": "array",
-                            "prefixItems": [{ "type": "integer" }],
-                            "minItems": 1,
-                            "maxItems": 1
+            "description": "Externally-tagged WebSocket client message (object with a single variant key).",
+            "oneOf": [{
+                "type": "object",
+                "title": "SubscribeSingle",
+                "required": ["SubscribeSingle"],
+                "properties": {
+                    "SubscribeSingle": {
+                        "type": "object",
+                        "required": ["query", "request_id", "query_id"],
+                        "properties": {
+                            "query": { "type": "string", "example": "SELECT * FROM my_table" },
+                            "request_id": { "type": "integer", "description": "Client-chosen id echoed back in the response." },
+                            "query_id": {
+                                "type": "array",
+                                "description": "QuerySetId — a SATS newtype tuple serialized as `[u32]`.",
+                                "prefixItems": [{ "type": "integer" }],
+                                "minItems": 1,
+                                "maxItems": 1
+                            }
                         }
                     }
                 }
+            }]
+        },
+        "ServerMessage": {
+            "description": "Externally-tagged WebSocket server message (object with a single variant key).",
+            "oneOf": [
+                {
+                    "type": "object",
+                    "title": "IdentityToken",
+                    "required": ["IdentityToken"],
+                    "properties": {
+                        "IdentityToken": {
+                            "type": "object",
+                            "description": "Sent once when the connection opens.",
+                            "properties": {
+                                "identity": { "type": "string" },
+                                "token": { "type": "string" },
+                                "connection_id": { "type": "string" }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "title": "InitialSubscription",
+                    "required": ["InitialSubscription"],
+                    "properties": {
+                        "InitialSubscription": {
+                            "type": "object",
+                            "description": "The full initial result set for a subscription.",
+                            "properties": {
+                                "database_update": { "$ref": "#/components/schemas/DatabaseUpdate" },
+                                "request_id": { "type": "integer" }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "title": "SubscribeApplied",
+                    "required": ["SubscribeApplied"],
+                    "properties": {
+                        "SubscribeApplied": {
+                            "type": "object",
+                            "properties": {
+                                "request_id": { "type": "integer" },
+                                "query_id": {
+                                    "type": "array",
+                                    "prefixItems": [{ "type": "integer" }],
+                                    "minItems": 1, "maxItems": 1
+                                },
+                                "rows": {
+                                    "type": "object",
+                                    "properties": {
+                                        "table_id": { "type": "integer" },
+                                        "table_name": { "type": "string" },
+                                        "table_rows": { "$ref": "#/components/schemas/QueryUpdate" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "title": "TransactionUpdate",
+                    "required": ["TransactionUpdate"],
+                    "properties": {
+                        "TransactionUpdate": {
+                            "type": "object",
+                            "description": "A committed (or failed) transaction.",
+                            "properties": {
+                                "status": {
+                                    "description": "Externally-tagged outcome.",
+                                    "oneOf": [
+                                        {
+                                            "type": "object",
+                                            "title": "Committed",
+                                            "required": ["Committed"],
+                                            "properties": { "Committed": { "$ref": "#/components/schemas/DatabaseUpdate" } }
+                                        },
+                                        {
+                                            "type": "object",
+                                            "title": "Failed",
+                                            "required": ["Failed"],
+                                            "properties": { "Failed": { "type": "string", "description": "Failure message." } }
+                                        },
+                                        {
+                                            "type": "object",
+                                            "title": "OutOfEnergy",
+                                            "required": ["OutOfEnergy"],
+                                            "properties": { "OutOfEnergy": {} }
+                                        }
+                                    ]
+                                },
+                                "request_id": { "type": "integer" },
+                                "reducer_call": {
+                                    "type": "object",
+                                    "description": "The reducer that produced this transaction (when applicable).",
+                                    "properties": {
+                                        "reducer_name": { "type": "string" },
+                                        "request_id": { "type": "integer" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "title": "TransactionUpdateLight",
+                    "required": ["TransactionUpdateLight"],
+                    "properties": {
+                        "TransactionUpdateLight": {
+                            "type": "object",
+                            "description": "A lighter, row-only transaction update.",
+                            "properties": {
+                                "request_id": { "type": "integer" },
+                                "update": { "$ref": "#/components/schemas/DatabaseUpdate" }
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "title": "SubscriptionError",
+                    "required": ["SubscriptionError"],
+                    "properties": {
+                        "SubscriptionError": {
+                            "type": "object",
+                            "properties": {
+                                "error": { "type": "string", "description": "Human-readable error message." }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "DatabaseUpdate": {
+            "type": "object",
+            "description": "A set of per-table row updates produced by a transaction or subscription.",
+            "properties": {
+                "tables": {
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/TableUpdate" }
+                }
+            }
+        },
+        "TableUpdate": {
+            "type": "object",
+            "properties": {
+                "table_id": { "type": "integer" },
+                "table_name": { "type": "string" },
+                "num_rows": { "type": "integer" },
+                "updates": {
+                    "type": "array",
+                    "description": "Each entry is a `QueryUpdate`, optionally wrapped in `{ \"Uncompressed\": … }` or `{ \"Compressed\": … }`.",
+                    "items": {
+                        "oneOf": [
+                            { "$ref": "#/components/schemas/QueryUpdate" },
+                            {
+                                "type": "object",
+                                "title": "Uncompressed",
+                                "required": ["Uncompressed"],
+                                "properties": { "Uncompressed": { "$ref": "#/components/schemas/QueryUpdate" } }
+                            },
+                            {
+                                "type": "object",
+                                "title": "Compressed",
+                                "required": ["Compressed"],
+                                "properties": { "Compressed": { "type": "string", "description": "Compressed payload (brotli/gzip), base64-encoded." } }
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "QueryUpdate": {
+            "type": "object",
+            "description": "Row deltas for one query. In the JSON subprotocol each row is itself a JSON-encoded **string** that must be parsed a second time.",
+            "properties": {
+                "deletes": {
+                    "type": "array",
+                    "items": { "type": "string", "description": "A JSON-encoded row (SATS-JSON)." }
+                },
+                "inserts": {
+                    "type": "array",
+                    "items": { "type": "string", "description": "A JSON-encoded row (SATS-JSON)." }
+                }
+            },
+            "example": {
+                "deletes": [],
+                "inserts": ["{\"id\":1,\"name\":\"alice\"}"]
             }
         }
     })
@@ -657,6 +882,20 @@ mod tests {
         let example = &paths[reducer_path]["post"]["requestBody"]["content"]
             ["application/json"]["example"];
         assert_eq!(example, &json!(["<name>", 0]));
+
+        // WebSocket message families are documented.
+        let schemas = &spec["components"]["schemas"];
+        assert!(schemas["ClientMessage"]["oneOf"].is_array());
+        let server_variants = schemas["ServerMessage"]["oneOf"].as_array().unwrap();
+        assert_eq!(server_variants.len(), 6);
+        assert!(schemas["DatabaseUpdate"].is_object());
+        assert!(schemas["QueryUpdate"].is_object());
+        // The subscribe response references ServerMessage.
+        assert_eq!(
+            paths["/v1/database/c200deadbeef/subscribe"]["get"]["responses"]["101"]["content"]
+                ["application/json"]["schema"]["$ref"],
+            "#/components/schemas/ServerMessage"
+        );
 
         // Whole document must serialize.
         assert!(serde_json::to_string(&spec).is_ok());
