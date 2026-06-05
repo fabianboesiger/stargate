@@ -439,7 +439,7 @@ impl ApiClient {
 
 // --- OAuth Login Flow ---
 
-const DEFAULT_AUTH_HOST: &str = "https://spacetimedb.com";
+pub const DEFAULT_AUTH_HOST: &str = "https://spacetimedb.com";
 
 #[derive(Deserialize)]
 struct AuthTokenData {

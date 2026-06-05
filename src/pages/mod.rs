@@ -5,6 +5,7 @@ mod table_data;
 mod sql;
 mod reducers;
 mod info;
+mod schema;
 mod scheduled_tasks;
 mod live_view;
 
@@ -15,5 +16,6 @@ pub use table_data::TableData;
 pub use sql::Sql;
 pub use reducers::Reducers;
 pub use info::Info;
+pub use schema::Schema;
 pub use scheduled_tasks::ScheduledTasks;
 pub use live_view::LiveView;

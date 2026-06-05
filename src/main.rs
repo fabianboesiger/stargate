@@ -1,6 +1,7 @@
 mod api;
 mod components;
 mod config;
+mod openapi;
 mod state;
 mod storage;
 mod theme;
@@ -8,7 +9,7 @@ mod pages;
 mod ws;
 
 use dioxus::prelude::*;
-use pages::{Login, DatabaseTables, DatabaseLogs, TableData, Sql, Reducers, Info, ScheduledTasks, LiveView};
+use pages::{Login, DatabaseTables, DatabaseLogs, TableData, Sql, Reducers, Info, ScheduledTasks, LiveView, Schema};
 use state::AppState;
 use storage::Storage;
 
@@ -28,6 +29,8 @@ pub enum Route {
     Sql { db_identity: String },
     #[route("/database/:db_identity/info")]
     Info { db_identity: String },
+    #[route("/database/:db_identity/schema")]
+    Schema { db_identity: String },
     #[route("/database/:db_identity/scheduled")]
     ScheduledTasks { db_identity: String },
     #[route("/database/:db_identity/live")]

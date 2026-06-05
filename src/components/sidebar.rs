@@ -27,6 +27,12 @@ pub fn build_nav_items(db_identity: &str, active_page: &str) -> Vec<NavItem> {
             active: active_page == "Tables",
         },
         NavItem {
+            label: "Schema".into(),
+            icon: IconName::FileText,
+            route: Some(Route::Schema { db_identity: db_identity.to_string() }),
+            active: active_page == "Schema",
+        },
+        NavItem {
             label: "Reducers".into(),
             icon: IconName::Bolt,
             route: Some(Route::Reducers { db_identity: db_identity.to_string() }),
