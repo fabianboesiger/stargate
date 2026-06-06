@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- App icon: Lucide "orbit" glyph, white on black, matching the in-app logo. -->
+  <rect width="1024" height="1024" rx="224" ry="224" fill="#000000"/>
+  <g transform="translate(152,152) scale(30)"
+     fill="none" stroke="#ffffff" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <circle cx="19" cy="5" r="2"/>
+    <circle cx="5" cy="19" r="2"/>
+    <path d="M10.4 21.9a10 10 0 0 0 9.941-15.416"/>
+    <path d="M13.5 2.1a10 10 0 0 0-9.841 15.416"/>
+  </g>
+</svg>
