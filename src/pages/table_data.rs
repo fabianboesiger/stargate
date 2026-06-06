@@ -512,7 +512,7 @@ pub fn TableData(db_identity: String, table_name: String) -> Element {
                                                 let csv = build_csv(&cols, &filtered);
                                                 let file_name = format!("{}.csv", table_name);
                                                 spawn(async move {
-                                                    export_csv(&file_name, &csv).await;
+                                                    crate::export::save_text_file(&file_name, "CSV", &["csv"], &csv).await;
                                                 });
                                             }
                                         },
@@ -929,51 +929,21 @@ fn format_insert_value(value: &str) -> String {
     }
 }
 
-fn escape_csv_field(field: &str) -> String {
-    if field.contains(',') || field.contains('"') || field.contains('\n') {
-        let escaped = field.replace('"', "\"\"");
-        format!("\"{escaped}\"")
-    } else {
-        field.to_string()
-    }
-}
-
+/// Render the keyed rows to a string matrix using this page's `format_cell`,
+/// then delegate CSV assembly to the shared exporter.
 fn build_csv(columns: &[String], rows: &[&serde_json::Value]) -> String {
-    let mut out = String::new();
+    let string_rows: Vec<Vec<String>> = rows
+        .iter()
+        .map(|row| {
+            columns
+                .iter()
+                .map(|col| {
+                    let val = row.get(col.as_str()).unwrap_or(&serde_json::Value::Null);
+                    format_cell(val)
+                })
+                .collect()
+        })
+        .collect();
 
-    // Header row
-    let header: Vec<String> = columns.iter().map(|c| escape_csv_field(c)).collect();
-    out.push_str(&header.join(","));
-    out.push('\n');
-
-    // Data rows
-    for row in rows {
-        let fields: Vec<String> = columns
-            .iter()
-            .map(|col| {
-                let val = row.get(col.as_str()).unwrap_or(&serde_json::Value::Null);
-                escape_csv_field(&format_cell(val))
-            })
-            .collect();
-        out.push_str(&fields.join(","));
-        out.push('\n');
-    }
-
-    out
-}
-
-async fn export_csv(file_name: &str, content: &str) {
-    let file_handle = rfd::AsyncFileDialog::new()
-        .set_file_name(file_name)
-        .add_filter("CSV", &["csv"])
-        .save_file()
-        .await;
-
-    if let Some(handle) = file_handle {
-        if let Err(e) = handle.write(content.as_bytes()).await {
-            log::error!("Failed to write CSV: {e}");
-        } else {
-            log::info!("Exported CSV to {:?}", handle.file_name());
-        }
-    }
+    crate::export::build_csv(columns, &string_rows)
 }

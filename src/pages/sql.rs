@@ -241,6 +241,42 @@ pub fn Sql(db_identity: String) -> Element {
                                 .collect();
                             let columns = res.columns.clone();
                             rsx! {
+                                div { class: "flex items-center justify-between",
+                                    span { class: "text-xs text-gray-600", "{total} row(s)" }
+                                    div { class: "flex items-center gap-2",
+                                        button {
+                                            class: "flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-gray-400 hover:text-gray-200 bg-gray-800 hover:bg-gray-700 border border-gray-700/50 rounded-md transition-colors",
+                                            onclick: move |_| {
+                                                if let Some(res) = result.peek().as_ref() {
+                                                    let string_rows: Vec<Vec<String>> = res
+                                                        .rows
+                                                        .iter()
+                                                        .map(|row| row.iter().map(format_cell).collect())
+                                                        .collect();
+                                                    let csv = crate::export::build_csv(&res.columns, &string_rows);
+                                                    spawn(async move {
+                                                        crate::export::save_text_file("query-result.csv", "CSV", &["csv"], &csv).await;
+                                                    });
+                                                }
+                                            },
+                                            Icon { name: IconName::Download, class: "w-3.5 h-3.5" }
+                                            "CSV"
+                                        }
+                                        button {
+                                            class: "flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-gray-400 hover:text-gray-200 bg-gray-800 hover:bg-gray-700 border border-gray-700/50 rounded-md transition-colors",
+                                            onclick: move |_| {
+                                                if let Some(res) = result.peek().as_ref() {
+                                                    let json = crate::export::build_json(&res.columns, &res.rows);
+                                                    spawn(async move {
+                                                        crate::export::save_text_file("query-result.json", "JSON", &["json"], &json).await;
+                                                    });
+                                                }
+                                            },
+                                            Icon { name: IconName::FileText, class: "w-3.5 h-3.5" }
+                                            "JSON"
+                                        }
+                                    }
+                                }
                                 DataTable {
                                     columns: columns.iter().map(|c| (c.clone(), String::new())).collect::<Vec<_>>(),
                                     total_rows: Some(total),
