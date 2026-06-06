@@ -1,11 +1,13 @@
 use dioxus::prelude::*;
 use crate::state::AppState;
 use crate::components::{ErrorMessage, PageLayout};
+use crate::polar;
+use crate::storage::Storage;
 use crate::Route;
 
 #[component]
 pub fn Info(db_identity: String) -> Element {
-    let app_state = use_context::<Signal<AppState>>();
+    let mut app_state = use_context::<Signal<AppState>>();
     let mut loading = use_signal(|| true);
     let mut error_msg = use_signal(|| Option::<String>::None);
     let mut db_name = use_signal(String::new);
@@ -71,6 +73,10 @@ pub fn Info(db_identity: String) -> Element {
     let server_url = app_state.read().server_url.clone();
     let identity = app_state.read().identity.clone();
 
+    let storage = use_context::<Storage>();
+    let mut license_key = use_signal(|| storage.get_license_key());
+    let mut deactivating = use_signal(|| false);
+
     let display_name = {
         let name = db_name.read();
         if name.is_empty() {
@@ -119,6 +125,35 @@ pub fn Info(db_identity: String) -> Element {
                                 InfoRow {
                                     label: "Connected Clients",
                                     value: format!("{clients}"),
+                                }
+                            }
+                            div { class: "px-5 py-3 flex items-center justify-between gap-4",
+                                span { class: "text-sm text-gray-500", "License" }
+                                div { class: "flex items-center gap-3 max-w-[70%]",
+                                    span { class: "text-sm text-gray-300 font-mono truncate",
+                                        {license_key.read().clone().unwrap_or_else(|| "Unlicensed".to_string())}
+                                    }
+                                    if license_key.read().is_some() {
+                                        button {
+                                            class: "px-2.5 py-1 text-xs text-gray-400 hover:text-red-500 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-md transition-colors disabled:opacity-50 shrink-0",
+                                            disabled: *deactivating.read(),
+                                            onclick: move |_| {
+                                                let storage = storage.clone();
+                                                spawn(async move {
+                                                    deactivating.set(true);
+                                                    if let Some(key) = storage.get_license_key() {
+                                                        polar::disable_license(&key).await;
+                                                    }
+                                                    storage.clear_license_key();
+                                                    // Read-write was backed by this license — drop it.
+                                                    app_state.write().readonly = true;
+                                                    license_key.set(None);
+                                                    deactivating.set(false);
+                                                });
+                                            },
+                                            if *deactivating.read() { "Deactivating..." } else { "Deactivate" }
+                                        }
+                                    }
                                 }
                             }
                         }

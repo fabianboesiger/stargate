@@ -3,12 +3,6 @@ name = "stargate"
 version = "0.1.0"
 edition = "2024"
 
-[features]
-default = []
-# When enabled, builds a limited "trial" version where write operations
-# (read-write mode) are disabled.
-trial = []
-
 [dependencies]
 dioxus = { version = "=0.7.3", features = ["desktop", "router"] }
 dioxus-free-icons = { version = "0.10", features = ["lucide"] }
@@ -29,6 +23,8 @@ rfd = "0.15"
 chrono = "0.4"
 open = "5"
 blake3 = "1"
+machine-uid = "0.5"
+whoami = "1"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 objc2 = "0.6"

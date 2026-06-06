@@ -98,7 +98,7 @@ jobs:
           prerelease: false
 
   build-and-upload:
-    name: Build ${{ matrix.target }}${{ matrix.trial && ' (trial)' || '' }}
+    name: Build ${{ matrix.target }}
     needs: create-release
     runs-on: ${{ matrix.os }}
     strategy:

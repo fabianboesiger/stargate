@@ -5,6 +5,7 @@ mod api;
 mod components;
 mod config;
 mod openapi;
+mod polar;
 mod state;
 mod storage;
 mod theme;
@@ -12,6 +13,7 @@ mod pages;
 mod ws;
 
 use dioxus::prelude::*;
+use components::LicenseGate;
 use pages::{Login, DatabaseTables, DatabaseLogs, TableData, Sql, Reducers, Info, ScheduledTasks, LiveView, Schema};
 use state::AppState;
 use storage::Storage;
@@ -95,6 +97,9 @@ fn App() -> Element {
 
     rsx! {
         document::Stylesheet { href: STYLE }
-        div { class: "{theme.read().root_class()} contents", Router::<Route> {} }
+        div { class: "{theme.read().root_class()} contents",
+            Router::<Route> {}
+            LicenseGate {}
+        }
     }
 }

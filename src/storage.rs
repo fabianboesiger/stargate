@@ -271,6 +271,14 @@ impl Storage {
         });
     }
 
+    /// Delete a setting value by key (no-op if absent).
+    pub fn delete_setting(&self, key: &str) {
+        self.with_conn((), |conn| {
+            conn.execute("DELETE FROM settings WHERE key = ?1", [key])?;
+            Ok(())
+        });
+    }
+
     /// The persisted UI theme, defaulting to [`Theme::default`].
     pub fn get_theme(&self) -> Theme {
         self.get_setting("theme")
@@ -281,5 +289,23 @@ impl Storage {
     /// Persist the selected UI theme.
     pub fn set_theme(&self, theme: Theme) {
         self.set_setting("theme", theme.as_str());
+    }
+
+    // ----- Premium license ----------------------------------------------
+
+    /// The locally stored Polar license key, if the user has activated premium.
+    pub fn get_license_key(&self) -> Option<String> {
+        self.get_setting("polar_license_key")
+            .filter(|k| !k.is_empty())
+    }
+
+    /// Persist the user's Polar license key.
+    pub fn set_license_key(&self, license_key: &str) {
+        self.set_setting("polar_license_key", license_key);
+    }
+
+    /// Forget the locally stored license key (e.g. after deactivating).
+    pub fn clear_license_key(&self) {
+        self.delete_setting("polar_license_key");
     }
 }
