@@ -120,7 +120,7 @@ pub fn Sidebar(
             div { class: "px-3 py-4 border-t border-gray-800 space-y-1",
                 ThemeToggle {}
                 button {
-                    class: if readonly { "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-amber-600 bg-amber-500/10 hover:bg-amber-500/20 transition-colors" } else { "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 transition-colors" },
+                    class: if readonly { "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 transition-colors" } else { "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-amber-600 bg-amber-500/10 hover:bg-amber-500/20 transition-colors" },
                     onclick: move |_| on_toggle_readonly.call(()),
                     Icon {
                         name: if readonly { IconName::Lock } else { IconName::LockOpen },
