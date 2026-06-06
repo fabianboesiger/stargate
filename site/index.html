@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<!--
+  Stargate landing page (static).
+  Before deploying, set your real domain everywhere marked CANONICAL_URL
+  (currently the https://stargate.example/ placeholder).
+  Every download link points at the "downloads/" placeholder (search DOWNLOAD_URL);
+  set it to your real installer or release page. No build step required.
+-->
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── Primary SEO ── -->
+  <title>Stargate · A SpacetimeDB GUI for Maincloud and self-hosted</title>
+  <meta name="description" content="Stargate is a desktop GUI client for SpacetimeDB that works with both Maincloud and self-hosted instances. Browse tables, run SQL, call reducers, stream logs, and watch live data as you build multiplayer games and real-time apps. Free to read on macOS, Windows, and Linux." />
+  <meta name="keywords" content="SpacetimeDB, SpacetimeDB client, SpacetimeDB GUI, SpacetimeDB desktop app, SpacetimeDB Maincloud, self-hosted SpacetimeDB, spacetime CLI alternative, SpacetimeDB admin, SpacetimeDB module, reducers, live view, schema browser, multiplayer game database, real-time database GUI, SQL client, Stargate" />
+  <meta name="author" content="Fabian Bösiger" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+
+  <!-- Resolve theme before first paint (avoids a flash and a wasted screenshot download). -->
+  <script>
+    (function () {
+      var t;
+      try { t = localStorage.getItem('stargate-theme'); } catch (e) {}
+      if (!t) t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <!-- CANONICAL_URL -->
+  <link rel="canonical" href="https://stargate.example/" />
+
+  <!-- ── Open Graph ── -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Stargate" />
+  <meta property="og:title" content="Stargate · A SpacetimeDB GUI for Maincloud and self-hosted" />
+  <meta property="og:description" content="Browse tables, run SQL, call reducers, stream logs, and watch live data. A desktop SpacetimeDB client for Maincloud and self-hosted instances, on macOS, Windows, and Linux." />
+  <meta property="og:url" content="https://stargate.example/" />
+  <meta property="og:image" content="https://stargate.example/og-image.svg" />
+  <meta property="og:image:alt" content="Stargate, a desktop GUI for SpacetimeDB" />
+
+  <!-- ── Twitter ── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Stargate · A SpacetimeDB GUI for Maincloud and self-hosted" />
+  <meta name="twitter:description" content="A desktop SpacetimeDB client for Maincloud and self-hosted databases. Tables, schema, reducers, logs, SQL, and live view in one window." />
+  <meta name="twitter:image" content="https://stargate.example/og-image.svg" />
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- For AI assistants & crawlers: a plain-language description of this tool. -->
+  <link rel="alternate" type="text/plain" title="llms.txt" href="llms.txt" />
+
+  <!-- ── Structured data (Schema.org) ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Stargate",
+        "applicationCategory": "DeveloperApplication",
+        "applicationSubCategory": "Database Management Tool",
+        "operatingSystem": "macOS, Windows, Linux",
+        "description": "Stargate is a desktop GUI client for SpacetimeDB that works with both Maincloud and self-hosted instances. It lets developers browse tables, inspect the schema, call reducers, stream logs, run SQL queries, watch live data, and manage scheduled tasks while building multiplayer games and real-time applications.",
+        "url": "https://stargate.example/",
+        "downloadUrl": "https://stargate.example/downloads/",
+        "keywords": "SpacetimeDB, SpacetimeDB GUI, SpacetimeDB client, SpacetimeDB Maincloud, self-hosted SpacetimeDB, spacetime CLI, reducers, live view, multiplayer game database, real-time database",
+        "audience": { "@type": "Audience", "audienceType": "Developers building multiplayer games and real-time applications on SpacetimeDB" },
+        "isAccessibleForFree": true,
+        "author": { "@type": "Person", "name": "Fabian Bösiger" },
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Read-only",
+            "price": "0",
+            "priceCurrency": "CHF",
+            "description": "Free read-only access to every feature: browse, inspect and query your database."
+          },
+          {
+            "@type": "Offer",
+            "name": "Read-write license",
+            "priceCurrency": "CHF",
+            "category": "license",
+            "description": "Per-device license that unlocks write operations: invoke mutating reducers and run write SQL."
+          }
+        ],
+        "featureList": [
+          "Browse and filter tables",
+          "Inspect the full schema (tables, reducers, indexes, constraints)",
+          "Invoke reducers with typed arguments",
+          "Stream and follow logs in real time",
+          "Run SQL queries with CSV / JSON export",
+          "Live view of subscribed data over WebSocket",
+          "Manage scheduled tasks",
+          "Generate an OpenAPI document for the connected database",
+          "Save and reconnect to multiple servers and databases",
+          "Connect to Maincloud or self-hosted SpacetimeDB instances",
+          "Light and dark themes"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Stargate?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Stargate is a desktop client for SpacetimeDB. You can browse tables, inspect the schema, call reducers, stream logs, run SQL, watch live data, and manage scheduled tasks." }
+          },
+          {
+            "@type": "Question",
+            "name": "Which operating systems does Stargate support?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Stargate runs on macOS, Windows, and Linux as a native app. There is no separate runtime to install." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Stargate free?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Reading is free. A per-device license unlocks read-write mode for mutating reducers and write SQL. You can connect, browse, and query without paying." }
+          },
+          {
+            "@type": "Question",
+            "name": "How does Stargate connect to my database?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Stargate talks to SpacetimeDB's HTTP and WebSocket API. Sign in with your CLI credentials or a token, pick a server and database, and connect. There is nothing extra to deploy." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Stargate work with SpacetimeDB Maincloud and self-hosted instances?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Stargate connects to any SpacetimeDB host. Point it at a database on Maincloud, at a server you self-host, or at a local instance on localhost while you develop. You just enter the server URL and sign in." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Stargate a GUI alternative to the spacetime CLI?",
+            "acceptedAnswer": { "@type": "Answer", "text": "For everyday inspection it can be. Stargate covers what you would otherwise run through commands like spacetime sql, call, describe, and logs, in a visual window. You still use the spacetime CLI to publish modules." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my data safe?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Stargate talks straight to your SpacetimeDB host. Credentials and saved logins stay on your machine, and connections default to read-only, so a write only happens when you choose it." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I view SpacetimeDB tables without using the command line?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Download Stargate, connect to your database, and open the Tables view. You get a visual table browser for any SpacetimeDB database, so you can page through rows, filter them, and read the schema without typing a single spacetime command." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I connect a desktop GUI to a self-hosted SpacetimeDB server?",
+            "acceptedAnswer": { "@type": "Answer", "text": "In Stargate, enter the URL of your self-hosted SpacetimeDB server, sign in with your CLI credentials or a token, and choose a database. The same flow works for a server on localhost during development and for a production server you host yourself." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is there a graphical client for SpacetimeDB Maincloud?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Stargate is a desktop graphical client that connects to databases on SpacetimeDB Maincloud, the managed cloud. Sign in with your existing Maincloud login, pick a database, and browse it, run SQL, and watch live data from one window." }
+          },
+          {
+            "@type": "Question",
+            "name": "How can I run SQL queries against a SpacetimeDB database from a desktop app?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Open the SQL console in Stargate, type your query, and run it against the connected database. Results appear in a table you can read, scroll, and export to CSV or JSON. Read queries work for free; write SQL needs a read-write license." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I call a SpacetimeDB reducer manually to test it?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Use the reducer console. Pick the reducer by name, fill in its typed arguments, and call it to reproduce a bug or seed test data, without writing a throwaway client. Reducers that mutate state require read-write mode." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I monitor SpacetimeDB module logs in real time?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Open the Logs view and turn on follow mode. Stargate streams new log lines as they arrive, with levels highlighted, so you can watch reducer output, panics, and timeouts live while you develop your module." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I export data from a SpacetimeDB table to CSV or JSON?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Browse the table or run a SQL query, then use the export action to save the rows as a CSV or JSON file through the native save dialog. It is handy for sharing data, attaching it to a bug report, or analysing it elsewhere." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="Stargate home">
+        <span class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="M10.4 21.9a10 10 0 0 0 9.941-15.416"/><path d="M13.5 2.1a10 10 0 0 0-9.841 15.416"/></svg>
+        </span>
+        <span>Stargate</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a class="hide-sm" href="#features">Features</a>
+        <a class="hide-sm" href="#use-cases">Use cases</a>
+        <a class="hide-sm" href="#pricing">Pricing</a>
+        <a class="hide-sm" href="#faq">FAQ</a>
+        <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode" title="Toggle theme">
+          <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ── HERO ── -->
+    <section class="hero">
+      <div class="wrap">
+        <span class="eyebrow">A Desktop client for SpacetimeDB</span>
+        <h1>A desktop GUI for SpacetimeDB.</h1>
+        <p class="lede">
+          Stargate is a desktop client for the databases behind your multiplayer games and
+          real-time apps. Browse tables, run SQL, call reducers, stream logs, and watch live
+          data, on Maincloud or a server you host yourself.
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary" href="downloads/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            Download Stargate
+          </a>
+          <a class="btn btn-ghost" href="#features">Explore features</a>
+        </div>
+        <p class="meta-line">
+          <span class="mono">macOS · Windows · Linux</span>
+        </p>
+
+        <!-- App screenshot; only the active theme's image is loaded (see inline script). -->
+        <div class="shot">
+          <div class="titlebar" aria-hidden="true"><i></i><i></i><i></i></div>
+          <img id="shot-img" class="shot-img" width="2784" height="1888" alt="Stargate showing a SpacetimeDB database" decoding="async" />
+          <script>
+            (function () {
+              var s = document.getElementById('shot-img');
+              var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+              s.src = dark ? 'images/screenshot-dark.png' : 'images/screenshot-light.png';
+            })();
+          </script>
+          <noscript><img class="shot-img" src="images/screenshot-light.png" alt="Stargate showing a SpacetimeDB database" /></noscript>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FEATURES ── -->
+    <section id="features">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Features</span>
+          <h2>Tools for working with a SpacetimeDB database.</h2>
+          <p>Inspect, query, and watch your database from one window.</p>
+        </div>
+        <div class="features">
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div>
+            <h3>Table browser</h3>
+            <p>Page through tables, filter rows, and export to CSV or JSON.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg></div>
+            <h3>Schema inspector</h3>
+            <p>See the full schema: tables, reducers, indexes, and constraints, kept in sync with the database.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg></div>
+            <h3>Reducer console</h3>
+            <p>Call any reducer by name with typed arguments. Write calls need read-write mode.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
+            <h3>Live logs</h3>
+            <p>Tail recent log lines or follow them live, with levels highlighted as they arrive.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div>
+            <h3>SQL console</h3>
+            <p>Run SQL against the database, view the results in a table, and export them.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-4 6-7 10-7s8 3 10 7c-2 4-6 7-10 7s-8-3-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <h3>Live view</h3>
+            <p>Subscribe over WebSocket and watch rows update live. Useful for debugging multiplayer state.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <h3>Scheduled tasks</h3>
+            <p>See which reducers are scheduled to run, and when.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="M10.4 21.9a10 10 0 0 0 9.941-15.416"/><path d="M13.5 2.1a10 10 0 0 0-9.841 15.416"/></svg></div>
+            <h3>OpenAPI export</h3>
+            <p>Generate an OpenAPI 3.1 document for the connected database, covering every table and reducer.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36A5.4 5.4 0 0 1 12 3z"/></svg></div>
+            <h3>Light &amp; dark themes</h3>
+            <p>Light and dark themes, both clean and easy to read during long sessions.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <h3>Read-only safety</h3>
+            <p>Connect read-only by default. Switch to read-write only when you mean to, so you don't change production by accident.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></div>
+            <h3>Maincloud or self-hosted</h3>
+            <p>Connect to any SpacetimeDB host. Point Stargate at Maincloud, the managed cloud, at a server you self-host, or at a local instance on localhost.</p>
+          </article>
+          <article class="feature">
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7.5L16.5 3z"/><path d="M17 21v-7H7v7M7 3v5h7"/></svg></div>
+            <h3>Saved connections</h3>
+            <p>Save your servers and databases, then reconnect in a click. Sign in with your CLI login or a token, and switch between projects without retyping anything.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── USE CASES ── -->
+    <section id="use-cases">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Use cases</span>
+          <h2>Built for SpacetimeDB developers.</h2>
+          <p>Whether you are shipping a multiplayer game or a real-time app, Stargate gives you a window into what your module is doing.</p>
+        </div>
+        <div class="features">
+          <article class="feature">
+            <span class="eyebrow">01</span>
+            <h3>Debug multiplayer state</h3>
+            <p>Watch tables and the live view update as players connect, move, and interact, so you can see exactly what your reducers write.</p>
+          </article>
+          <article class="feature">
+            <span class="eyebrow">02</span>
+            <h3>Inspect without the CLI</h3>
+            <p>Skip memorising <code>spacetime</code> commands. Browse tables, read the schema, and run SQL from one window instead of the terminal.</p>
+          </article>
+          <article class="feature">
+            <span class="eyebrow">03</span>
+            <h3>Test reducers by hand</h3>
+            <p>Call any reducer with typed arguments to reproduce a bug or seed data, without writing a throwaway client.</p>
+          </article>
+          <article class="feature">
+            <span class="eyebrow">04</span>
+            <h3>Read and follow logs</h3>
+            <p>Tail module logs to track panics, reducer timeouts, and output while you develop, with levels highlighted as they arrive.</p>
+          </article>
+          <article class="feature">
+            <span class="eyebrow">05</span>
+            <h3>Run ad-hoc SQL</h3>
+            <p>Query any table, check row counts, and export the results to CSV or JSON for analysis or a bug report.</p>
+          </article>
+          <article class="feature">
+            <span class="eyebrow">06</span>
+            <h3>Audit production safely</h3>
+            <p>Connect read-only to a live database to look at real data, with no way to change it by accident.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PRICING ── -->
+    <section id="pricing">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Pricing</span>
+          <h2>Read for free. License to write.</h2>
+          <p>Read, query, and watch any database for free. A per-device license unlocks writes.</p>
+        </div>
+        <div class="tiers">
+          <div class="tier">
+            <span class="eyebrow">Read-only</span>
+            <h3>Free</h3>
+            <p class="price">No account needed</p>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Browse tables, schema, and logs</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Run read SQL and export results</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Live view and scheduled tasks</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> OpenAPI export</li>
+            </ul>
+            <a class="btn btn-ghost" href="downloads/">Download free</a>
+          </div>
+          <div class="tier feat">
+            <span class="eyebrow">Read-write</span>
+            <h3>License</h3>
+            <p class="price">Per device, priced in CHF</p>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Everything in read-only</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Call mutating reducers</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Run write SQL</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Move the license between devices</li>
+            </ul>
+            <a class="btn btn-primary" href="downloads/">Get a license</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FAQ ── -->
+    <section id="faq">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">FAQ</span>
+          <h2>Common questions.</h2>
+        </div>
+        <div class="faq">
+          <details open>
+            <summary>What is Stargate? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Stargate is a desktop client for SpacetimeDB. You can browse tables, inspect the schema, call reducers, stream logs, run SQL, watch live data, and manage scheduled tasks.</p>
+          </details>
+          <details>
+            <summary>Which operating systems are supported? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Stargate runs on macOS, Windows, and Linux as a native app. There is no separate runtime to install.</p>
+          </details>
+          <details>
+            <summary>Is Stargate free? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Reading is free. A per-device license unlocks read-write mode for mutating reducers and write SQL. You can connect, browse, and query without paying.</p>
+          </details>
+          <details>
+            <summary>How does it connect to my database? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Stargate talks to SpacetimeDB's HTTP and WebSocket API. Sign in with your CLI credentials or a token, pick a server and database, and connect. There is nothing extra to deploy.</p>
+          </details>
+          <details>
+            <summary>Does it work with Maincloud and self-hosted instances? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Yes. Stargate connects to any SpacetimeDB host. Point it at a database on Maincloud, at a server you self-host, or at a local instance on localhost while you develop. You just enter the server URL and sign in.</p>
+          </details>
+          <details>
+            <summary>Is it a GUI alternative to the spacetime CLI? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>For everyday inspection it can be. Stargate covers what you would otherwise run through commands like <code>spacetime sql</code>, <code>call</code>, <code>describe</code>, and <code>logs</code>, in a visual window. You still use the CLI to publish modules.</p>
+          </details>
+          <details>
+            <summary>Is my data safe? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Stargate talks straight to your SpacetimeDB host. Credentials and saved logins stay on your machine, and connections default to read-only, so a write only happens when you choose it.</p>
+          </details>
+          <details>
+            <summary>How do I view SpacetimeDB tables without using the command line? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Download Stargate, connect to your database, and open the Tables view. You get a visual table browser for any SpacetimeDB database, so you can page through rows, filter them, and read the schema without typing a single <code>spacetime</code> command.</p>
+          </details>
+          <details>
+            <summary>How do I connect a desktop GUI to a self-hosted SpacetimeDB server? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>In Stargate, enter the URL of your self-hosted SpacetimeDB server, sign in with your CLI credentials or a token, and choose a database. The same flow works for a server on localhost during development and for a production server you host yourself.</p>
+          </details>
+          <details>
+            <summary>Is there a graphical client for SpacetimeDB Maincloud? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Yes. Stargate is a desktop graphical client that connects to databases on SpacetimeDB Maincloud, the managed cloud. Sign in with your existing Maincloud login, pick a database, and browse it, run SQL, and watch live data from one window.</p>
+          </details>
+          <details>
+            <summary>How can I run SQL queries against a SpacetimeDB database from a desktop app? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Open the SQL console in Stargate, type your query, and run it against the connected database. Results appear in a table you can read, scroll, and export to CSV or JSON. Read queries work for free; write SQL needs a read-write license.</p>
+          </details>
+          <details>
+            <summary>How do I call a SpacetimeDB reducer manually to test it? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Use the reducer console. Pick the reducer by name, fill in its typed arguments, and call it to reproduce a bug or seed test data, without writing a throwaway client. Reducers that mutate state require read-write mode.</p>
+          </details>
+          <details>
+            <summary>How do I monitor SpacetimeDB module logs in real time? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Open the Logs view and turn on follow mode. Stargate streams new log lines as they arrive, with levels highlighted, so you can watch reducer output, panics, and timeouts live while you develop your module.</p>
+          </details>
+          <details>
+            <summary>How do I export data from a SpacetimeDB table to CSV or JSON? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Browse the table or run a SQL query, then use the export action to save the rows as a CSV or JSON file through the native save dialog. It is handy for sharing data, attaching it to a bug report, or analysing it elsewhere.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <a class="brand" href="#top">
+        <span class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="M10.4 21.9a10 10 0 0 0 9.941-15.416"/><path d="M13.5 2.1a10 10 0 0 0-9.841 15.416"/></svg>
+        </span>
+        <span>Stargate</span>
+      </a>
+      <nav class="links" aria-label="Footer">
+        <a href="downloads/">Download</a>
+        <a href="#features">Features</a>
+        <a href="#use-cases">Use cases</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://spacetimedb.com" rel="noopener">SpacetimeDB</a>
+      </nav>
+      <p class="legal">© <span id="year">2026</span> Stargate · Built by Fabian Bösiger. Not affiliated with SpacetimeDB / Clockwork Labs.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle. Initial theme + screenshot are resolved by the inline scripts above.
+    (function () {
+      var root = document.documentElement;
+      var shot = document.getElementById('shot-img');
+
+      var btn = document.getElementById('theme-toggle');
+      if (btn) btn.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        if (shot) shot.src = next === 'dark' ? 'images/screenshot-dark.png' : 'images/screenshot-light.png';
+        try { localStorage.setItem('stargate-theme', next); } catch (e) {}
+      });
+
+      var y = document.getElementById('year');
+      if (y) y.textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>

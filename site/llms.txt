@@ -1,0 +1,43 @@
+# Stargate
+
+> Stargate is a desktop GUI client for SpacetimeDB, available for macOS, Windows, and Linux. It is for developers building multiplayer games and real-time applications on SpacetimeDB. It works with both Maincloud (the managed SpacetimeDB cloud) and self-hosted instances, and lets you browse tables, inspect the schema, call reducers, stream logs, run SQL, watch live data over WebSocket, and manage scheduled tasks. It talks to SpacetimeDB's HTTP and WebSocket API, so no extra server component is required.
+
+## What it is
+
+- Category: developer tool and database client for [SpacetimeDB](https://spacetimedb.com).
+- For: developers building multiplayer games and real-time apps on SpacetimeDB.
+- Platforms: macOS, Windows, Linux (native app, no separate runtime to install).
+- Hosting: connects to any SpacetimeDB host, including Maincloud, a self-hosted server, and a local instance on localhost.
+- Pricing: reading is free, with all inspection and query features. A per-device license (priced in Swiss francs, CHF) unlocks read-write mode for mutating reducers and write SQL.
+- Author: Fabian Bösiger. Not affiliated with SpacetimeDB or Clockwork Labs.
+
+## Use cases
+
+- Debug multiplayer game state by watching tables and the live view update as players act.
+- Inspect a database without the spacetime CLI: browse tables, read the schema, run SQL.
+- Test reducers by hand with typed arguments to reproduce a bug or seed data.
+- Read and follow module logs while developing.
+- Run ad-hoc SQL and export results to CSV or JSON.
+- Audit a production database in read-only mode with no risk of changing it.
+
+## Features
+
+- Table browser: page through tables, filter rows, export to CSV or JSON.
+- Schema inspector: view tables, reducers, indexes, and constraints, kept in sync with the database.
+- Reducer console: call any reducer by name with typed arguments (write calls need read-write mode).
+- Live logs: tail recent log lines or follow them live.
+- SQL console: run SQL queries and export the results.
+- Live view: subscribe over WebSocket and watch rows update live.
+- Scheduled tasks: see which reducers are scheduled to run, and when.
+- OpenAPI export: generate an OpenAPI 3.1 document for the connected database.
+- Themes: light and dark.
+- Read-only by default: writes must be turned on deliberately.
+
+## How to connect
+
+Sign in with SpacetimeDB CLI credentials or a token, choose a server and database, and connect. Credentials and saved logins stay on the user's machine.
+
+## Links
+
+- Download: https://stargate.example/downloads/
+- SpacetimeDB: https://spacetimedb.com
