@@ -368,32 +368,32 @@
         </div>
         <div class="features">
           <article class="feature">
-            <span class="eyebrow">01</span>
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
             <h3>Debug multiplayer state</h3>
             <p>Watch tables and the live view update as players connect, move, and interact, so you can see exactly what your reducers write.</p>
           </article>
           <article class="feature">
-            <span class="eyebrow">02</span>
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
             <h3>Inspect without the CLI</h3>
             <p>Skip memorising <code>spacetime</code> commands. Browse tables, read the schema, and run SQL from one window instead of the terminal.</p>
           </article>
           <article class="feature">
-            <span class="eyebrow">03</span>
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6.5L5.2 18a2 2 0 0 0 1.8 3h10a2 2 0 0 0 1.8-3L14 9.5V3"/><path d="M7.5 15h9"/></svg></div>
             <h3>Test reducers by hand</h3>
             <p>Call any reducer with typed arguments to reproduce a bug or seed data, without writing a throwaway client.</p>
           </article>
           <article class="feature">
-            <span class="eyebrow">04</span>
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
             <h3>Read and follow logs</h3>
             <p>Tail module logs to track panics, reducer timeouts, and output while you develop, with levels highlighted as they arrive.</p>
           </article>
           <article class="feature">
-            <span class="eyebrow">05</span>
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div>
             <h3>Run ad-hoc SQL</h3>
             <p>Query any table, check row counts, and export the results to CSV or JSON for analysis or a bug report.</p>
           </article>
           <article class="feature">
-            <span class="eyebrow">06</span>
+            <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
             <h3>Audit production safely</h3>
             <p>Connect read-only to a live database to look at real data, with no way to change it by accident.</p>
           </article>
@@ -515,7 +515,7 @@
             <p>Yes. The table browser lets you page through rows and filter them without typing a query, so you don't need to write SQL to inspect your data. When you do want SQL, the SQL console is there for ad-hoc queries.</p>
           </details>
           <details>
-            <summary>How do I connect to a SpacetimeDB instance in Docker or started with <code>spacetime start</code>? <span class="pm" aria-hidden="true">+</span></summary>
+            <summary>How do I connect to a SpacetimeDB instance? <span class="pm" aria-hidden="true">+</span></summary>
             <p>Point Stargate at the instance's URL. For a local server started with <code>spacetime start</code> or a Docker container, that's usually <code>http://localhost:3000</code>. Sign in with your CLI credentials or a token, choose the database, and connect. The same flow works for a remote self-hosted server.</p>
           </details>
           <details>
