@@ -45,22 +45,19 @@ jobs:
           fi
           echo "Commit ${COMMIT_SHA} has passed tests."
 
-      - name: Compare Cargo.toml version to latest release
+      - name: Check whether a release already exists for this version
         id: check
         run: |
           VERSION=$(grep '^version' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Cargo.toml version: $VERSION"
 
-          LATEST_TAG=$(git tag --list 'v*' --sort=-v:refname | head -1 || true)
-          echo "Latest release tag: $LATEST_TAG"
-
-          if [ "v$VERSION" != "$LATEST_TAG" ]; then
-            echo "Version changed — will release v$VERSION"
-            echo "should_release=true" >> $GITHUB_OUTPUT
-          else
-            echo "Version unchanged — skipping release"
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "Release v$VERSION already exists — skipping release"
             echo "should_release=false" >> $GITHUB_OUTPUT
+          else
+            echo "No release for v$VERSION — will create one"
+            echo "should_release=true" >> $GITHUB_OUTPUT
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
