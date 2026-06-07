@@ -143,6 +143,10 @@ h1, h2, h3 { color: var(--text-strong); letter-spacing: -0.02em; font-weight: 60
 .hero .cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
 .hero .meta-line { margin-top: 20px; font-size: 13px; color: var(--text-muted); display: flex; gap: 18px; flex-wrap: wrap; }
 .hero .meta-line span { display: inline-flex; align-items: center; gap: 7px; }
+.dl-alts { gap: 10px; }
+.dl-alt { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid transparent; transition: color .15s, border-color .15s; }
+.dl-alt:hover { color: var(--text); border-bottom-color: currentColor; }
+.dl-alt[aria-current="true"] { color: var(--text); font-weight: 500; }
 .dot { width: 6px; height: 6px; border-radius: 9999px; background: var(--graphite-900); display: inline-block; }
 
 /* ---------- app mockup ---------- */

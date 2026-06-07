@@ -73,7 +73,7 @@
         "operatingSystem": "macOS, Windows, Linux",
         "description": "Stargate is a desktop GUI client for SpacetimeDB that works with both Maincloud and self-hosted instances. It lets developers browse tables, inspect the schema, call reducers, stream logs, run SQL queries, watch live data, and manage scheduled tasks while building multiplayer games and real-time applications.",
         "url": "https://stargate.example/",
-        "downloadUrl": "https://stargate.example/downloads/",
+        "downloadUrl": "https://github.com/fabianboesiger/stargate/releases/latest",
         "keywords": "SpacetimeDB, SpacetimeDB GUI, SpacetimeDB client, SpacetimeDB Maincloud, self-hosted SpacetimeDB, spacetime CLI, reducers, live view, multiplayer game database, real-time database",
         "audience": { "@type": "Audience", "audienceType": "Developers building multiplayer games and real-time applications on SpacetimeDB" },
         "isAccessibleForFree": true,
@@ -221,14 +221,20 @@
           data, on Maincloud or a server you host yourself.
         </p>
         <div class="cta">
-          <a class="btn btn-primary" href="downloads/">
+          <a class="btn btn-primary" id="download-primary" data-dl="auto" href="https://github.com/fabianboesiger/stargate/releases/latest">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-            Download Stargate
+            <span class="dl-label">Download Stargate</span>
           </a>
           <a class="btn btn-ghost" href="#features">Explore features</a>
         </div>
         <p class="meta-line">
-          <span class="mono">macOS · Windows · Linux</span>
+          <span class="dl-alts">
+            <a class="dl-alt" data-dl="macos" href="https://github.com/fabianboesiger/stargate/releases/latest/download/stargate-macos-aarch64.tar.gz">macOS</a>
+            <span aria-hidden="true">·</span>
+            <a class="dl-alt" data-dl="windows" href="https://github.com/fabianboesiger/stargate/releases/latest/download/stargate-windows-x86_64.zip">Windows</a>
+            <span aria-hidden="true">·</span>
+            <a class="dl-alt" data-dl="linux" href="https://github.com/fabianboesiger/stargate/releases/latest/download/stargate-linux-x86_64.tar.gz">Linux</a>
+          </span>
         </p>
 
         <!-- App screenshot; only the active theme's image is loaded (see inline script). -->
@@ -382,7 +388,7 @@
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Live view and scheduled tasks</li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> OpenAPI export</li>
             </ul>
-            <a class="btn btn-ghost" href="downloads/">Download free</a>
+            <a class="btn btn-ghost" data-dl="auto" href="https://github.com/fabianboesiger/stargate/releases/latest">Download free</a>
           </div>
           <div class="tier feat">
             <span class="eyebrow">Read-write</span>
@@ -394,7 +400,7 @@
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Run write SQL</li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Move the license between devices</li>
             </ul>
-            <a class="btn btn-primary" href="downloads/">Get a license</a>
+            <a class="btn btn-primary" href="https://buy.polar.sh/polar_cl_OQ4RGE0k5zSAQaUr8Gz6MCz6uewuBKbsFk8rx0AcqLZ" rel="noopener">Get a license</a>
           </div>
         </div>
       </div>
@@ -478,7 +484,7 @@
         <span>Stargate</span>
       </a>
       <nav class="links" aria-label="Footer">
-        <a href="downloads/">Download</a>
+        <a data-dl="auto" href="https://github.com/fabianboesiger/stargate/releases/latest">Download</a>
         <a href="#features">Features</a>
         <a href="#use-cases">Use cases</a>
         <a href="#pricing">Pricing</a>
@@ -505,6 +511,45 @@
 
       var y = document.getElementById('year');
       if (y) y.textContent = new Date().getFullYear();
+    })();
+
+    // Point the download links at the right release asset for the visitor's OS.
+    (function () {
+      var BASE = 'https://github.com/fabianboesiger/stargate/releases/latest/download/';
+      var ASSETS = {
+        macos:   { file: 'stargate-macos-aarch64.tar.gz', label: 'Download for macOS' },
+        windows: { file: 'stargate-windows-x86_64.zip',   label: 'Download for Windows' },
+        linux:   { file: 'stargate-linux-x86_64.tar.gz',  label: 'Download for Linux' }
+      };
+
+      function detectOS() {
+        var p = '';
+        try {
+          p = (navigator.userAgentData && navigator.userAgentData.platform) ||
+              navigator.platform || navigator.userAgent || '';
+        } catch (e) { p = navigator.userAgent || ''; }
+        p = p.toLowerCase();
+        if (p.indexOf('win') !== -1) return 'windows';
+        if (p.indexOf('mac') !== -1 || p.indexOf('iphone') !== -1 || p.indexOf('ipad') !== -1) return 'macos';
+        if (p.indexOf('linux') !== -1 || p.indexOf('android') !== -1 || p.indexOf('x11') !== -1) return 'linux';
+        return null; // unknown — keep the releases-page fallback
+      }
+
+      var os = detectOS();
+      if (!os) return;
+      var asset = ASSETS[os];
+
+      // Rewrite every auto download link to the detected platform's asset.
+      var autos = document.querySelectorAll('a[data-dl="auto"]');
+      for (var i = 0; i < autos.length; i++) {
+        autos[i].setAttribute('href', BASE + asset.file);
+        var label = autos[i].querySelector('.dl-label');
+        if (label) label.textContent = asset.label;
+      }
+
+      // Mark the matching alternate link as the current platform.
+      var alt = document.querySelector('a[data-dl="' + os + '"]');
+      if (alt) alt.setAttribute('aria-current', 'true');
     })();
   </script>
 </body>
