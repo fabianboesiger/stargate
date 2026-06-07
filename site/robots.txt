@@ -20,5 +20,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-# CANONICAL_URL — update host on deploy
-Sitemap: https://stargate.example/sitemap.xml
+Sitemap: https://stargate-client.com/sitemap.xml

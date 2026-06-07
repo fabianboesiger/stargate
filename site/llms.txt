@@ -7,7 +7,8 @@
 - Category: developer tool and database client for [SpacetimeDB](https://spacetimedb.com).
 - For: developers building multiplayer games and real-time apps on SpacetimeDB.
 - Platforms: macOS, Windows, Linux (native app, no separate runtime to install).
-- Hosting: connects to any SpacetimeDB host, including Maincloud, a self-hosted server, and a local instance on localhost.
+- Hosting: connects to any SpacetimeDB host, including Maincloud, a self-hosted server (spacetime start or Docker), and a local instance on localhost.
+- Language-agnostic: talks to SpacetimeDB over its HTTP and WebSocket API, so it works regardless of whether the module is written in Rust, C#, TypeScript, or C++, and alongside any client (Unity, Unreal, web, or custom).
 - Pricing: reading is free, with all inspection and query features. A per-device license (priced in Swiss francs, CHF) unlocks read-write mode for mutating reducers and write SQL.
 - Author: Fabian Bösiger. Not affiliated with SpacetimeDB or Clockwork Labs.
 
@@ -39,5 +40,6 @@ Sign in with SpacetimeDB CLI credentials or a token, choose a server and databas
 
 ## Links
 
-- Download: https://stargate.example/downloads/
+- Website: https://stargate-client.com/
+- Download: https://github.com/fabianboesiger/stargate/releases/latest
 - SpacetimeDB: https://spacetimedb.com

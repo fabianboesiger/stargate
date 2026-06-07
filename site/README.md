@@ -16,16 +16,16 @@ Open `index.html` directly or serve the folder with any static host
 | `sitemap.xml` | Single-page sitemap. |
 | `llms.txt` | Plain-language summary for AI assistants ([llmstxt.org](https://llmstxt.org)). |
 
-## Before deploying
+## Deployment
 
-1. Replace every `CANONICAL_URL` placeholder (`https://stargate.example/`)
-   with your real domain in `index.html`, `robots.txt` and `sitemap.xml`.
-2. Optional: convert `og-image.svg` to a 1200×630 **PNG** named `og-image.png`
-   and update the `og:image` / `twitter:image` tags, since some social
-   scrapers don't render SVG previews.
-3. Every download link points to the `downloads/` placeholder (search for
-   `DOWNLOAD_URL` and `href="downloads/"`). Point these at your real installer
-   or release page before going live.
+Deployed via GitHub Pages (`.github/workflows`) to **https://stargate-client.com/**.
+The custom domain is set by the `CNAME` file in this folder; the canonical host is
+also set in `index.html`, `robots.txt` and `sitemap.xml`; download links point at the
+GitHub releases page. If the domain ever changes, update `CNAME` plus those three files
+and `llms.txt`.
+
+Optional: convert `og-image.svg` to a 1200×630 **PNG** named `og-image.png` and update
+the `og:image` / `twitter:image` tags, since some social scrapers don't render SVG previews.
 
 ## SEO / AI optimization included
 

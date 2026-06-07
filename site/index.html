@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <!--
   Stargate landing page (static).
-  Before deploying, set your real domain everywhere marked CANONICAL_URL
-  (currently the https://stargate.example/ placeholder).
-  Every download link points at the "downloads/" placeholder (search DOWNLOAD_URL);
-  set it to your real installer or release page. No build step required.
+  Canonical host: https://stargate-client.com/ (GitHub Pages, custom domain via CNAME).
+  Download links point at the GitHub releases page. No build step required.
 -->
 <html lang="en" data-theme="light">
 <head>
@@ -14,7 +12,7 @@
   <!-- ── Primary SEO ── -->
   <title>Stargate · A SpacetimeDB GUI for Maincloud and self-hosted</title>
   <meta name="description" content="Stargate is a desktop GUI client for SpacetimeDB that works with both Maincloud and self-hosted instances. Browse tables, run SQL, call reducers, stream logs, and watch live data as you build multiplayer games and real-time apps. Free to read on macOS, Windows, and Linux." />
-  <meta name="keywords" content="SpacetimeDB, SpacetimeDB client, SpacetimeDB GUI, SpacetimeDB desktop app, SpacetimeDB Maincloud, self-hosted SpacetimeDB, spacetime CLI alternative, SpacetimeDB admin, SpacetimeDB module, reducers, live view, schema browser, multiplayer game database, real-time database GUI, SQL client, Stargate" />
+  <meta name="keywords" content="SpacetimeDB, SpacetimeDB client, SpacetimeDB GUI, SpacetimeDB desktop app, SpacetimeDB Maincloud, self-hosted SpacetimeDB, SpacetimeDB Docker, spacetime start, spacetime CLI alternative, SpacetimeDB admin, SpacetimeDB web admin panel, SpacetimeDB dashboard, SpacetimeDB module, reducers, live view, schema browser, view SpacetimeDB tables, multiplayer game database, real-time database GUI, SQL client, SpacetimeDB Unity, SpacetimeDB Unreal, SpacetimeDB Rust, SpacetimeDB C#, SpacetimeDB TypeScript, Stargate" />
   <meta name="author" content="Fabian Bösiger" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
   <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
@@ -31,23 +29,22 @@
     })();
   </script>
 
-  <!-- CANONICAL_URL -->
-  <link rel="canonical" href="https://stargate.example/" />
+  <link rel="canonical" href="https://stargate-client.com/" />
 
   <!-- ── Open Graph ── -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Stargate" />
   <meta property="og:title" content="Stargate · A SpacetimeDB GUI for Maincloud and self-hosted" />
   <meta property="og:description" content="Browse tables, run SQL, call reducers, stream logs, and watch live data. A desktop SpacetimeDB client for Maincloud and self-hosted instances, on macOS, Windows, and Linux." />
-  <meta property="og:url" content="https://stargate.example/" />
-  <meta property="og:image" content="https://stargate.example/og-image.svg" />
+  <meta property="og:url" content="https://stargate-client.com/" />
+  <meta property="og:image" content="https://stargate-client.com/og-image.svg" />
   <meta property="og:image:alt" content="Stargate, a desktop GUI for SpacetimeDB" />
 
   <!-- ── Twitter ── -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Stargate · A SpacetimeDB GUI for Maincloud and self-hosted" />
   <meta name="twitter:description" content="A desktop SpacetimeDB client for Maincloud and self-hosted databases. Tables, schema, reducers, logs, SQL, and live view in one window." />
-  <meta name="twitter:image" content="https://stargate.example/og-image.svg" />
+  <meta name="twitter:image" content="https://stargate-client.com/og-image.svg" />
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="favicon.svg" />
@@ -72,7 +69,7 @@
         "applicationSubCategory": "Database Management Tool",
         "operatingSystem": "macOS, Windows, Linux",
         "description": "Stargate is a desktop GUI client for SpacetimeDB that works with both Maincloud and self-hosted instances. It lets developers browse tables, inspect the schema, call reducers, stream logs, run SQL queries, watch live data, and manage scheduled tasks while building multiplayer games and real-time applications.",
-        "url": "https://stargate.example/",
+        "url": "https://stargate-client.com/",
         "downloadUrl": "https://github.com/fabianboesiger/stargate/releases/latest",
         "keywords": "SpacetimeDB, SpacetimeDB GUI, SpacetimeDB client, SpacetimeDB Maincloud, self-hosted SpacetimeDB, spacetime CLI, reducers, live view, multiplayer game database, real-time database",
         "audience": { "@type": "Audience", "audienceType": "Developers building multiplayer games and real-time applications on SpacetimeDB" },
@@ -180,6 +177,41 @@
             "@type": "Question",
             "name": "How do I export data from a SpacetimeDB table to CSV or JSON?",
             "acceptedAnswer": { "@type": "Answer", "text": "Browse the table or run a SQL query, then use the export action to save the rows as a CSV or JSON file through the native save dialog. It is handy for sharing data, attaching it to a bug report, or analysing it elsewhere." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Stargate work with SpacetimeDB modules written in Rust, C#, TypeScript, or C++?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Stargate talks to SpacetimeDB over its HTTP and WebSocket API, so it does not care which language your module is written in. Whether your tables and reducers are defined in Rust, C#, TypeScript, or C++, Stargate reads the live schema from the host and shows the same tables, reducers, and logs." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use Stargate while building a Unity or Unreal game?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Stargate connects to the database your game talks to, not to the game engine, so it works alongside any Unity, Unreal, or custom client. While you playtest, watch the live view to see rows change as players connect and move, and call reducers by hand to reproduce bugs." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I browse and filter a SpacetimeDB database without writing SQL?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. The table browser lets you page through rows and filter them without typing a query, so you do not need to write SQL to inspect your data. When you do want SQL, the SQL console is there for ad-hoc queries." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I connect Stargate to a SpacetimeDB instance running in Docker or started with spacetime start?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Point Stargate at the instance's URL. For a local server started with spacetime start or a Docker container, that is usually http://localhost:3000. Sign in with your CLI credentials or a token, choose the database, and connect. The same flow works for a remote self-hosted server." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Stargate a desktop alternative to a web admin panel for SpacetimeDB?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Instead of deploying and hosting a separate web dashboard, Stargate is a native desktop app you download and point at any SpacetimeDB host. There is no extra service to run; it connects straight to Maincloud, a self-hosted server, or localhost." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use Stargate for real-time apps and not just games?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. SpacetimeDB powers chat apps, collaboration tools, dashboards, and IoT backends as well as games, and Stargate works with any of them. If your data lives in a SpacetimeDB database, you can browse it, query it, and watch it update live." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can Stargate manage many databases or room-based instances at once?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Save each server and database once, then switch between them in a click, which helps when a match- or room-based architecture spins up many SpacetimeDB instances. Each saved connection keeps its own login, so you do not retype credentials." }
           }
         ]
       }
@@ -469,6 +501,34 @@
           <details>
             <summary>How do I export data from a SpacetimeDB table to CSV or JSON? <span class="pm" aria-hidden="true">+</span></summary>
             <p>Browse the table or run a SQL query, then use the export action to save the rows as a CSV or JSON file through the native save dialog. It is handy for sharing data, attaching it to a bug report, or analysing it elsewhere.</p>
+          </details>
+          <details>
+            <summary>Does it work with modules written in Rust, C#, TypeScript, or C++? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Yes. Stargate talks to SpacetimeDB over its HTTP and WebSocket API, so it doesn't care which language your module is written in. Whether your tables and reducers are defined in Rust, C#, TypeScript, or C++, Stargate reads the live schema from the host and shows the same tables, reducers, and logs.</p>
+          </details>
+          <details>
+            <summary>Can I use it while building a Unity or Unreal game? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Yes. Stargate connects to the database your game talks to, not to the game engine, so it works alongside any Unity, Unreal, or custom client. While you playtest, watch the live view to see rows change as players connect and move, and call reducers by hand to reproduce bugs.</p>
+          </details>
+          <details>
+            <summary>Can I browse and filter data without writing SQL? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Yes. The table browser lets you page through rows and filter them without typing a query, so you don't need to write SQL to inspect your data. When you do want SQL, the SQL console is there for ad-hoc queries.</p>
+          </details>
+          <details>
+            <summary>How do I connect to a SpacetimeDB instance in Docker or started with <code>spacetime start</code>? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Point Stargate at the instance's URL. For a local server started with <code>spacetime start</code> or a Docker container, that's usually <code>http://localhost:3000</code>. Sign in with your CLI credentials or a token, choose the database, and connect. The same flow works for a remote self-hosted server.</p>
+          </details>
+          <details>
+            <summary>Is it a desktop alternative to a web admin panel? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Yes. Instead of deploying and hosting a separate web dashboard, Stargate is a native desktop app you download and point at any SpacetimeDB host. There's no extra service to run; it connects straight to Maincloud, a self-hosted server, or localhost.</p>
+          </details>
+          <details>
+            <summary>Can I use it for real-time apps, not just games? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Yes. SpacetimeDB powers chat apps, collaboration tools, dashboards, and IoT backends as well as games, and Stargate works with any of them. If your data lives in a SpacetimeDB database, you can browse it, query it, and watch it update live.</p>
+          </details>
+          <details>
+            <summary>Can it manage many databases or room-based instances at once? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Yes. Save each server and database once, then switch between them in a click, which helps when a match- or room-based architecture spins up many SpacetimeDB instances. Each saved connection keeps its own login, so you don't retype credentials.</p>
           </details>
         </div>
       </div>
