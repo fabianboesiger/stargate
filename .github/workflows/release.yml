@@ -107,27 +107,12 @@ jobs:
           - os: macos-latest
             target: aarch64-apple-darwin
             asset_name: stargate-macos-aarch64
-            trial: false
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             asset_name: stargate-linux-x86_64
-            trial: false
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             asset_name: stargate-windows-x86_64
-            trial: false
-          - os: macos-latest
-            target: aarch64-apple-darwin
-            asset_name: stargate-trial-macos-aarch64
-            trial: true
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-            asset_name: stargate-trial-linux-x86_64
-            trial: true
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            asset_name: stargate-trial-windows-x86_64
-            trial: true
 
     steps:
       - name: Checkout code
@@ -165,12 +150,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
 
       - name: Build with Dioxus CLI
-        run: |
-          if [ "${{ matrix.trial }}" == "true" ]; then
-            dx build --release --platform desktop --package stargate --features trial
-          else
-            dx build --release --platform desktop --package stargate
-          fi
+        run: dx build --release --platform desktop --package stargate
         shell: bash
 
       - name: Sign macOS app (ad-hoc)
