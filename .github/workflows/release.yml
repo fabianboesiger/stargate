@@ -157,6 +157,11 @@ jobs:
         # icon from [bundle] icon in Dioxus.toml — the .icns into the macOS .app,
         # the .ico into the Windows installer/exe, and a .desktop + icon into the
         # Linux AppImage. No manual icon handling needed.
+        env:
+          # linuxdeploy/appimagetool are themselves AppImages and need FUSE to
+          # mount, which GitHub's ubuntu runners lack. This makes them self-extract
+          # instead, avoiding FUSE entirely. No-op on macOS/Windows.
+          APPIMAGE_EXTRACT_AND_RUN: 1
         run: dx bundle --release --platform desktop --package-types ${{ matrix.package_types }}
         shell: bash
 
