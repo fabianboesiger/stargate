@@ -1,7 +1,10 @@
 """
-Generate a Stargate app icon using the exact same SVG logo as in the app.
-Uses the Lucide "orbit" icon (src/components/icon.rs IconName::Logo).
-Rendered with blue-400 (#60a5fa) on a dark slate background.
+Generate the Stargate app icon (PNG / ICO / ICNS) from assets/icon.svg.
+
+assets/icon.svg is the single source of truth for the icon's colors and shape.
+This script renders it to the raster formats the platform bundles need and
+writes them to both assets/ and icons/ (the latter is what Dioxus.toml points
+at for `dx bundle`). Re-run this whenever icon.svg changes.
 """
 import cairosvg
 from PIL import Image
@@ -10,30 +13,9 @@ import os
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# The exact same icon as used in the app (src/components/icon.rs IconName::Logo)
-# This is the Lucide "orbit" icon, a stroke-based 24x24 glyph.
-# Color: text-blue-400 = #60a5fa, background: slate-900 = #0f172a
-# The 24x24 glyph is centered within the 24x24 viewport with padding via transform.
-SVG = """<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1024" height="1024">
-  <!-- Background -->
-  <rect x="0" y="0" width="24" height="24" rx="3.5" fill="#0f172a"/>
-
-  <!-- Lucide "orbit" icon, scaled down and centered to leave padding -->
-  <g transform="translate(3 3) scale(0.75)"
-     fill="none" stroke="#60a5fa" stroke-width="2"
-     stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="3"/>
-    <circle cx="19" cy="5" r="2"/>
-    <circle cx="5" cy="19" r="2"/>
-    <path d="M10.4 21.9a10 10 0 0 0 9.941-15.416"/>
-    <path d="M13.5 2.1a10 10 0 0 0-9.841 15.416"/>
-  </g>
-</svg>
-"""
-
-# Render SVG to PNG at 1024x1024
-png_data = cairosvg.svg2png(bytestring=SVG.encode(), output_width=1024, output_height=1024)
+# Render the canonical icon SVG to PNG at 1024x1024.
+icon_svg_path = os.path.join(PROJECT_ROOT, "assets", "icon.svg")
+png_data = cairosvg.svg2png(url=icon_svg_path, output_width=1024, output_height=1024)
 
 # Save as PNG
 icon_png_path = os.path.join(PROJECT_ROOT, "assets", "icon.png")
