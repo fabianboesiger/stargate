@@ -152,11 +152,19 @@ jobs:
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
 
-      - name: Allow AppImage tooling (Ubuntu 24.04)
+      - name: AppImage prerequisites (Linux)
         if: matrix.os == 'ubuntu-latest'
-        # Ubuntu 24.04 restricts unprivileged user namespaces via AppArmor, which
-        # breaks the AppImage runtime used by linuxdeploy/appimagetool. Lift it.
-        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+        # Mirrors the working setup in nhardt/footnote (a Dioxus desktop app that
+        # ships AppImages). libfuse2 lets the linuxdeploy/appimagetool AppImages
+        # run; NO_STRIP disables linuxdeploy's strip pass, the usual cause of the
+        # generic "failed to run linuxdeploy" error.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfuse2 || sudo apt-get install -y libfuse2t64
+          # Ubuntu 24.04's AppArmor blocks the unprivileged user namespaces the
+          # AppImage runtime relies on; lift it (best-effort).
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+          echo "NO_STRIP=true" >> "$GITHUB_ENV"
         shell: bash
 
       - name: Bundle with Dioxus CLI
@@ -165,9 +173,8 @@ jobs:
         # the .ico into the Windows installer/exe, and a .desktop + icon into the
         # Linux AppImage. No manual icon handling needed.
         env:
-          # linuxdeploy/appimagetool are themselves AppImages and need FUSE to
-          # mount, which GitHub's ubuntu runners lack. This makes them self-extract
-          # instead, avoiding FUSE entirely. No-op on macOS/Windows.
+          # Belt-and-suspenders: make any AppImage self-extract instead of FUSE-
+          # mounting. No-op on macOS/Windows. NO_STRIP is set on Linux above.
           APPIMAGE_EXTRACT_AND_RUN: 1
         # --verbose surfaces linuxdeploy/appimagetool's real stderr; without it the
         # bundler collapses failures into a generic "failed to run ...AppImage".
