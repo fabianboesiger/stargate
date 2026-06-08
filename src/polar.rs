@@ -44,7 +44,7 @@ const POLAR_BASE_URL: &str = "https://api.polar.sh";
 #[cfg(debug_assertions)]
 const POLAR_ORG_ID: &str = "0e5cb33e-71f4-4002-87cd-667b9935d564";
 #[cfg(not(debug_assertions))]
-const POLAR_ORG_ID: &str = "TODO_PRODUCTION_ORGANIZATION_ID";
+const POLAR_ORG_ID: &str = "da9e6c0e-3539-4144-963a-408bd2eb0f1d";
 
 /// Public checkout link where users purchase a license, opened from the
 /// activation UI.
@@ -52,7 +52,7 @@ const POLAR_ORG_ID: &str = "TODO_PRODUCTION_ORGANIZATION_ID";
 #[cfg(debug_assertions)]
 pub const CHECKOUT_URL: &str = "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_Km5XrftpLM7BRHDOJJLfsB4brBCniM5N1uT851cQrPJ/redirect";
 #[cfg(not(debug_assertions))]
-pub const CHECKOUT_URL: &str = "https://polar.sh/TODO_CHECKOUT_LINK";
+pub const CHECKOUT_URL: &str = "https://buy.polar.sh/polar_cl_OQ4RGE0k5zSAQaUr8Gz6MCz6uewuBKbsFk8rx0AcqLZ";
 
 // --- Public API -------------------------------------------------------------
 
