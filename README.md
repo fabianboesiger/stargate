@@ -2,15 +2,14 @@
 
 **Website: [stargate-client.com](https://stargate-client.com/) · [Download the latest release](https://github.com/fabianboesiger/stargate/releases/latest)**
 
-Stargate is a native desktop **GUI client for [SpacetimeDB](https://spacetimedb.com)**. It connects
-to both **Maincloud** (the managed SpacetimeDB cloud) and **self-hosted** instances, and lets you
-browse tables, inspect the schema, call reducers, stream logs, run SQL, watch live data over
-WebSocket, and manage scheduled tasks — all from one window, without memorising `spacetime` CLI
-commands.
+Stargate is a native desktop GUI for [SpacetimeDB](https://spacetimedb.com). It connects to Maincloud
+(the managed cloud) or to any instance you host yourself. From a single window you can browse tables,
+read the schema, call reducers, follow logs, run SQL, watch live data over WebSocket, and check on
+scheduled tasks — so you don't have to keep the `spacetime` CLI in your head.
 
-It runs on **macOS, Windows, and Linux**, and talks to SpacetimeDB over its HTTP and WebSocket API,
-so it works regardless of whether your module is written in **Rust, C#, TypeScript, or C++**, and
-alongside any client (Unity, Unreal, web, or custom).
+It runs on macOS, Windows, and Linux, and speaks SpacetimeDB's HTTP and WebSocket API directly. That
+means it doesn't care what language your module is written in (Rust, C#, TypeScript, C++) or which
+client you ship alongside it.
 
 [![Download](https://img.shields.io/github/v/release/fabianboesiger/stargate?label=download&sort=semver)](https://github.com/fabianboesiger/stargate/releases/latest)
 ![Platforms](https://img.shields.io/badge/platforms-macOS%20%7C%20Windows%20%7C%20Linux-555)
@@ -21,30 +20,30 @@ alongside any client (Unity, Unreal, web, or custom).
 ## Features
 
 - **Table browser** — page through tables, filter rows, and export to CSV or JSON.
-- **Schema inspector** — view tables, reducers, indexes, and constraints, kept in sync with the database.
-- **Reducer console** — call any reducer by name with typed arguments (write calls need a read-write license).
-- **Live logs** — tail recent log lines or follow them live, with levels highlighted.
-- **SQL console** — run SQL against the database, view results in a table, and export them.
-- **Live view** — subscribe over WebSocket and watch rows update live; useful for debugging multiplayer state.
-- **Scheduled tasks** — see which reducers are scheduled to run, and when.
+- **Schema inspector** — tables, reducers, indexes, and constraints, kept in sync with the database.
+- **Reducer console** — call any reducer by name with typed arguments. Write calls need a read-write license.
+- **Live logs** — tail the recent lines or follow them live, with levels highlighted.
+- **SQL console** — run queries, view the results in a table, and export them.
+- **Live view** — subscribe over WebSocket and watch rows change. Handy for debugging multiplayer state.
+- **Scheduled tasks** — see which reducers are scheduled and when they run.
 - **OpenAPI export** — generate an OpenAPI 3.1 document for the connected database.
-- **Saved connections** — save servers and databases, then reconnect in a click.
-- **Read-only by default** — writes only happen when you turn them on, so you don't change production by accident.
+- **Saved connections** — save servers and databases and reconnect with a click.
+- **Read-only by default** — writes only happen once you turn them on, so you won't change production by accident.
 - **Light and dark themes.**
 
 ## Use cases
 
-- Debug multiplayer game state by watching tables and the live view update as players act.
-- Inspect a SpacetimeDB database without the `spacetime` CLI.
-- Test reducers by hand with typed arguments to reproduce a bug or seed data.
-- Read and follow module logs while developing.
-- Run ad-hoc SQL and export results to CSV or JSON.
-- Audit a production database in read-only mode with no risk of changing it.
+- Watch tables and the live view update as players act, to debug multiplayer game state.
+- Poke around a SpacetimeDB database without reaching for the `spacetime` CLI.
+- Call a reducer by hand with typed arguments to reproduce a bug or seed some data.
+- Read and follow module logs while you develop.
+- Run a one-off SQL query and export the results to CSV or JSON.
+- Open a production database in read-only mode when you just need to look, not touch.
 
 ## Install
 
-Download a build for your platform from the
-[**latest release**](https://github.com/fabianboesiger/stargate/releases/latest):
+Grab a build for your platform from the
+[latest release](https://github.com/fabianboesiger/stargate/releases/latest):
 
 | Platform | Asset |
 | --- | --- |
@@ -54,19 +53,19 @@ Download a build for your platform from the
 
 ## Connect
 
-Sign in with your SpacetimeDB CLI credentials or a token, choose a server and database, and connect:
+Sign in with your SpacetimeDB CLI credentials or a token, pick a server and database, and connect:
 
 - **Maincloud** — sign in with your existing Maincloud login.
-- **Self-hosted** — enter the URL of your server (a server started with `spacetime start`, a Docker
-  container, or a production host you run yourself).
+- **Self-hosted** — enter your server's URL, whether that's `spacetime start`, a Docker container,
+  or a production host you run.
 - **Local** — point Stargate at `http://localhost:3000` while you develop.
 
-Credentials and saved logins stay on your machine.
+Credentials and saved logins never leave your machine.
 
 ## Pricing
 
-Reading is free, with every inspection and query feature. A per-device license (priced in CHF)
-unlocks read-write mode for mutating reducers and write SQL. See
+Reading is free, including every inspection and query feature. A per-device license (in CHF) unlocks
+read-write mode for mutating reducers and write SQL. See
 [stargate-client.com](https://stargate-client.com/#pricing).
 
 ## Build from source
