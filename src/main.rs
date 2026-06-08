@@ -51,9 +51,6 @@ fn main() {
         .target(env_logger::Target::Stdout)
         .init();
 
-    #[cfg(target_os = "macos")]
-    set_macos_dock_icon();
-
     let icon = dioxus::desktop::icon_from_memory::<dioxus::desktop::tao::window::Icon>(
         include_bytes!("../assets/icon.png"),
     )
@@ -70,24 +67,6 @@ fn main() {
                 ),
         )
         .launch(App);
-}
-
-#[cfg(target_os = "macos")]
-fn set_macos_dock_icon() {
-    use objc2::AllocAnyThread;
-    use objc2_app_kit::{NSApplication, NSImage};
-    use objc2_foundation::NSData;
-
-    let icon_bytes = include_bytes!("../assets/icon.png");
-    unsafe {
-        let mtm = objc2::MainThreadMarker::new_unchecked();
-        let data = NSData::with_bytes(icon_bytes);
-        let image = NSImage::initWithData(NSImage::alloc(), &data);
-        if let Some(image) = image {
-            let app = NSApplication::sharedApplication(mtm);
-            app.setApplicationIconImage(Some(&image));
-        }
-    }
 }
 
 #[component]

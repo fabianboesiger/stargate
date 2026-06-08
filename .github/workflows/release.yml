@@ -103,13 +103,19 @@ jobs:
         include:
           - os: macos-latest
             target: aarch64-apple-darwin
-            asset_name: stargate-macos-aarch64
+            package_types: macos
+            artifact: stargate-macos-aarch64.tar.gz
+            content_type: application/gzip
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            asset_name: stargate-linux-x86_64
+            package_types: appimage
+            artifact: stargate-linux-x86_64.AppImage
+            content_type: application/octet-stream
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            asset_name: stargate-windows-x86_64
+            package_types: nsis
+            artifact: stargate-windows-x86_64-setup.exe
+            content_type: application/octet-stream
 
     steps:
       - name: Checkout code
@@ -146,62 +152,42 @@ jobs:
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
 
-      - name: Build with Dioxus CLI
-        run: dx build --release --platform desktop --package stargate
+      - name: Bundle with Dioxus CLI
+        # dx bundle (unlike dx build) does platform packaging and embeds the app
+        # icon from [bundle] icon in Dioxus.toml — the .icns into the macOS .app,
+        # the .ico into the Windows installer/exe, and a .desktop + icon into the
+        # Linux AppImage. No manual icon handling needed.
+        run: dx bundle --release --platform desktop --package-types ${{ matrix.package_types }}
         shell: bash
 
       - name: Sign macOS app (ad-hoc)
         if: startsWith(matrix.os, 'macos')
         run: |
-          # Ad-hoc sign the app bundle to prevent "damaged" message
-          codesign --force --deep --sign - target/dx/stargate/release/macos/Stargate.app
+          # Ad-hoc sign the bundled .app to prevent the "damaged" Gatekeeper message.
+          APP=$(find target/dx/stargate/bundle -ipath '*macos*' -name 'Stargate.app' | head -1)
+          codesign --force --deep --sign - "$APP"
         shell: bash
 
       - name: Prepare artifact
         run: |
           mkdir -p release-artifacts
           if [[ "${{ matrix.os }}" == macos* ]]; then
-            # macOS builds create a .app bundle
-            cp -r target/dx/stargate/release/macos/Stargate.app release-artifacts/
-            cd release-artifacts
-            # Create a zip of the .app bundle (use ditto to preserve signatures)
-            ditto -c -k --keepParent Stargate.app ${{ matrix.asset_name }}.zip
-            # Also create a tar.gz
-            tar -czf ${{ matrix.asset_name }}.tar.gz Stargate.app
-            cd ..
+            # Package the signed .app as a tarball (preserves the bundle layout).
+            APP=$(find target/dx/stargate/bundle -ipath '*macos*' -name 'Stargate.app' | head -1)
+            tar -C "$(dirname "$APP")" -czf "release-artifacts/${{ matrix.artifact }}" Stargate.app
           elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            # Linux builds create an app directory
-            cp -r target/dx/stargate/release/linux/app release-artifacts/
-            cd release-artifacts
-            tar -czf ${{ matrix.asset_name }}.tar.gz app
-            cd ..
+            cp "$(find target/dx/stargate/bundle -iname '*.AppImage' | head -1)" "release-artifacts/${{ matrix.artifact }}"
           elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-            # Windows builds create an app directory
-            cp -r target/dx/stargate/release/windows/app release-artifacts/
-            cd release-artifacts
-            7z a ${{ matrix.asset_name }}.zip app
-            cd ..
+            cp "$(find target/dx/stargate/bundle -ipath '*nsis*' -name '*.exe' | head -1)" "release-artifacts/${{ matrix.artifact }}"
           fi
         shell: bash
 
-      - name: Upload Release Asset (Unix Desktop)
-        if: matrix.os != 'windows-latest'
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./release-artifacts/${{ matrix.asset_name }}.tar.gz
-          asset_name: ${{ matrix.asset_name }}.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload Release Asset (Windows Desktop)
-        if: matrix.os == 'windows-latest'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./release-artifacts/${{ matrix.asset_name }}.zip
-          asset_name: ${{ matrix.asset_name }}.zip
-          asset_content_type: application/zip
+          asset_path: ./release-artifacts/${{ matrix.artifact }}
+          asset_name: ${{ matrix.artifact }}
+          asset_content_type: ${{ matrix.content_type }}
