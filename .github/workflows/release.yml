@@ -108,9 +108,9 @@ jobs:
             content_type: application/gzip
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            package_types: appimage
-            artifact: stargate-linux-x86_64.AppImage
-            content_type: application/octet-stream
+            package_types: deb
+            artifact: stargate-linux-x86_64.deb
+            content_type: application/vnd.debian.binary-package
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             package_types: nsis
@@ -152,33 +152,12 @@ jobs:
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
 
-      - name: AppImage prerequisites (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        # Mirrors the working setup in nhardt/footnote (a Dioxus desktop app that
-        # ships AppImages). libfuse2 lets the linuxdeploy/appimagetool AppImages
-        # run; NO_STRIP disables linuxdeploy's strip pass, the usual cause of the
-        # generic "failed to run linuxdeploy" error.
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libfuse2 || sudo apt-get install -y libfuse2t64
-          # Ubuntu 24.04's AppArmor blocks the unprivileged user namespaces the
-          # AppImage runtime relies on; lift it (best-effort).
-          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
-          echo "NO_STRIP=true" >> "$GITHUB_ENV"
-        shell: bash
-
       - name: Bundle with Dioxus CLI
         # dx bundle (unlike dx build) does platform packaging and embeds the app
         # icon from [bundle] icon in Dioxus.toml — the .icns into the macOS .app,
         # the .ico into the Windows installer/exe, and a .desktop + icon into the
-        # Linux AppImage. No manual icon handling needed.
-        env:
-          # Belt-and-suspenders: make any AppImage self-extract instead of FUSE-
-          # mounting. No-op on macOS/Windows. NO_STRIP is set on Linux above.
-          APPIMAGE_EXTRACT_AND_RUN: 1
-        # --verbose surfaces linuxdeploy/appimagetool's real stderr; without it the
-        # bundler collapses failures into a generic "failed to run ...AppImage".
-        run: dx bundle --verbose --release --platform desktop --package-types ${{ matrix.package_types }}
+        # Linux .deb. No manual icon handling needed.
+        run: dx bundle --release --platform desktop --package-types ${{ matrix.package_types }}
         shell: bash
 
       - name: Sign macOS app (ad-hoc)
@@ -197,7 +176,7 @@ jobs:
             APP=$(find target/dx/stargate/bundle -ipath '*macos*' -name 'Stargate.app' | head -1)
             tar -C "$(dirname "$APP")" -czf "release-artifacts/${{ matrix.artifact }}" Stargate.app
           elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            cp "$(find target/dx/stargate/bundle -iname '*.AppImage' | head -1)" "release-artifacts/${{ matrix.artifact }}"
+            cp "$(find target/dx/stargate/bundle -ipath '*deb*' -name '*.deb' | head -1)" "release-artifacts/${{ matrix.artifact }}"
           elif [ "${{ matrix.os }}" == "windows-latest" ]; then
             cp "$(find target/dx/stargate/bundle -ipath '*nsis*' -name '*.exe' | head -1)" "release-artifacts/${{ matrix.artifact }}"
           fi

@@ -49,7 +49,7 @@ Grab a build for your platform from the
 | --- | --- |
 | macOS (Apple Silicon) | `stargate-macos-aarch64.tar.gz` (unpack, move `Stargate.app` to Applications) |
 | Windows (x86-64) | `stargate-windows-x86_64-setup.exe` (installer) |
-| Linux (x86-64) | `stargate-linux-x86_64.AppImage` (mark executable, run) |
+| Linux (x86-64) | `stargate-linux-x86_64.deb` (install with `sudo dpkg -i` or a software center) |
 
 ## Connect
 
