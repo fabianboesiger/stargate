@@ -152,6 +152,13 @@ jobs:
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
 
+      - name: Allow AppImage tooling (Ubuntu 24.04)
+        if: matrix.os == 'ubuntu-latest'
+        # Ubuntu 24.04 restricts unprivileged user namespaces via AppArmor, which
+        # breaks the AppImage runtime used by linuxdeploy/appimagetool. Lift it.
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+        shell: bash
+
       - name: Bundle with Dioxus CLI
         # dx bundle (unlike dx build) does platform packaging and embeds the app
         # icon from [bundle] icon in Dioxus.toml — the .icns into the macOS .app,
@@ -162,7 +169,9 @@ jobs:
           # mount, which GitHub's ubuntu runners lack. This makes them self-extract
           # instead, avoiding FUSE entirely. No-op on macOS/Windows.
           APPIMAGE_EXTRACT_AND_RUN: 1
-        run: dx bundle --release --platform desktop --package-types ${{ matrix.package_types }}
+        # --verbose surfaces linuxdeploy/appimagetool's real stderr; without it the
+        # bundler collapses failures into a generic "failed to run ...AppImage".
+        run: dx bundle --verbose --release --platform desktop --package-types ${{ matrix.package_types }}
         shell: bash
 
       - name: Sign macOS app (ad-hoc)
