@@ -10,6 +10,12 @@ use crate::storage::Storage;
 /// How often a license is re-validated while read-write mode is enabled.
 const CHECK_INTERVAL_SECS: u64 = 15 * 60;
 
+/// When the `unlicensed` Cargo feature is enabled, read-write mode is allowed
+/// without a Polar license: the gate never checks a license, never blocks, and
+/// never shows the activation popup. Intended for development/internal builds
+/// only — see the feature definition in `Cargo.toml`.
+const UNLICENSED: bool = cfg!(feature = "unlicensed");
+
 /// Invisible app-root component that gates read-write mode behind a valid Polar
 /// license.
 ///
@@ -47,6 +53,10 @@ pub fn LicenseGate() -> Element {
 
             if readonly {
                 return; // Never check while read-only.
+            }
+
+            if UNLICENSED {
+                return; // Read-write allowed without a license in this build.
             }
 
             let storage = storage.clone();
