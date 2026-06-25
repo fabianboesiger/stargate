@@ -1,7 +1,7 @@
 /*
   Stargate landing page — Swiss minimalist theme.
   Mirrors the desktop app's "paper / graphite" palette, Inter type,
-  monospace eyebrow labels, hairline borders and tabular numerals.
+  hairline borders and tabular numerals.
   Hand-authored (no build step) so the page stays static and fast.
 */
 
@@ -78,15 +78,6 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
-/* eyebrow / mono label — the app's signature */
-.eyebrow {
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--text-muted);
-}
-
 .num { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
 .mono { font-family: var(--mono); }
 
@@ -134,7 +125,6 @@ h1, h2, h3 { color: var(--text-strong); letter-spacing: -0.02em; font-weight: 60
 
 /* ---------- hero ---------- */
 .hero { padding: 92px 0 64px; }
-.hero .eyebrow { display: block; margin-bottom: 22px; }
 .hero h1 { font-size: clamp(38px, 6vw, 62px); max-width: 16ch; }
 .hero p.lede {
   font-size: clamp(17px, 2.2vw, 21px); color: var(--text-faint);
@@ -165,7 +155,6 @@ h1, h2, h3 { color: var(--text-strong); letter-spacing: -0.02em; font-weight: 60
 /* ---------- section scaffold ---------- */
 section { padding: 72px 0; }
 .section-head { max-width: 60ch; margin-bottom: 48px; }
-.section-head .eyebrow { display: block; margin-bottom: 16px; }
 .section-head h2 { font-size: clamp(28px, 4vw, 40px); }
 .section-head p { color: var(--text-faint); margin-top: 16px; font-size: 17px; }
 
@@ -174,7 +163,6 @@ section { padding: 72px 0; }
 .feature { background: var(--bg); padding: 30px 28px; }
 .feature .ic { display: flex; align-items: center; color: var(--text-strong); margin-bottom: 16px; }
 .feature .ic svg { width: 22px; height: 22px; }
-.feature .eyebrow { display: block; margin-bottom: 14px; }
 .feature h3 { font-size: 17px; margin-bottom: 8px; }
 .feature p { font-size: 14.5px; color: var(--text-faint); line-height: 1.55; }
 code { font-family: var(--mono); font-size: 0.86em; background: var(--paper-100); padding: 1px 5px; border-radius: 4px; color: var(--text); }
@@ -183,7 +171,6 @@ code { font-family: var(--mono); font-size: 0.86em; background: var(--paper-100)
 .tiers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
 .tier { border: 1px solid var(--hairline-strong); border-radius: 14px; padding: 32px 30px; background: var(--surface); }
 .tier.feat { border-color: var(--accent); }
-.tier .eyebrow { display: block; margin-bottom: 14px; }
 .tier h3 { font-size: 24px; }
 .tier .price { font-size: 15px; color: var(--text-faint); margin: 6px 0 22px; }
 .tier ul { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 26px; }
