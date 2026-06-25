@@ -120,6 +120,16 @@
           },
           {
             "@type": "Question",
+            "name": "macOS says Stargate cannot be opened or can't be verified. How do I open it?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Stargate is not notarized by Apple yet, so macOS blocks it on first launch. Double-click Stargate and click Done in the warning (do not move it to the Trash). Then open System Settings, go to Privacy & Security, and scroll to the Security section. You will see a message that Stargate was blocked, with an Open Anyway button next to it. Click Open Anyway and enter your login password. The app launches and is saved as an exception, so afterwards it opens normally. On macOS Sequoia and later the old right-click Open shortcut no longer works; use the Open Anyway button, which stays available for about an hour after you try to launch the app." }
+          },
+          {
+            "@type": "Question",
+            "name": "Windows shows Windows protected your PC. How do I install Stargate?",
+            "acceptedAnswer": { "@type": "Answer", "text": "The installer is not code-signed yet, so Microsoft Defender SmartScreen warns about it. When the Windows protected your PC dialog appears, click the More info link, then click Run anyway, and the installer continues. If Run anyway does not appear, right-click the downloaded .exe, choose Properties, tick Unblock in the Security section of the General tab, click OK, then run it again." }
+          },
+          {
+            "@type": "Question",
             "name": "Is Stargate free?",
             "acceptedAnswer": { "@type": "Answer", "text": "Reading is free. A per-device license unlocks read-write mode for mutating reducers and write SQL. You can connect, browse, and query without paying." }
           },
@@ -451,6 +461,14 @@
           <details>
             <summary>Which operating systems are supported? <span class="pm" aria-hidden="true">+</span></summary>
             <p>Stargate runs on macOS, Windows, and Linux as a native app. There is no separate runtime to install.</p>
+          </details>
+          <details>
+            <summary>macOS says the app "cannot be opened" or "can't be verified" — how do I open it? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>Stargate isn't notarized by Apple yet, so macOS blocks it on first launch. To open it anyway: double-click <strong>Stargate</strong>, and in the warning click <strong>Done</strong> (do not move it to the Trash). Then open <strong>System Settings → Privacy &amp; Security</strong> and scroll down to the <strong>Security</strong> section. You'll see a message that "Stargate" was blocked, with an <strong>Open Anyway</strong> button next to it — click it, then enter your login password to confirm. The app launches and is saved as an exception, so afterwards you can open it normally by double-clicking. On macOS Sequoia and later the old right-click → Open shortcut no longer works; you have to use the Open Anyway button in Privacy &amp; Security, which stays available for about an hour after you try to launch the app.</p>
+          </details>
+          <details>
+            <summary>Windows shows "Windows protected your PC" — how do I install it? <span class="pm" aria-hidden="true">+</span></summary>
+            <p>The installer isn't code-signed yet, so Microsoft Defender SmartScreen warns about it. The download is safe to run: when the "Windows protected your PC" dialog appears, click the <strong>More info</strong> link, then click the <strong>Run anyway</strong> button that appears, and the installer continues. If <strong>Run anyway</strong> doesn't show, right-click the downloaded <code>.exe</code>, choose <strong>Properties</strong>, tick <strong>Unblock</strong> in the Security section at the bottom of the General tab, click <strong>OK</strong>, then run it again.</p>
           </details>
           <details>
             <summary>Is Stargate free? <span class="pm" aria-hidden="true">+</span></summary>
