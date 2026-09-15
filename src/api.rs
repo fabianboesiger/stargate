@@ -36,6 +36,12 @@ pub struct DatabaseInfo {
     pub initial_program: String,
 }
 
+/// Server health/version info as reported by `GET /v1/health`.
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+pub struct ServerHealth {
+    pub version: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 pub struct SchemaResponse {
     #[serde(default)]
@@ -202,6 +208,23 @@ impl ApiClient {
 
     fn auth_header(&self) -> Option<String> {
         self.token.as_ref().map(|t| format!("Bearer {t}"))
+    }
+
+    /// Get the SpacetimeDB version the server runs (`GET /v1/health`).
+    /// Servers that predate the health route return an error, so this is best-effort.
+    pub async fn get_server_health(&self) -> Result<ServerHealth, String> {
+        let url = format!("{}/v1/health", self.base_url);
+        let mut req = self.client.get(&url);
+        if let Some(auth) = self.auth_header() {
+            req = req.header("Authorization", auth);
+        }
+        let resp = req.send().await.map_err(|e| e.to_string())?;
+        if !resp.status().is_success() {
+            let status = resp.status();
+            let body = resp.text().await.unwrap_or_default();
+            return Err(format!("HTTP {status}: {body}"));
+        }
+        resp.json().await.map_err(|e| e.to_string())
     }
 
     /// Get database info (identity, owner, host_type, initial_program).
@@ -576,4 +599,23 @@ pub async fn oauth_exchange_token(auth_host: Option<&str>, session_token: &str) 
     resp.data
         .map(|d| d.token)
         .ok_or_else(|| "Token exchange response missing data".to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_standalone_health_response() {
+        let body = r#"{"package_name":"spacetimedb-standalone","version":"2.10.0","nodes":[0],"schedulable":true}"#;
+        let health: ServerHealth = serde_json::from_str(body).unwrap();
+        assert_eq!(health.version, "2.10.0");
+    }
+
+    #[test]
+    fn parses_cloud_health_response_with_extra_fields() {
+        let body = r#"{"git_commit":"ba9a66b","nodes":[1,3],"package_name":"spacetimedb-cloud","schedulable":true,"type":"worker","version":"2.10.0"}"#;
+        let health: ServerHealth = serde_json::from_str(body).unwrap();
+        assert_eq!(health.version, "2.10.0");
+    }
 }

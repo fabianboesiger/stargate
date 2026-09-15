@@ -14,6 +14,7 @@ pub fn Info(db_identity: String) -> Element {
     let mut table_count = use_signal(|| 0usize);
     let mut reducer_count = use_signal(|| 0usize);
     let mut connected_clients = use_signal(|| Option::<u64>::None);
+    let mut server_version = use_signal(|| Option::<String>::None);
 
     let connected = app_state.read().connected;
     if !connected {
@@ -31,6 +32,13 @@ pub fn Info(db_identity: String) -> Element {
                 if let Some(api) = &state.api {
                     let api = api.clone();
                     drop(state);
+
+                    // Get the SpacetimeDB version the server runs.
+                    // Older servers have no /v1/health route, so treat this as best-effort.
+                    match api.get_server_health().await {
+                        Ok(health) => server_version.set(Some(health.version)),
+                        Err(e) => log::warn!("Failed to fetch server version: {e}"),
+                    }
 
                     // Get database name
                     if let Ok(names) = api.get_database_names(&db_identity).await
@@ -107,6 +115,12 @@ pub fn Info(db_identity: String) -> Element {
                             InfoRow {
                                 label: "Server URL",
                                 value: server_url.clone(),
+                            }
+                            if let Some(version) = server_version.read().as_ref() {
+                                InfoRow {
+                                    label: "SpacetimeDB Version",
+                                    value: version.clone(),
+                                }
                             }
                             InfoRow { label: "Identity", value: identity.clone() }
                             InfoRow {
