@@ -1,0 +1,49 @@
+# Jekyll config for https://stargate-client.com/
+# Built by the "Deploy static content to Pages" workflow (actions/jekyll-build-pages),
+# which uses the github-pages gem set (Jekyll 3.x), so keep templates compatible with it.
+
+title: Stargate
+description: >-
+  Stargate is a desktop GUI client for SpacetimeDB that works with Maincloud and
+  self-hosted servers. Browse tables, run SQL, call reducers, stream logs, and watch
+  live data on macOS, Windows, and Linux.
+url: https://stargate-client.com
+baseurl: ""
+lang: en
+timezone: Europe/Zurich
+
+author:
+  name: Fabian Bösiger
+  url: https://github.com/fabianboesiger
+
+links:
+  github: https://github.com/fabianboesiger/stargate
+  releases: https://github.com/fabianboesiger/stargate/releases/latest
+  download_base: https://github.com/fabianboesiger/stargate/releases/latest/download/
+  license: https://buy.polar.sh/polar_cl_OQ4RGE0k5zSAQaUr8Gz6MCz6uewuBKbsFk8rx0AcqLZ
+  spacetimedb: https://spacetimedb.com
+  spacetimedb_docs: https://spacetimedb.com/docs
+
+# Hero screenshot, also used as JSON-LD screenshot. Keep width/height in sync with the files.
+screenshot:
+  light: /images/screenshot-light.webp
+  dark: /images/screenshot-dark.webp
+  width: 2048
+  height: 1268
+
+permalink: pretty
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+exclude:
+  - README.md
+
+defaults:
+  - scope:
+      path: "guides"
+    values:
+      layout: guide
+      og_type: article
+      jsonld: jsonld-guide.html

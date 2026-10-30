@@ -1,0 +1,17 @@
+{%- comment -%}
+  Grid of guide cards built from pages with layout "guide" (front matter: card_title,
+  summary, icon, order). Optional: exclude (URL of the current page).
+{%- endcomment -%}
+{%- assign guides = site.pages | where: "layout", "guide" | sort: "order" -%}
+<div class="features guide-cards">
+  {%- for g in guides %}
+  {%- unless g.url == include.exclude %}
+  <a class="feature" href="{{ g.url | relative_url }}">
+    <div class="ic" aria-hidden="true">{% include icon.html name=g.icon %}</div>
+    <h3>{{ g.card_title }}</h3>
+    <p>{{ g.summary }}</p>
+    <span class="more">Read guide {% include icon.html name="arrow-right" %}</span>
+  </a>
+  {%- endunless %}
+  {%- endfor %}
+</div>

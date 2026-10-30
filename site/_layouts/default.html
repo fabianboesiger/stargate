@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--
+  Stargate website. Built with Jekyll (see site/README.md); canonical host {{ site.url }}.
+  Download links point at the GitHub releases page.
+-->
+<html lang="{{ site.lang }}" data-theme="light">
+<head>
+  {% include head.html %}
+  {%- if page.jsonld %}
+  <script type="application/ld+json">
+  {% include {{ page.jsonld }} %}
+  </script>
+  {%- endif %}
+</head>
+
+<body>
+  {% include header.html %}
+
+  {{ content }}
+
+  {% include footer.html %}
+
+  <script>
+    // Theme toggle. The initial theme is resolved in <head> (window.stargateTheme).
+    (function () {
+      var btn = document.getElementById('theme-toggle');
+      if (btn) btn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        window.stargateTheme.apply(next);
+        try { localStorage.setItem('stargate-theme', next); } catch (e) {}
+      });
+    })();
+
+    // Point the download links at the right release asset for the visitor's OS.
+    (function () {
+      var BASE = {{ site.links.download_base | jsonify }};
+      var ASSETS = {
+        macos:   { file: 'stargate-macos-aarch64.dmg',         label: 'Download for macOS' },
+        windows: { file: 'stargate-windows-x86_64-setup.exe',  label: 'Download for Windows' },
+        linux:   { file: 'stargate-linux-x86_64.deb',          label: 'Download for Linux' }
+      };
+
+      function detectOS() {
+        var p = '';
+        try {
+          p = (navigator.userAgentData && navigator.userAgentData.platform) ||
+              navigator.platform || navigator.userAgent || '';
+        } catch (e) { p = navigator.userAgent || ''; }
+        p = p.toLowerCase();
+        if (p.indexOf('win') !== -1) return 'windows';
+        if (p.indexOf('mac') !== -1 || p.indexOf('iphone') !== -1 || p.indexOf('ipad') !== -1) return 'macos';
+        if (p.indexOf('linux') !== -1 || p.indexOf('android') !== -1 || p.indexOf('x11') !== -1) return 'linux';
+        return null; // unknown: keep the releases-page fallback
+      }
+
+      var os = detectOS();
+      if (!os) return;
+      var asset = ASSETS[os];
+
+      // Rewrite every auto download link to the detected platform's asset.
+      var autos = document.querySelectorAll('a[data-dl="auto"]');
+      for (var i = 0; i < autos.length; i++) {
+        autos[i].setAttribute('href', BASE + asset.file);
+        var label = autos[i].querySelector('.dl-label');
+        if (label) label.textContent = asset.label;
+      }
+
+      // Mark the matching alternate links as the current platform.
+      var alts = document.querySelectorAll('a[data-dl="' + os + '"]');
+      for (var j = 0; j < alts.length; j++) alts[j].setAttribute('aria-current', 'true');
+    })();
+  </script>
+</body>
+</html>

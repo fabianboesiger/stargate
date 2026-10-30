@@ -1,0 +1,5 @@
+{%- comment -%}
+  Inline Lucide icon. Usage: {% include icon.html name="table" %} (optional: stroke="2.5").
+  Paths live in _data/icons.yml; scripts/check_site.py fails the build check on an unknown name.
+{%- endcomment -%}
+<svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ include.stroke | default: 2 }}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" data-icon="{{ include.name }}">{{ site.data.icons[include.name] }}</svg>

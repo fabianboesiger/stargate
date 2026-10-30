@@ -1,0 +1,18 @@
+{%- comment -%}
+  FAQPage node for one group of _data/faq.yml, emitted inside a JSON-LD @graph.
+  Usage: {% include jsonld-faq.html group="home" %}
+{%- endcomment -%}
+{%- assign items = site.data.faq | where: "page", include.group -%}
+{
+  "@type": "FAQPage",
+  "@id": {{ page.url | absolute_url | append: "#faq" | jsonify }},
+  "mainEntity": [
+    {%- for item in items %}
+    {
+      "@type": "Question",
+      "name": {{ item.q | jsonify }},
+      "acceptedAnswer": { "@type": "Answer", "text": {{ item.a | strip_html | normalize_whitespace | jsonify }} }
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
+}

@@ -2,8 +2,18 @@
   Stargate landing page — Swiss minimalist theme.
   Mirrors the desktop app's "paper / graphite" palette, Inter type,
   hairline borders and tabular numerals.
-  Hand-authored (no build step) so the page stays static and fast.
+  Plain CSS served as-is by Jekyll; Inter is self-hosted (fonts/, SIL OFL).
 */
+
+/* Inter variable font, latin subset (weights 300 to 600). */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url('fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 :root {
   /* paper / graphite — light theme (matches app `input.css`) */
@@ -75,6 +85,7 @@ body {
 }
 
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+.wrap.narrow { max-width: 760px; }
 
 a { color: inherit; text-decoration: none; }
 
@@ -154,6 +165,7 @@ h1, h2, h3 { color: var(--text-strong); letter-spacing: -0.02em; font-weight: 60
 
 /* ---------- section scaffold ---------- */
 section { padding: 72px 0; }
+section[id], .prose h2[id] { scroll-margin-top: 64px; } /* keep anchors clear of the sticky header */
 .section-head { max-width: 60ch; margin-bottom: 48px; }
 .section-head h2 { font-size: clamp(28px, 4vw, 40px); }
 .section-head p { color: var(--text-faint); margin-top: 16px; font-size: 17px; }
@@ -195,17 +207,65 @@ code { font-family: var(--mono); font-size: 0.86em; background: var(--paper-100)
 .os-row a { font-family: var(--mono); font-size: 12px; color: var(--text-muted); border: 1px solid var(--hairline); padding: 8px 14px; border-radius: 8px; transition: color .15s, border-color .15s; }
 .os-row a:hover { color: var(--text-strong); border-color: var(--hairline-strong); }
 
+.download { border-top: 1px solid var(--hairline); }
+.download .meta-line { margin-top: 18px; font-size: 13px; color: var(--text-muted); }
+
+/* ---------- inline links ---------- */
+a.inline, .prose a, .faq details p a, .guide-meta a {
+  color: var(--text-strong); text-decoration: underline; text-decoration-color: var(--hairline-strong);
+  text-underline-offset: 3px; transition: text-decoration-color .15s;
+}
+a.inline:hover, .prose a:hover, .faq details p a:hover, .guide-meta a:hover { text-decoration-color: currentColor; }
+
+/* ---------- guide cards ---------- */
+a.feature { display: flex; flex-direction: column; transition: background .15s; }
+a.feature:hover { background: var(--surface); }
+a.feature .more { margin-top: auto; padding-top: 16px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--text-strong); }
+a.feature .more svg { width: 14px; height: 14px; transition: transform .15s; }
+a.feature:hover .more svg { transform: translateX(3px); }
+.guide-cards { grid-template-columns: repeat(2, 1fr); }
+
+/* ---------- guides ---------- */
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
+.breadcrumb a:hover { color: var(--text-strong); }
+.breadcrumb [aria-current] { color: var(--text-faint); }
+.guides-hero { padding-bottom: 24px; }
+.guides-list { padding-top: 24px; }
+.guide { padding: 72px 0 24px; }
+.guide h1 { font-size: clamp(32px, 5vw, 46px); }
+.guide .lede { font-size: clamp(17px, 2vw, 19px); color: var(--text-faint); margin-top: 20px; line-height: 1.55; }
+.guide-meta { margin-top: 18px; font-size: 13px; color: var(--text-muted); }
+.prose { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--hairline); font-size: 16px; }
+.prose > * + * { margin-top: 18px; }
+.prose h2 { font-size: 24px; margin-top: 44px; }
+.prose h3 { font-size: 18px; margin-top: 32px; }
+.prose ul, .prose ol { padding-left: 22px; }
+.prose li + li { margin-top: 8px; }
+.prose li > p + p, .prose li > div { margin-top: 10px; }
+.prose strong { color: var(--text-strong); font-weight: 600; }
+.prose pre, .prose div.highlighter-rouge { overflow-x: auto; }
+.prose pre {
+  font-family: var(--mono); font-size: 13.5px; line-height: 1.6; background: var(--paper-100);
+  border: 1px solid var(--hairline); border-radius: 10px; padding: 14px 16px;
+}
+.prose pre code { background: none; padding: 0; font-size: inherit; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 14.5px; display: block; overflow-x: auto; }
+.prose th, .prose td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+.prose th { color: var(--text-strong); font-weight: 600; border-bottom-color: var(--hairline-strong); }
+
 /* ---------- footer ---------- */
 .site-footer { border-top: 1px solid var(--hairline); padding: 40px 0; }
 .site-footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
 .site-footer .brand { font-size: 14px; }
 .site-footer .links { display: flex; gap: 22px; font-size: 13px; color: var(--text-faint); }
+.site-footer .links { flex-wrap: wrap; }
 .site-footer .links a:hover { color: var(--text-strong); }
+.site-footer .guide-links { width: 100%; }
 .site-footer .legal { font-size: 12px; color: var(--text-muted); width: 100%; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 860px) {
-  .features, .tiers { grid-template-columns: 1fr; }
+  .features, .tiers, .guide-cards { grid-template-columns: 1fr; }
   .nav { gap: 16px; }
   .nav .hide-sm { display: none; }
 }

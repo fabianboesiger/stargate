@@ -1,0 +1,206 @@
+# Single source for every FAQ on the site.
+# _includes/faq.html renders the visible <details> list and _includes/jsonld-faq.html
+# renders the FAQPage structured data from the same entries (answer HTML is stripped there).
+# `page` is the group a question belongs to; each question appears on exactly one page,
+# so the FAQPage markup is never duplicated across URLs.
+
+- page: home
+  q: What is Stargate?
+  a: >-
+    Stargate is a desktop client for SpacetimeDB. You can browse tables, inspect the schema,
+    call reducers, stream logs, run SQL, watch live data, and manage scheduled tasks.
+
+- page: home
+  q: Which operating systems does Stargate support?
+  a: >-
+    Stargate runs on macOS, Windows, and Linux as a native app. There is no separate runtime
+    to install.
+
+- page: home
+  q: macOS says Stargate "cannot be opened" or "can't be verified". How do I open it?
+  a: >-
+    Stargate isn't notarized by Apple yet, so macOS blocks it on first launch. To open it
+    anyway: double-click <strong>Stargate</strong>, and in the warning click <strong>Done</strong>
+    (do not move it to the Trash). Then open <strong>System Settings &gt; Privacy &amp; Security</strong>
+    and scroll down to the <strong>Security</strong> section. You'll see a message that "Stargate"
+    was blocked, with an <strong>Open Anyway</strong> button next to it. Click it, then enter your
+    login password to confirm. The app launches and is saved as an exception, so afterwards you
+    can open it normally by double-clicking. On macOS Sequoia and later the old right-click &gt; Open
+    shortcut no longer works; you have to use the Open Anyway button in Privacy &amp; Security, which
+    stays available for about an hour after you try to launch the app.
+
+- page: home
+  q: Windows shows "Windows protected your PC". How do I install Stargate?
+  a: >-
+    The installer isn't code-signed yet, so Microsoft Defender SmartScreen warns about it. When
+    the "Windows protected your PC" dialog appears, click the <strong>More info</strong> link, then
+    click the <strong>Run anyway</strong> button that appears, and the installer continues. If
+    <strong>Run anyway</strong> doesn't show, right-click the downloaded <code>.exe</code>, choose
+    <strong>Properties</strong>, tick <strong>Unblock</strong> in the Security section at the bottom of
+    the General tab, click <strong>OK</strong>, then run it again.
+
+- page: home
+  q: Is Stargate free?
+  a: >-
+    Reading is free. A per-device license unlocks read-write mode for mutating reducers and write
+    SQL. You can connect, browse, and query without paying.
+
+- page: home
+  q: How does Stargate connect to my database?
+  a: >-
+    Stargate talks to SpacetimeDB's HTTP and WebSocket API. Sign in with your CLI credentials, a
+    token, or a browser login, pick a server and database, and connect. There is nothing extra
+    to deploy.
+
+- page: home
+  q: Does Stargate work with SpacetimeDB Maincloud and self-hosted instances?
+  a: >-
+    Yes. Stargate connects to any SpacetimeDB host. Point it at a database on Maincloud, at a
+    server you self-host, or at a local instance on localhost while you develop. You just enter
+    the server URL and sign in.
+
+- page: home
+  q: Is my data safe?
+  a: >-
+    Stargate talks straight to your SpacetimeDB host. Credentials and saved logins stay on your
+    machine, and connections default to read-only, so a write only happens when you choose it.
+
+- page: home
+  q: Does Stargate work with SpacetimeDB modules written in Rust, C#, TypeScript, or C++?
+  a: >-
+    Yes. Stargate talks to SpacetimeDB over its HTTP and WebSocket API, so it doesn't care which
+    language your module is written in. Whether your tables and reducers are defined in Rust, C#,
+    TypeScript, or C++, Stargate reads the live schema from the host and shows the same tables,
+    reducers, and logs.
+
+- page: home
+  q: Can I use Stargate while building a Unity or Unreal game?
+  a: >-
+    Yes. Stargate connects to the database your game talks to, not to the game engine, so it
+    works alongside any Unity, Unreal, or custom client. While you playtest, watch the live view
+    to see rows change as players connect and move, and call reducers by hand to reproduce bugs.
+
+- page: home
+  q: Can I use Stargate for real-time apps, not just games?
+  a: >-
+    Yes. SpacetimeDB powers chat apps, collaboration tools, dashboards, and IoT backends as well as
+    games, and Stargate works with any of them. If your data lives in a SpacetimeDB database, you
+    can browse it, query it, and watch it update live.
+
+- page: home
+  q: Can Stargate manage many databases or room-based instances at once?
+  a: >-
+    Yes. Save each server and database once, then switch between them in a click, which helps when
+    a match- or room-based architecture spins up many SpacetimeDB instances. Each saved connection
+    keeps its own login, so you don't retype credentials.
+
+- page: home
+  q: Is Stargate open source?
+  a: >-
+    Stargate is source available. The full source code is published on
+    <a href="https://github.com/fabianboesiger/stargate" rel="noopener">GitHub</a> so you can read
+    it, audit it, and build from it.
+
+# ── /guides/self-hosted-spacetimedb/ ──
+
+- page: self-hosted
+  q: How do I connect a desktop GUI to a self-hosted SpacetimeDB server?
+  a: >-
+    In Stargate, enter the URL of your self-hosted SpacetimeDB server, sign in with your CLI
+    credentials or a token, and choose a database. The same flow works for a server on localhost
+    during development and for a production server you host yourself.
+
+- page: self-hosted
+  q: How do I connect Stargate to a SpacetimeDB instance running in Docker or started with spacetime start?
+  a: >-
+    Point Stargate at the instance's URL. For a local server started with <code>spacetime start</code>
+    or a Docker container, that's usually <code>http://localhost:3000</code>. Sign in with your CLI
+    credentials or a token, choose the database, and connect. The same flow works for a remote
+    self-hosted server.
+
+- page: self-hosted
+  q: Why does Stargate fail to load tables or logs from my self-hosted server behind nginx?
+  a: >-
+    The reverse proxy config in the official SpacetimeDB self-hosting guide only allows
+    <code>/v1/identity</code> and the subscribe endpoint from remote machines, and blocks every other
+    route except from localhost. Stargate also needs the schema, SQL, logs, and call routes. Either
+    open an SSH tunnel (<code>ssh -L 3000:localhost:3000 you@your-server</code>) and connect to
+    <code>http://localhost:3000</code>, or allow those routes for trusted IP addresses only.
+
+# ── /guides/maincloud-gui/ ──
+
+- page: maincloud
+  q: Is there a graphical client for SpacetimeDB Maincloud?
+  a: >-
+    Yes. Stargate is a desktop graphical client that connects to databases on SpacetimeDB
+    Maincloud, the managed cloud. Sign in with your existing Maincloud login, pick a database, and
+    browse it, run SQL, and watch live data from one window.
+
+- page: maincloud
+  q: How is Stargate different from the Maincloud web dashboard?
+  a: >-
+    The dashboard on spacetimedb.com shows an overview, usage, logs, and a SQL console for
+    databases on Maincloud. Stargate adds a filterable table browser with CSV and JSON export, a
+    schema inspector, a reducer console with typed arguments, a WebSocket live view, scheduled
+    tasks, and OpenAPI export, and it uses the same window for Maincloud, self-hosted, and local
+    databases.
+
+# ── /guides/spacetime-cli-alternative/ ──
+
+- page: cli-alternative
+  q: Is Stargate a GUI alternative to the spacetime CLI?
+  a: >-
+    For everyday inspection it can be. Stargate covers what you would otherwise run through
+    commands like <code>spacetime sql</code>, <code>call</code>, <code>describe</code>, and
+    <code>logs</code>, in a visual window. You still use the CLI to publish modules.
+
+- page: cli-alternative
+  q: How do I view SpacetimeDB tables without using the command line?
+  a: >-
+    Download Stargate, connect to your database, and open the Tables view. You get a visual table
+    browser for any SpacetimeDB database, so you can page through rows, filter them, and read the
+    schema without typing a single <code>spacetime</code> command.
+
+- page: cli-alternative
+  q: Can I browse and filter a SpacetimeDB database without writing SQL?
+  a: >-
+    Yes. The table browser lets you page through rows and filter them without typing a query, so
+    you don't need to write SQL to inspect your data. When you do want SQL, the SQL console is
+    there for ad-hoc queries.
+
+- page: cli-alternative
+  q: How can I run SQL queries against a SpacetimeDB database from a desktop app?
+  a: >-
+    Open the SQL console in Stargate, type your query, and run it against the connected database.
+    Results appear in a table you can read, scroll, and export to CSV or JSON. Read queries work
+    for free; write SQL needs a read-write license.
+
+- page: cli-alternative
+  q: Is Stargate a desktop alternative to a web admin panel for SpacetimeDB?
+  a: >-
+    Yes. Instead of deploying and hosting a separate web dashboard, Stargate is a native desktop
+    app you download and point at any SpacetimeDB host. There's no extra service to run; it
+    connects straight to Maincloud, a self-hosted server, or localhost.
+
+# ── /guides/debug-spacetimedb/ ──
+
+- page: debug
+  q: How do I call a SpacetimeDB reducer manually to test it?
+  a: >-
+    Use the reducer console. Pick the reducer by name, fill in its typed arguments, and call it to
+    reproduce a bug or seed test data, without writing a throwaway client. Reducers that mutate
+    state require read-write mode.
+
+- page: debug
+  q: How do I monitor SpacetimeDB module logs in real time?
+  a: >-
+    Open the Logs view. Stargate loads the recent log lines and then streams new ones as they
+    arrive (the status badge shows Live), with levels highlighted, so you can watch reducer output,
+    panics, and timeouts while you develop your module.
+
+- page: debug
+  q: How do I export data from a SpacetimeDB table to CSV or JSON?
+  a: >-
+    Browse the table or run a SQL query, then use the export action to save the rows as a CSV or
+    JSON file through the native save dialog. It is handy for sharing data, attaching it to a bug
+    report, or analysing it elsewhere.

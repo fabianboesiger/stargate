@@ -1,0 +1,17 @@
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="Stargate home">
+      <span class="glyph" aria-hidden="true">{% include icon.html name="orbit" %}</span>
+      <span>Stargate</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a class="hide-sm" href="{{ '/#features' | relative_url }}">Features</a>
+      <a class="hide-sm" href="{{ '/guides/' | relative_url }}">Guides</a>
+      <a class="hide-sm" href="{{ '/#pricing' | relative_url }}">Pricing</a>
+      <a class="hide-sm" href="{{ '/#faq' | relative_url }}">FAQ</a>
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode" title="Toggle theme">
+        {% include icon.html name="sun" %}
+      </button>
+    </nav>
+  </div>
+</header>
