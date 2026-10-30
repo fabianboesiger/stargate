@@ -1,0 +1,13 @@
+{%- comment -%}
+  Visible FAQ list for one group of _data/faq.yml. Usage: {% include faq.html group="home" %}.
+  The first entry is open when open_first is set.
+{%- endcomment -%}
+{%- assign items = site.data.faq | where: "page", include.group -%}
+<div class="faq">
+  {%- for item in items %}
+  <details{% if forloop.first and include.open_first %} open{% endif %}>
+    <summary>{{ item.q }} <span class="pm" aria-hidden="true">+</span></summary>
+    <p>{{ item.a }}</p>
+  </details>
+  {%- endfor %}
+</div>

@@ -1,0 +1,11 @@
+{%- comment -%}
+  Per-platform download links. The script in _layouts/default.html marks the visitor's
+  platform with aria-current and rewrites data-dl="auto" buttons to the matching asset.
+{%- endcomment -%}
+<span class="dl-alts">
+  <a class="dl-alt" data-dl="macos" href="{{ site.links.download_base }}stargate-macos-aarch64.dmg">macOS</a>
+  <span aria-hidden="true">·</span>
+  <a class="dl-alt" data-dl="windows" href="{{ site.links.download_base }}stargate-windows-x86_64-setup.exe">Windows</a>
+  <span aria-hidden="true">·</span>
+  <a class="dl-alt" data-dl="linux" href="{{ site.links.download_base }}stargate-linux-x86_64.deb">Linux</a>
+</span>

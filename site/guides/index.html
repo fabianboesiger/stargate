@@ -1,0 +1,33 @@
+---
+layout: default
+title: "SpacetimeDB guides: self-hosting, Maincloud, CLI, debugging | Stargate"
+description: >-
+  SpacetimeDB guides: connect a GUI to self-hosted or Maincloud databases, replace spacetime CLI commands, and debug modules with logs and live data.
+h1: SpacetimeDB guides
+jsonld: jsonld-guides-index.html
+og_type: website
+last_modified_at: 2026-10-30
+---
+<main id="top">
+  <section class="hero guides-hero">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ '/' | relative_url }}">Stargate</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Guides</span>
+      </nav>
+      <h1>{{ page.h1 }}</h1>
+      <p class="lede">
+        Step-by-step walkthroughs for connecting to SpacetimeDB databases on Maincloud, on a
+        server you host yourself, or on localhost, and for inspecting and debugging them with
+        Stargate.
+      </p>
+    </div>
+  </section>
+  <section class="guides-list">
+    <div class="wrap">
+      {% include guide-cards.html %}
+    </div>
+  </section>
+  {% include download-cta.html %}
+</main>

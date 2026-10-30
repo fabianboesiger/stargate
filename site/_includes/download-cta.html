@@ -1,0 +1,18 @@
+{%- comment -%}
+  Download call to action used at the end of guides and on the 404 page.
+  Optional: heading, text.
+{%- endcomment -%}
+<section class="download">
+  <div class="wrap">
+    <h2>{{ include.heading | default: "Try Stargate on your database." }}</h2>
+    <p>{{ include.text | default: "Free to read on macOS, Windows, and Linux. Connect to Maincloud, a self-hosted server, or localhost." }}</p>
+    <div class="cta">
+      <a class="btn btn-primary" data-dl="auto" href="{{ site.links.releases }}">
+        {% include icon.html name="download" %}
+        <span class="dl-label">Download Stargate</span>
+      </a>
+      <a class="btn btn-ghost" href="{{ '/' | relative_url }}">What Stargate does</a>
+    </div>
+    <p class="meta-line">{% include download-links.html %}</p>
+  </div>
+</section>

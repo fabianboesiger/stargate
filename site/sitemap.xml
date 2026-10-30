@@ -1,9 +1,23 @@
+---
+layout: null
+sitemap: false
+---
 <?xml version="1.0" encoding="UTF-8"?>
+{%- comment -%}
+  Lists every page with a pretty URL (ending in "/"). Pages opt out with `sitemap: false`
+  or `noindex: true`; lastmod comes from `last_modified_at` in front matter, so bump it
+  when a page's content changes.
+{%- endcomment %}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- assign pages = site.pages | sort: "url" %}
+{%- for p in pages %}
+{%- assign last_char = p.url | slice: -1, 1 %}
+{%- if last_char != "/" or p.sitemap == false or p.noindex %}{% continue %}{% endif %}
   <url>
-    <loc>https://stargate-client.com/</loc>
-    <lastmod>2026-06-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <loc>{{ p.url | absolute_url }}</loc>
+    {%- if p.last_modified_at %}
+    <lastmod>{{ p.last_modified_at | date: "%Y-%m-%d" }}</lastmod>
+    {%- endif %}
   </url>
+{%- endfor %}
 </urlset>

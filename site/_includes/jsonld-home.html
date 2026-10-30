@@ -1,0 +1,70 @@
+{%- include jsonld-ids.html -%}
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": {{ id_website | jsonify }},
+      "url": {{ '/' | absolute_url | jsonify }},
+      "name": "Stargate",
+      "alternateName": ["Stargate client", "Stargate for SpacetimeDB", "Stargate SpacetimeDB GUI"],
+      "description": {{ site.description | strip | jsonify }},
+      "inLanguage": "en",
+      "publisher": { "@id": {{ id_author | jsonify }} }
+    },
+    {
+      "@type": "Person",
+      "@id": {{ id_author | jsonify }},
+      "name": {{ site.author.name | jsonify }},
+      "url": {{ site.author.url | jsonify }},
+      "sameAs": [{{ site.author.url | jsonify }}]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": {{ id_software | jsonify }},
+      "name": "Stargate",
+      "alternateName": "Stargate for SpacetimeDB",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Database client",
+      "operatingSystem": "macOS, Windows, Linux",
+      "description": "Stargate is a desktop GUI client for SpacetimeDB that works with both Maincloud and self-hosted instances. It lets developers browse tables, inspect the schema, call reducers, stream logs, run SQL queries, watch live data, and manage scheduled tasks while building multiplayer games and real-time applications.",
+      "url": {{ '/' | absolute_url | jsonify }},
+      "downloadUrl": {{ site.links.releases | jsonify }},
+      "installUrl": {{ site.links.releases | jsonify }},
+      "image": {{ '/og-image.png' | absolute_url | jsonify }},
+      "screenshot": [
+        {{ site.screenshot.light | absolute_url | jsonify }},
+        {{ site.screenshot.dark | absolute_url | jsonify }}
+      ],
+      "sameAs": [{{ site.links.github | jsonify }}],
+      "codeRepository": {{ site.links.github | jsonify }},
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "author": { "@id": {{ id_author | jsonify }} },
+      "publisher": { "@id": {{ id_author | jsonify }} },
+      "audience": { "@type": "Audience", "audienceType": "Developers building multiplayer games and real-time applications on SpacetimeDB" },
+      "about": { "@type": "SoftwareApplication", "name": "SpacetimeDB", "url": {{ site.links.spacetimedb | jsonify }} },
+      "offers": {
+        "@type": "Offer",
+        "name": "Read-only",
+        "price": "0",
+        "priceCurrency": "CHF",
+        "description": "Free read-only access: browse, inspect, and query any SpacetimeDB database. A per-device license unlocks write operations."
+      },
+      "featureList": [
+        "Browse and filter tables",
+        "Inspect the full schema (tables, reducers, indexes, constraints)",
+        "Invoke reducers with typed arguments",
+        "Stream and follow logs in real time",
+        "Run SQL queries with CSV and JSON export",
+        "Live view of subscribed data over WebSocket",
+        "Manage scheduled tasks",
+        "Generate an OpenAPI document for the connected database",
+        "Save and reconnect to multiple servers and databases",
+        "Connect to Maincloud or self-hosted SpacetimeDB instances",
+        "Light and dark themes"
+      ]
+    },
+    {% include jsonld-faq.html group="home" %}
+  ]
+}

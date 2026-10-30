@@ -1,0 +1,52 @@
+---
+layout: default
+---
+{%- comment -%}
+  Guide article. Front matter: title, description, h1, lede (answer-first summary shown
+  under the H1 and used by AI engines as the quotable answer), card_title, summary, icon,
+  order, last_modified_at, faq_group (optional, a group in _data/faq.yml).
+{%- endcomment -%}
+<main id="top">
+  <article class="guide">
+    <div class="wrap narrow">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ '/' | relative_url }}">Stargate</a>
+        <span aria-hidden="true">/</span>
+        <a href="{{ '/guides/' | relative_url }}">Guides</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{{ page.card_title }}</span>
+      </nav>
+      <h1>{{ page.h1 }}</h1>
+      <p class="lede">{{ page.lede }}</p>
+      <p class="guide-meta">
+        Updated <time datetime="{{ page.last_modified_at | date: '%Y-%m-%d' }}">{{ page.last_modified_at | date: "%-d %B %Y" }}</time>
+        · By <a href="{{ site.author.url }}" rel="author noopener">{{ site.author.name }}</a>
+      </p>
+      <div class="prose">
+        {{ content }}
+      </div>
+    </div>
+  </article>
+
+  {%- if page.faq_group %}
+  <section id="faq">
+    <div class="wrap narrow">
+      <div class="section-head">
+        <h2>Questions about this guide.</h2>
+      </div>
+      {% include faq.html group=page.faq_group %}
+    </div>
+  </section>
+  {%- endif %}
+
+  <section class="more-guides">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>More guides.</h2>
+      </div>
+      {% include guide-cards.html exclude=page.url %}
+    </div>
+  </section>
+
+  {% include download-cta.html %}
+</main>

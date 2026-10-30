@@ -1,640 +1,213 @@
-<!DOCTYPE html>
-<!--
-  Stargate landing page (static).
-  Canonical host: https://stargate-client.com/ (GitHub Pages, custom domain via CNAME).
-  Download links point at the GitHub releases page. No build step required.
--->
-<html lang="en" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- ── Primary SEO ── -->
-  <title>Stargate · A SpacetimeDB GUI for Maincloud and self-hosted</title>
-  <meta name="description" content="Stargate is a desktop GUI client for SpacetimeDB that works with both Maincloud and self-hosted instances. Browse tables, run SQL, call reducers, stream logs, and watch live data as you build multiplayer games and real-time apps. Free to read on macOS, Windows, and Linux." />
-  <meta name="keywords" content="SpacetimeDB, SpacetimeDB client, SpacetimeDB GUI, SpacetimeDB desktop app, SpacetimeDB Maincloud, self-hosted SpacetimeDB, SpacetimeDB Docker, spacetime start, spacetime CLI alternative, SpacetimeDB admin, SpacetimeDB web admin panel, SpacetimeDB dashboard, SpacetimeDB module, reducers, live view, schema browser, view SpacetimeDB tables, multiplayer game database, real-time database GUI, SQL client, SpacetimeDB Unity, SpacetimeDB Unreal, SpacetimeDB Rust, SpacetimeDB C#, SpacetimeDB TypeScript, Stargate" />
-  <meta name="author" content="Fabian Bösiger" />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
-  <meta name="color-scheme" content="light dark" />
-
-  <!-- Resolve theme before first paint (avoids a flash and a wasted screenshot download). -->
-  <script>
-    (function () {
-      var t;
-      try { t = localStorage.getItem('stargate-theme'); } catch (e) {}
-      if (!t) t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', t);
-    })();
-  </script>
-
-  <link rel="canonical" href="https://stargate-client.com/" />
-
-  <!-- ── Open Graph ── -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Stargate" />
-  <meta property="og:title" content="Stargate · A SpacetimeDB GUI for Maincloud and self-hosted" />
-  <meta property="og:description" content="Browse tables, run SQL, call reducers, stream logs, and watch live data. A desktop SpacetimeDB client for Maincloud and self-hosted instances, on macOS, Windows, and Linux." />
-  <meta property="og:url" content="https://stargate-client.com/" />
-  <meta property="og:image" content="https://stargate-client.com/og-image.svg" />
-  <meta property="og:image:alt" content="Stargate, a desktop GUI for SpacetimeDB" />
-
-  <!-- ── Twitter ── -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Stargate · A SpacetimeDB GUI for Maincloud and self-hosted" />
-  <meta name="twitter:description" content="A desktop SpacetimeDB client for Maincloud and self-hosted databases. Tables, schema, reducers, logs, SQL, and live view in one window." />
-  <meta name="twitter:image" content="https://stargate-client.com/og-image.svg" />
-
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <link rel="apple-touch-icon" href="favicon.svg" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- For AI assistants & crawlers: a plain-language description of this tool. -->
-  <link rel="alternate" type="text/plain" title="llms.txt" href="llms.txt" />
-
-  <!-- ── Structured data (Schema.org) ── -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "SoftwareApplication",
-        "name": "Stargate",
-        "applicationCategory": "DeveloperApplication",
-        "applicationSubCategory": "Database Management Tool",
-        "operatingSystem": "macOS, Windows, Linux",
-        "description": "Stargate is a desktop GUI client for SpacetimeDB that works with both Maincloud and self-hosted instances. It lets developers browse tables, inspect the schema, call reducers, stream logs, run SQL queries, watch live data, and manage scheduled tasks while building multiplayer games and real-time applications.",
-        "url": "https://stargate-client.com/",
-        "downloadUrl": "https://github.com/fabianboesiger/stargate/releases/latest",
-        "keywords": "SpacetimeDB, SpacetimeDB GUI, SpacetimeDB client, SpacetimeDB Maincloud, self-hosted SpacetimeDB, spacetime CLI, reducers, live view, multiplayer game database, real-time database",
-        "audience": { "@type": "Audience", "audienceType": "Developers building multiplayer games and real-time applications on SpacetimeDB" },
-        "isAccessibleForFree": true,
-        "author": { "@type": "Person", "name": "Fabian Bösiger" },
-        "offers": [
-          {
-            "@type": "Offer",
-            "name": "Read-only",
-            "price": "0",
-            "priceCurrency": "CHF",
-            "description": "Free read-only access to every feature: browse, inspect and query your database."
-          },
-          {
-            "@type": "Offer",
-            "name": "Read-write license",
-            "priceCurrency": "CHF",
-            "category": "license",
-            "description": "Per-device license that unlocks write operations: invoke mutating reducers and run write SQL."
-          }
-        ],
-        "featureList": [
-          "Browse and filter tables",
-          "Inspect the full schema (tables, reducers, indexes, constraints)",
-          "Invoke reducers with typed arguments",
-          "Stream and follow logs in real time",
-          "Run SQL queries with CSV / JSON export",
-          "Live view of subscribed data over WebSocket",
-          "Manage scheduled tasks",
-          "Generate an OpenAPI document for the connected database",
-          "Save and reconnect to multiple servers and databases",
-          "Connect to Maincloud or self-hosted SpacetimeDB instances",
-          "Light and dark themes"
-        ]
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is Stargate?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Stargate is a desktop client for SpacetimeDB. You can browse tables, inspect the schema, call reducers, stream logs, run SQL, watch live data, and manage scheduled tasks." }
-          },
-          {
-            "@type": "Question",
-            "name": "Which operating systems does Stargate support?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Stargate runs on macOS, Windows, and Linux as a native app. There is no separate runtime to install." }
-          },
-          {
-            "@type": "Question",
-            "name": "macOS says Stargate cannot be opened or can't be verified. How do I open it?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Stargate is not notarized by Apple yet, so macOS blocks it on first launch. Double-click Stargate and click Done in the warning (do not move it to the Trash). Then open System Settings, go to Privacy & Security, and scroll to the Security section. You will see a message that Stargate was blocked, with an Open Anyway button next to it. Click Open Anyway and enter your login password. The app launches and is saved as an exception, so afterwards it opens normally. On macOS Sequoia and later the old right-click Open shortcut no longer works; use the Open Anyway button, which stays available for about an hour after you try to launch the app." }
-          },
-          {
-            "@type": "Question",
-            "name": "Windows shows Windows protected your PC. How do I install Stargate?",
-            "acceptedAnswer": { "@type": "Answer", "text": "The installer is not code-signed yet, so Microsoft Defender SmartScreen warns about it. When the Windows protected your PC dialog appears, click the More info link, then click Run anyway, and the installer continues. If Run anyway does not appear, right-click the downloaded .exe, choose Properties, tick Unblock in the Security section of the General tab, click OK, then run it again." }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Stargate free?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Reading is free. A per-device license unlocks read-write mode for mutating reducers and write SQL. You can connect, browse, and query without paying." }
-          },
-          {
-            "@type": "Question",
-            "name": "How does Stargate connect to my database?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Stargate talks to SpacetimeDB's HTTP and WebSocket API. Sign in with your CLI credentials or a token, pick a server and database, and connect. There is nothing extra to deploy." }
-          },
-          {
-            "@type": "Question",
-            "name": "Does Stargate work with SpacetimeDB Maincloud and self-hosted instances?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Stargate connects to any SpacetimeDB host. Point it at a database on Maincloud, at a server you self-host, or at a local instance on localhost while you develop. You just enter the server URL and sign in." }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Stargate a GUI alternative to the spacetime CLI?",
-            "acceptedAnswer": { "@type": "Answer", "text": "For everyday inspection it can be. Stargate covers what you would otherwise run through commands like spacetime sql, call, describe, and logs, in a visual window. You still use the spacetime CLI to publish modules." }
-          },
-          {
-            "@type": "Question",
-            "name": "Is my data safe?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Stargate talks straight to your SpacetimeDB host. Credentials and saved logins stay on your machine, and connections default to read-only, so a write only happens when you choose it." }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I view SpacetimeDB tables without using the command line?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Download Stargate, connect to your database, and open the Tables view. You get a visual table browser for any SpacetimeDB database, so you can page through rows, filter them, and read the schema without typing a single spacetime command." }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I connect a desktop GUI to a self-hosted SpacetimeDB server?",
-            "acceptedAnswer": { "@type": "Answer", "text": "In Stargate, enter the URL of your self-hosted SpacetimeDB server, sign in with your CLI credentials or a token, and choose a database. The same flow works for a server on localhost during development and for a production server you host yourself." }
-          },
-          {
-            "@type": "Question",
-            "name": "Is there a graphical client for SpacetimeDB Maincloud?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Stargate is a desktop graphical client that connects to databases on SpacetimeDB Maincloud, the managed cloud. Sign in with your existing Maincloud login, pick a database, and browse it, run SQL, and watch live data from one window." }
-          },
-          {
-            "@type": "Question",
-            "name": "How can I run SQL queries against a SpacetimeDB database from a desktop app?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Open the SQL console in Stargate, type your query, and run it against the connected database. Results appear in a table you can read, scroll, and export to CSV or JSON. Read queries work for free; write SQL needs a read-write license." }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I call a SpacetimeDB reducer manually to test it?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Use the reducer console. Pick the reducer by name, fill in its typed arguments, and call it to reproduce a bug or seed test data, without writing a throwaway client. Reducers that mutate state require read-write mode." }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I monitor SpacetimeDB module logs in real time?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Open the Logs view and turn on follow mode. Stargate streams new log lines as they arrive, with levels highlighted, so you can watch reducer output, panics, and timeouts live while you develop your module." }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I export data from a SpacetimeDB table to CSV or JSON?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Browse the table or run a SQL query, then use the export action to save the rows as a CSV or JSON file through the native save dialog. It is handy for sharing data, attaching it to a bug report, or analysing it elsewhere." }
-          },
-          {
-            "@type": "Question",
-            "name": "Does Stargate work with SpacetimeDB modules written in Rust, C#, TypeScript, or C++?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Stargate talks to SpacetimeDB over its HTTP and WebSocket API, so it does not care which language your module is written in. Whether your tables and reducers are defined in Rust, C#, TypeScript, or C++, Stargate reads the live schema from the host and shows the same tables, reducers, and logs." }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I use Stargate while building a Unity or Unreal game?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Stargate connects to the database your game talks to, not to the game engine, so it works alongside any Unity, Unreal, or custom client. While you playtest, watch the live view to see rows change as players connect and move, and call reducers by hand to reproduce bugs." }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I browse and filter a SpacetimeDB database without writing SQL?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes. The table browser lets you page through rows and filter them without typing a query, so you do not need to write SQL to inspect your data. When you do want SQL, the SQL console is there for ad-hoc queries." }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I connect Stargate to a SpacetimeDB instance running in Docker or started with spacetime start?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Point Stargate at the instance's URL. For a local server started with spacetime start or a Docker container, that is usually http://localhost:3000. Sign in with your CLI credentials or a token, choose the database, and connect. The same flow works for a remote self-hosted server." }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Stargate a desktop alternative to a web admin panel for SpacetimeDB?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Instead of deploying and hosting a separate web dashboard, Stargate is a native desktop app you download and point at any SpacetimeDB host. There is no extra service to run; it connects straight to Maincloud, a self-hosted server, or localhost." }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I use Stargate for real-time apps and not just games?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes. SpacetimeDB powers chat apps, collaboration tools, dashboards, and IoT backends as well as games, and Stargate works with any of them. If your data lives in a SpacetimeDB database, you can browse it, query it, and watch it update live." }
-          },
-          {
-            "@type": "Question",
-            "name": "Can Stargate manage many databases or room-based instances at once?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Save each server and database once, then switch between them in a click, which helps when a match- or room-based architecture spins up many SpacetimeDB instances. Each saved connection keeps its own login, so you do not retype credentials." }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Stargate open source?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Stargate is source available: the full source code is published on GitHub at https://github.com/fabianboesiger/stargate so you can read it, audit it, and build from it." }
-          }
-        ]
-      }
-    ]
-  }
-  </script>
-</head>
-
-<body>
-  <header class="site-header">
+---
+layout: default
+title: "Stargate: SpacetimeDB GUI client for Maincloud and self-hosted"
+og_title: "Stargate: a desktop GUI for SpacetimeDB"
+description: >-
+  Stargate is a desktop GUI client for SpacetimeDB. Browse tables, run SQL, call reducers, and stream logs on Maincloud or self-hosted. Free to read.
+social_description: >-
+  Browse tables, run SQL, call reducers, stream logs, and watch live data. A desktop
+  SpacetimeDB client for Maincloud and self-hosted instances, on macOS, Windows, and Linux.
+hero: true
+jsonld: jsonld-home.html
+last_modified_at: 2026-10-30
+---
+<main id="top">
+  <!-- ── HERO ── -->
+  <section class="hero">
     <div class="wrap">
-      <a class="brand" href="#top" aria-label="Stargate home">
-        <span class="glyph" aria-hidden="true">
-          <i data-lucide="orbit" aria-hidden="true"></i>
-        </span>
-        <span>Stargate</span>
-      </a>
-      <nav class="nav" aria-label="Primary">
-        <a class="hide-sm" href="#features">Features</a>
-        <a class="hide-sm" href="#use-cases">Use cases</a>
-        <a class="hide-sm" href="#pricing">Pricing</a>
-        <a class="hide-sm" href="#faq">FAQ</a>
-        <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode" title="Toggle theme">
-          <i data-lucide="sun" aria-hidden="true"></i>
-        </button>
-      </nav>
+      <h1>A desktop GUI for SpacetimeDB.</h1>
+      <p class="lede">
+        Stargate is a desktop client for the databases behind your multiplayer games and
+        real-time apps. Browse tables, run SQL, call reducers, stream logs, and watch live
+        data, on Maincloud or a server you host yourself.
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" id="download-primary" data-dl="auto" href="{{ site.links.releases }}">
+          {% include icon.html name="download" %}
+          <span class="dl-label">Download Stargate</span>
+        </a>
+        <a class="btn btn-ghost" href="#features">Explore features</a>
+      </div>
+      <p class="meta-line">{% include download-links.html %}</p>
+
+      <!-- App screenshot. The dark <source> follows the active theme (see stargateTheme in <head>). -->
+      <div class="shot">
+        <div class="titlebar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <picture>
+          <source id="shot-dark" srcset="{{ site.screenshot.dark | relative_url }}" type="image/webp" media="(prefers-color-scheme: dark)" />
+          <img class="shot-img" src="{{ site.screenshot.light | relative_url }}" width="{{ site.screenshot.width }}" height="{{ site.screenshot.height }}" alt="Stargate reducer console listing the reducers of a SpacetimeDB database, with typed arguments for launch_swarm" fetchpriority="high" decoding="async" />
+        </picture>
+        <script>window.stargateTheme.apply(document.documentElement.getAttribute('data-theme'));</script>
+      </div>
     </div>
-  </header>
+  </section>
 
-  <main id="top">
-    <!-- ── HERO ── -->
-    <section class="hero">
-      <div class="wrap">
-        <h1>A desktop GUI for SpacetimeDB.</h1>
-        <p class="lede">
-          Stargate is a desktop client for the databases behind your multiplayer games and
-          real-time apps. Browse tables, run SQL, call reducers, stream logs, and watch live
-          data, on Maincloud or a server you host yourself.
-        </p>
-        <div class="cta">
-          <a class="btn btn-primary" id="download-primary" data-dl="auto" href="https://github.com/fabianboesiger/stargate/releases/latest">
-            <i data-lucide="download" aria-hidden="true"></i>
-            <span class="dl-label">Download Stargate</span>
-          </a>
-          <a class="btn btn-ghost" href="#features">Explore features</a>
-        </div>
-        <p class="meta-line">
-          <span class="dl-alts">
-            <a class="dl-alt" data-dl="macos" href="https://github.com/fabianboesiger/stargate/releases/latest/download/stargate-macos-aarch64.dmg">macOS</a>
-            <span aria-hidden="true">·</span>
-            <a class="dl-alt" data-dl="windows" href="https://github.com/fabianboesiger/stargate/releases/latest/download/stargate-windows-x86_64-setup.exe">Windows</a>
-            <span aria-hidden="true">·</span>
-            <a class="dl-alt" data-dl="linux" href="https://github.com/fabianboesiger/stargate/releases/latest/download/stargate-linux-x86_64.deb">Linux</a>
-          </span>
-        </p>
-
-        <!-- App screenshot; only the active theme's image is loaded (see inline script). -->
-        <div class="shot">
-          <div class="titlebar" aria-hidden="true"><i></i><i></i><i></i></div>
-          <img id="shot-img" class="shot-img" width="2784" height="1888" alt="Stargate showing a SpacetimeDB database" decoding="async" />
-          <script>
-            (function () {
-              var s = document.getElementById('shot-img');
-              var dark = document.documentElement.getAttribute('data-theme') === 'dark';
-              s.src = dark ? 'images/screenshot-dark.png' : 'images/screenshot-light.png';
-            })();
-          </script>
-          <noscript><img class="shot-img" src="images/screenshot-light.png" alt="Stargate showing a SpacetimeDB database" /></noscript>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── FEATURES ── -->
-    <section id="features">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Tools for working with a SpacetimeDB database.</h2>
-          <p>Inspect, query, and watch your database from one window.</p>
-        </div>
-        <div class="features">
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="table" aria-hidden="true"></i></div>
-            <h3>Table browser</h3>
-            <p>Page through tables, filter rows, and export to CSV or JSON.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="file-text" aria-hidden="true"></i></div>
-            <h3>Schema inspector</h3>
-            <p>See the full schema: tables, reducers, indexes, and constraints, kept in sync with the database.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="zap" aria-hidden="true"></i></div>
-            <h3>Reducer console</h3>
-            <p>Call any reducer by name with typed arguments. Write calls need read-write mode.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="list" aria-hidden="true"></i></div>
-            <h3>Live logs</h3>
-            <p>Tail recent log lines or follow them live, with levels highlighted as they arrive.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="terminal" aria-hidden="true"></i></div>
-            <h3>SQL console</h3>
-            <p>Run SQL against the database, view the results in a table, and export them.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="eye" aria-hidden="true"></i></div>
-            <h3>Live view</h3>
-            <p>Subscribe over WebSocket and watch rows update live. Useful for debugging multiplayer state.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="clock" aria-hidden="true"></i></div>
-            <h3>Scheduled tasks</h3>
-            <p>See which reducers are scheduled to run, and when.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="braces" aria-hidden="true"></i></div>
-            <h3>OpenAPI export</h3>
-            <p>Generate an OpenAPI 3.1 document for the connected database, covering every table and reducer.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="moon" aria-hidden="true"></i></div>
-            <h3>Light &amp; dark themes</h3>
-            <p>Light and dark themes, both clean and easy to read during long sessions.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="lock" aria-hidden="true"></i></div>
-            <h3>Read-only safety</h3>
-            <p>Connect read-only by default. Switch to read-write only when you mean to, so you don't change production by accident.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="cloud" aria-hidden="true"></i></div>
-            <h3>Maincloud or self-hosted</h3>
-            <p>Connect to any SpacetimeDB host. Point Stargate at Maincloud, the managed cloud, at a server you self-host, or at a local instance on localhost.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="save" aria-hidden="true"></i></div>
-            <h3>Saved connections</h3>
-            <p>Save your servers and databases, then reconnect in a click. Sign in with your CLI login or a token, and switch between projects without retyping anything.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── USE CASES ── -->
-    <section id="use-cases">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Built for SpacetimeDB developers.</h2>
-          <p>Whether you are shipping a multiplayer game or a real-time app, Stargate gives you a window into what your module is doing.</p>
-        </div>
-        <div class="features">
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="activity" aria-hidden="true"></i></div>
-            <h3>Debug multiplayer state</h3>
-            <p>Watch tables and the live view update as players connect, move, and interact, so you can see exactly what your reducers write.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="search" aria-hidden="true"></i></div>
-            <h3>Inspect without the CLI</h3>
-            <p>Skip memorising <code>spacetime</code> commands. Browse tables, read the schema, and run SQL from one window instead of the terminal.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="flask-conical" aria-hidden="true"></i></div>
-            <h3>Test reducers by hand</h3>
-            <p>Call any reducer with typed arguments to reproduce a bug or seed data, without writing a throwaway client.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="list" aria-hidden="true"></i></div>
-            <h3>Read and follow logs</h3>
-            <p>Tail module logs to track panics, reducer timeouts, and output while you develop, with levels highlighted as they arrive.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="terminal" aria-hidden="true"></i></div>
-            <h3>Run ad-hoc SQL</h3>
-            <p>Query any table, check row counts, and export the results to CSV or JSON for analysis or a bug report.</p>
-          </article>
-          <article class="feature">
-            <div class="ic" aria-hidden="true"><i data-lucide="shield" aria-hidden="true"></i></div>
-            <h3>Audit production safely</h3>
-            <p>Connect read-only to a live database to look at real data, with no way to change it by accident.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── PRICING ── -->
-    <section id="pricing">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Read for free. License to write.</h2>
-          <p>Read, query, and watch any database for free. A per-device license unlocks writes.</p>
-        </div>
-        <div class="tiers">
-          <div class="tier">
-            <h3>Free</h3>
-            <p class="price">No account needed</p>
-            <ul>
-              <li><i data-lucide="check" stroke-width="2.5" aria-hidden="true"></i> Browse tables, schema, and logs</li>
-              <li><i data-lucide="check" stroke-width="2.5" aria-hidden="true"></i> Run read SQL and export results</li>
-              <li><i data-lucide="check" stroke-width="2.5" aria-hidden="true"></i> Live view and scheduled tasks</li>
-              <li><i data-lucide="check" stroke-width="2.5" aria-hidden="true"></i> OpenAPI export</li>
-            </ul>
-            <a class="btn btn-ghost" data-dl="auto" href="https://github.com/fabianboesiger/stargate/releases/latest">Download free</a>
-          </div>
-          <div class="tier feat">
-            <h3>License</h3>
-            <p class="price">Buy once, use forever</p>
-            <ul>
-              <li><i data-lucide="check" stroke-width="2.5" aria-hidden="true"></i> Everything in read-only</li>
-              <li><i data-lucide="check" stroke-width="2.5" aria-hidden="true"></i> Call mutating reducers</li>
-              <li><i data-lucide="check" stroke-width="2.5" aria-hidden="true"></i> Run write SQL</li>
-              <li><i data-lucide="check" stroke-width="2.5" aria-hidden="true"></i> Move the license between devices</li>
-            </ul>
-            <a class="btn btn-primary" href="https://buy.polar.sh/polar_cl_OQ4RGE0k5zSAQaUr8Gz6MCz6uewuBKbsFk8rx0AcqLZ" rel="noopener">Get a license</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── FAQ ── -->
-    <section id="faq">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Common questions.</h2>
-        </div>
-        <div class="faq">
-          <details open>
-            <summary>What is Stargate? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Stargate is a desktop client for SpacetimeDB. You can browse tables, inspect the schema, call reducers, stream logs, run SQL, watch live data, and manage scheduled tasks.</p>
-          </details>
-          <details>
-            <summary>Which operating systems are supported? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Stargate runs on macOS, Windows, and Linux as a native app. There is no separate runtime to install.</p>
-          </details>
-          <details>
-            <summary>macOS says the app "cannot be opened" or "can't be verified" — how do I open it? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Stargate isn't notarized by Apple yet, so macOS blocks it on first launch. To open it anyway: double-click <strong>Stargate</strong>, and in the warning click <strong>Done</strong> (do not move it to the Trash). Then open <strong>System Settings → Privacy &amp; Security</strong> and scroll down to the <strong>Security</strong> section. You'll see a message that "Stargate" was blocked, with an <strong>Open Anyway</strong> button next to it — click it, then enter your login password to confirm. The app launches and is saved as an exception, so afterwards you can open it normally by double-clicking. On macOS Sequoia and later the old right-click → Open shortcut no longer works; you have to use the Open Anyway button in Privacy &amp; Security, which stays available for about an hour after you try to launch the app.</p>
-          </details>
-          <details>
-            <summary>Windows shows "Windows protected your PC" — how do I install it? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>The installer isn't code-signed yet, so Microsoft Defender SmartScreen warns about it. The download is safe to run: when the "Windows protected your PC" dialog appears, click the <strong>More info</strong> link, then click the <strong>Run anyway</strong> button that appears, and the installer continues. If <strong>Run anyway</strong> doesn't show, right-click the downloaded <code>.exe</code>, choose <strong>Properties</strong>, tick <strong>Unblock</strong> in the Security section at the bottom of the General tab, click <strong>OK</strong>, then run it again.</p>
-          </details>
-          <details>
-            <summary>Is Stargate free? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Reading is free. A per-device license unlocks read-write mode for mutating reducers and write SQL. You can connect, browse, and query without paying.</p>
-          </details>
-          <details>
-            <summary>How does it connect to my database? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Stargate talks to SpacetimeDB's HTTP and WebSocket API. Sign in with your CLI credentials or a token, pick a server and database, and connect. There is nothing extra to deploy.</p>
-          </details>
-          <details>
-            <summary>Does it work with Maincloud and self-hosted instances? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Yes. Stargate connects to any SpacetimeDB host. Point it at a database on Maincloud, at a server you self-host, or at a local instance on localhost while you develop. You just enter the server URL and sign in.</p>
-          </details>
-          <details>
-            <summary>Is it a GUI alternative to the spacetime CLI? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>For everyday inspection it can be. Stargate covers what you would otherwise run through commands like <code>spacetime sql</code>, <code>call</code>, <code>describe</code>, and <code>logs</code>, in a visual window. You still use the CLI to publish modules.</p>
-          </details>
-          <details>
-            <summary>Is my data safe? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Stargate talks straight to your SpacetimeDB host. Credentials and saved logins stay on your machine, and connections default to read-only, so a write only happens when you choose it.</p>
-          </details>
-          <details>
-            <summary>How do I view SpacetimeDB tables without using the command line? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Download Stargate, connect to your database, and open the Tables view. You get a visual table browser for any SpacetimeDB database, so you can page through rows, filter them, and read the schema without typing a single <code>spacetime</code> command.</p>
-          </details>
-          <details>
-            <summary>How do I connect a desktop GUI to a self-hosted SpacetimeDB server? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>In Stargate, enter the URL of your self-hosted SpacetimeDB server, sign in with your CLI credentials or a token, and choose a database. The same flow works for a server on localhost during development and for a production server you host yourself.</p>
-          </details>
-          <details>
-            <summary>Is there a graphical client for SpacetimeDB Maincloud? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Yes. Stargate is a desktop graphical client that connects to databases on SpacetimeDB Maincloud, the managed cloud. Sign in with your existing Maincloud login, pick a database, and browse it, run SQL, and watch live data from one window.</p>
-          </details>
-          <details>
-            <summary>How can I run SQL queries against a SpacetimeDB database from a desktop app? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Open the SQL console in Stargate, type your query, and run it against the connected database. Results appear in a table you can read, scroll, and export to CSV or JSON. Read queries work for free; write SQL needs a read-write license.</p>
-          </details>
-          <details>
-            <summary>How do I call a SpacetimeDB reducer manually to test it? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Use the reducer console. Pick the reducer by name, fill in its typed arguments, and call it to reproduce a bug or seed test data, without writing a throwaway client. Reducers that mutate state require read-write mode.</p>
-          </details>
-          <details>
-            <summary>How do I monitor SpacetimeDB module logs in real time? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Open the Logs view and turn on follow mode. Stargate streams new log lines as they arrive, with levels highlighted, so you can watch reducer output, panics, and timeouts live while you develop your module.</p>
-          </details>
-          <details>
-            <summary>How do I export data from a SpacetimeDB table to CSV or JSON? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Browse the table or run a SQL query, then use the export action to save the rows as a CSV or JSON file through the native save dialog. It is handy for sharing data, attaching it to a bug report, or analysing it elsewhere.</p>
-          </details>
-          <details>
-            <summary>Does it work with modules written in Rust, C#, TypeScript, or C++? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Yes. Stargate talks to SpacetimeDB over its HTTP and WebSocket API, so it doesn't care which language your module is written in. Whether your tables and reducers are defined in Rust, C#, TypeScript, or C++, Stargate reads the live schema from the host and shows the same tables, reducers, and logs.</p>
-          </details>
-          <details>
-            <summary>Can I use it while building a Unity or Unreal game? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Yes. Stargate connects to the database your game talks to, not to the game engine, so it works alongside any Unity, Unreal, or custom client. While you playtest, watch the live view to see rows change as players connect and move, and call reducers by hand to reproduce bugs.</p>
-          </details>
-          <details>
-            <summary>Can I browse and filter data without writing SQL? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Yes. The table browser lets you page through rows and filter them without typing a query, so you don't need to write SQL to inspect your data. When you do want SQL, the SQL console is there for ad-hoc queries.</p>
-          </details>
-          <details>
-            <summary>How do I connect to a SpacetimeDB instance? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Point Stargate at the instance's URL. For a local server started with <code>spacetime start</code> or a Docker container, that's usually <code>http://localhost:3000</code>. Sign in with your CLI credentials or a token, choose the database, and connect. The same flow works for a remote self-hosted server.</p>
-          </details>
-          <details>
-            <summary>Is it a desktop alternative to a web admin panel? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Yes. Instead of deploying and hosting a separate web dashboard, Stargate is a native desktop app you download and point at any SpacetimeDB host. There's no extra service to run; it connects straight to Maincloud, a self-hosted server, or localhost.</p>
-          </details>
-          <details>
-            <summary>Can I use it for real-time apps, not just games? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Yes. SpacetimeDB powers chat apps, collaboration tools, dashboards, and IoT backends as well as games, and Stargate works with any of them. If your data lives in a SpacetimeDB database, you can browse it, query it, and watch it update live.</p>
-          </details>
-          <details>
-            <summary>Can it manage many databases or room-based instances at once? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Yes. Save each server and database once, then switch between them in a click, which helps when a match- or room-based architecture spins up many SpacetimeDB instances. Each saved connection keeps its own login, so you don't retype credentials.</p>
-          </details>
-          <details>
-            <summary>Is it open source? <span class="pm" aria-hidden="true">+</span></summary>
-            <p>Stargate is source available — the full source code is published on <a href="https://github.com/fabianboesiger/stargate" rel="noopener">GitHub</a> so you can read it, audit it, and build from it.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
+  <!-- ── FEATURES ── -->
+  <section id="features">
     <div class="wrap">
-      <a class="brand" href="#top">
-        <span class="glyph" aria-hidden="true">
-          <i data-lucide="orbit" aria-hidden="true"></i>
-        </span>
-        <span>Stargate</span>
-      </a>
-      <nav class="links" aria-label="Footer">
-        <a data-dl="auto" href="https://github.com/fabianboesiger/stargate/releases/latest">Download</a>
-        <a href="#features">Features</a>
-        <a href="#use-cases">Use cases</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#faq">FAQ</a>
-        <a href="https://spacetimedb.com" rel="noopener">SpacetimeDB</a>
-      </nav>
-      <p class="legal">© <span id="year">2026</span> Stargate · Built by Fabian Bösiger. Not affiliated with SpacetimeDB / Clockwork Labs.</p>
+      <div class="section-head">
+        <h2>Tools for working with a SpacetimeDB database.</h2>
+        <p>Inspect, query, and watch your database from one window.</p>
+      </div>
+      <div class="features">
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="table" %}</div>
+          <h3>Table browser</h3>
+          <p>Page through tables, filter rows, and export to CSV or JSON.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="file-text" %}</div>
+          <h3>Schema inspector</h3>
+          <p>See the full schema: tables, reducers, indexes, and constraints, kept in sync with the database.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="zap" %}</div>
+          <h3>Reducer console</h3>
+          <p>Call any reducer by name with typed arguments. Write calls need read-write mode.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="list" %}</div>
+          <h3>Live logs</h3>
+          <p>Tail recent log lines or follow them live, with levels highlighted as they arrive.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="terminal" %}</div>
+          <h3>SQL console</h3>
+          <p>Run SQL against the database, view the results in a table, and export them.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="eye" %}</div>
+          <h3>Live view</h3>
+          <p>Subscribe over WebSocket and watch rows update live. Useful for debugging multiplayer state.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="clock" %}</div>
+          <h3>Scheduled tasks</h3>
+          <p>See which reducers are scheduled to run, and when.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="braces" %}</div>
+          <h3>OpenAPI export</h3>
+          <p>Generate an OpenAPI 3.1 document for the connected database, covering every table and reducer.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="moon" %}</div>
+          <h3>Light &amp; dark themes</h3>
+          <p>Light and dark themes, both clean and easy to read during long sessions.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="lock" %}</div>
+          <h3>Read-only safety</h3>
+          <p>Connect read-only by default. Switch to read-write only when you mean to, so you don't change production by accident.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="cloud" %}</div>
+          <h3>Maincloud or self-hosted</h3>
+          <p>Connect to any SpacetimeDB host. Point Stargate at <a class="inline" href="{{ '/guides/maincloud-gui/' | relative_url }}">Maincloud</a>, the managed cloud, at a <a class="inline" href="{{ '/guides/self-hosted-spacetimedb/' | relative_url }}">server you self-host</a>, or at a local instance on localhost.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="save" %}</div>
+          <h3>Saved connections</h3>
+          <p>Save your servers and databases, then reconnect in a click. Sign in with your CLI login, a token, or the browser, and switch between projects without retyping anything.</p>
+        </article>
+      </div>
     </div>
-  </footer>
+  </section>
 
-  <script>
-    // Theme toggle. Initial theme + screenshot are resolved by the inline scripts above.
-    (function () {
-      var root = document.documentElement;
-      var shot = document.getElementById('shot-img');
+  <!-- ── USE CASES ── -->
+  <section id="use-cases">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Built for SpacetimeDB developers.</h2>
+        <p>Whether you are shipping a multiplayer game or a real-time app, Stargate gives you a window into what your module is doing.</p>
+      </div>
+      <div class="features">
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="activity" %}</div>
+          <h3>Debug multiplayer state</h3>
+          <p>Watch tables and the live view update as players connect, move, and interact, so you can see exactly what your reducers write.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="search" %}</div>
+          <h3>Inspect without the CLI</h3>
+          <p>Skip memorising <code>spacetime</code> commands. Browse tables, read the schema, and run SQL from one window instead of the terminal.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="flask-conical" %}</div>
+          <h3>Test reducers by hand</h3>
+          <p>Call any reducer with typed arguments to reproduce a bug or seed data, without writing a throwaway client.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="list" %}</div>
+          <h3>Read and follow logs</h3>
+          <p>Tail module logs to track panics, reducer timeouts, and output while you develop, with levels highlighted as they arrive.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="terminal" %}</div>
+          <h3>Run ad-hoc SQL</h3>
+          <p>Query any table, check row counts, and export the results to CSV or JSON for analysis or a bug report.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true">{% include icon.html name="shield" %}</div>
+          <h3>Audit production safely</h3>
+          <p>Connect read-only to a live database to look at real data, with no way to change it by accident.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-      var btn = document.getElementById('theme-toggle');
-      if (btn) btn.addEventListener('click', function () {
-        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', next);
-        if (shot) shot.src = next === 'dark' ? 'images/screenshot-dark.png' : 'images/screenshot-light.png';
-        try { localStorage.setItem('stargate-theme', next); } catch (e) {}
-      });
+  <!-- ── GUIDES ── -->
+  <section id="guides">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Guides.</h2>
+        <p>Step-by-step walkthroughs for connecting to and working with SpacetimeDB databases.</p>
+      </div>
+      {% include guide-cards.html %}
+    </div>
+  </section>
 
-      var y = document.getElementById('year');
-      if (y) y.textContent = new Date().getFullYear();
-    })();
+  <!-- ── PRICING ── -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Read for free. License to write.</h2>
+        <p>Read, query, and watch any database for free. A per-device license unlocks writes.</p>
+      </div>
+      <div class="tiers">
+        <div class="tier">
+          <h3>Free</h3>
+          <p class="price">No account needed</p>
+          <ul>
+            <li>{% include icon.html name="check" stroke="2.5" %} Browse tables, schema, and logs</li>
+            <li>{% include icon.html name="check" stroke="2.5" %} Run read SQL and export results</li>
+            <li>{% include icon.html name="check" stroke="2.5" %} Live view and scheduled tasks</li>
+            <li>{% include icon.html name="check" stroke="2.5" %} OpenAPI export</li>
+          </ul>
+          <a class="btn btn-ghost" data-dl="auto" href="{{ site.links.releases }}">Download free</a>
+        </div>
+        <div class="tier feat">
+          <h3>License</h3>
+          <p class="price">Buy once, use forever</p>
+          <ul>
+            <li>{% include icon.html name="check" stroke="2.5" %} Everything in read-only</li>
+            <li>{% include icon.html name="check" stroke="2.5" %} Call mutating reducers</li>
+            <li>{% include icon.html name="check" stroke="2.5" %} Run write SQL</li>
+            <li>{% include icon.html name="check" stroke="2.5" %} Move the license between devices</li>
+          </ul>
+          <a class="btn btn-primary" href="{{ site.links.license }}" rel="noopener">Get a license</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    // Point the download links at the right release asset for the visitor's OS.
-    (function () {
-      var BASE = 'https://github.com/fabianboesiger/stargate/releases/latest/download/';
-      var ASSETS = {
-        macos:   { file: 'stargate-macos-aarch64.dmg',         label: 'Download for macOS' },
-        windows: { file: 'stargate-windows-x86_64-setup.exe',  label: 'Download for Windows' },
-        linux:   { file: 'stargate-linux-x86_64.deb',          label: 'Download for Linux' }
-      };
-
-      function detectOS() {
-        var p = '';
-        try {
-          p = (navigator.userAgentData && navigator.userAgentData.platform) ||
-              navigator.platform || navigator.userAgent || '';
-        } catch (e) { p = navigator.userAgent || ''; }
-        p = p.toLowerCase();
-        if (p.indexOf('win') !== -1) return 'windows';
-        if (p.indexOf('mac') !== -1 || p.indexOf('iphone') !== -1 || p.indexOf('ipad') !== -1) return 'macos';
-        if (p.indexOf('linux') !== -1 || p.indexOf('android') !== -1 || p.indexOf('x11') !== -1) return 'linux';
-        return null; // unknown — keep the releases-page fallback
-      }
-
-      var os = detectOS();
-      if (!os) return;
-      var asset = ASSETS[os];
-
-      // Rewrite every auto download link to the detected platform's asset.
-      var autos = document.querySelectorAll('a[data-dl="auto"]');
-      for (var i = 0; i < autos.length; i++) {
-        autos[i].setAttribute('href', BASE + asset.file);
-        var label = autos[i].querySelector('.dl-label');
-        if (label) label.textContent = asset.label;
-      }
-
-      // Mark the matching alternate link as the current platform.
-      var alt = document.querySelector('a[data-dl="' + os + '"]');
-      if (alt) alt.setAttribute('aria-current', 'true');
-    })();
-  </script>
-
-  <!-- Lucide icons: rendered client-side from the data-lucide attributes above. -->
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0/dist/umd/lucide.min.js"></script>
-  <script>if (window.lucide) lucide.createIcons();</script>
-</body>
-</html>
+  <!-- ── FAQ ── -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Common questions.</h2>
+      </div>
+      {% include faq.html group="home" open_first=true %}
+    </div>
+  </section>
+</main>

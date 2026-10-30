@@ -1,36 +1,55 @@
-# Stargate landing page
+# Stargate website
 
-Static, dependency-free landing page for downloading the Stargate desktop app.
-Open `index.html` directly or serve the folder with any static host
-(Netlify, Vercel, Cloudflare Pages, `python3 -m http.server`).
+Jekyll site for https://stargate-client.com/: the landing page, the SpacetimeDB guides, and
+the files search engines and AI assistants read (sitemap, robots.txt, llms.txt).
 
-## Files
+## Local preview
 
-| File | Purpose |
+```sh
+jekyll serve -s site            # from the repository root, then open http://localhost:4000
+jekyll build -s site -d _site && python3 scripts/check_site.py _site
+```
+
+CI builds with GitHub's `actions/jekyll-build-pages` (Jekyll 3.10, github-pages gem set), so keep
+templates compatible with Jekyll 3. For an exact local match:
+
+```sh
+docker run --rm -v "$PWD/site":/src:ro -v "$PWD/_site":/out --entrypoint "" \
+  ghcr.io/actions/jekyll-build-pages:v1.0.13 jekyll build -s /src -d /out
+```
+
+## Layout
+
+| Path | Purpose |
 | --- | --- |
-| `index.html` | The page. Mirrors the app's design, with a light/dark toggle. |
-| `styles.css` | Hand-authored theme (paper/graphite palette, Inter + mono labels). |
-| `favicon.svg` | App "orbit" logo. |
-| `og-image.svg` | Social share card (`og:image` / `twitter:image`). |
-| `robots.txt` | Allows all crawlers, including AI bots; points to the sitemap. |
-| `sitemap.xml` | Single-page sitemap. |
-| `llms.txt` | Plain-language summary for AI assistants ([llmstxt.org](https://llmstxt.org)). |
+| `_config.yml` | Site URL, author, download/GitHub/license links, hero screenshot size. |
+| `_layouts/default.html` | Page shell: head, header, footer, theme toggle, OS-aware download links. |
+| `_layouts/guide.html` | Guide article: breadcrumb, answer-first lede, FAQ, related guides, CTA. |
+| `_includes/head.html` | Title, description, canonical, Open Graph/Twitter, preloads. |
+| `_includes/jsonld-*.html` | Structured data per page type (home, guide, guides index, FAQ). |
+| `_includes/guides/*.md` | Guide bodies. Shared by the guide pages and `llms-full.txt`. |
+| `_includes/llms-summary.md` | Product summary shared by `llms.txt` and `llms-full.txt`. |
+| `_data/faq.yml` | Every FAQ entry, grouped by page. Renders both the visible list and FAQPage JSON-LD. |
+| `_data/icons.yml` | Inline Lucide icons (`{% include icon.html name="table" %}`). |
+| `index.html` | Landing page. |
+| `guides/*.md` | Guide front matter (title, description, lede, card text, order, dates). |
+| `guides/index.html` | Guide overview. |
+| `sitemap.xml`, `robots.txt`, `llms.txt`, `llms-full.txt` | Generated from templates. |
+| `images/`, `fonts/`, `og-image.png` | Hero screenshots (WebP), self-hosted Inter (SIL OFL), social card. |
+
+## Common edits
+
+- **New guide:** add `_includes/guides/<slug>.md` with the body and `guides/<slug>.md` with front
+  matter (copy an existing one, set `order`, `permalink`, `last_modified_at`). It appears in the
+  nav cards, footer, sitemap, `llms.txt`, and `llms-full.txt` automatically.
+- **Edit a page:** bump its `last_modified_at`, which feeds the sitemap and the "Updated" line.
+- **FAQ:** edit `_data/faq.yml`. Each question belongs to exactly one page (`page:` group).
+- **Icon:** copy the child elements of `lucide-static/icons/<name>.svg` into `_data/icons.yml`.
+- **Social card:** edit `og-image.svg`, then re-render `og-image.png` at 1200x630.
+- **Domain change:** update `CNAME`, `url` in `_config.yml`, and `SITE_URL` in `scripts/check_site.py`.
 
 ## Deployment
 
-Deployed via GitHub Pages (`.github/workflows`) to **https://stargate-client.com/**.
-The custom domain is set by the `CNAME` file in this folder; the canonical host is
-also set in `index.html`, `robots.txt` and `sitemap.xml`; download links point at the
-GitHub releases page. If the domain ever changes, update `CNAME` plus those three files
-and `llms.txt`.
-
-Optional: convert `og-image.svg` to a 1200×630 **PNG** named `og-image.png` and update
-the `og:image` / `twitter:image` tags, since some social scrapers don't render SVG previews.
-
-## SEO / AI optimization included
-
-- Title, description, keywords, canonical, `theme-color`, Open Graph & Twitter cards.
-- JSON-LD structured data: `SoftwareApplication`, `Offer` (CHF), and `FAQPage`.
-- Semantic HTML5 landmarks, accessible labels, `prefers-color-scheme` support.
-- `robots.txt` explicitly welcomes GPTBot, ClaudeBot, PerplexityBot, etc.
-- `llms.txt` gives AI assistants a clean, structured product summary.
+`.github/workflows/page.yml` builds the site, runs `scripts/check_site.py` (fails on invalid
+JSON-LD, missing titles/descriptions/canonicals, empty icons, or sitemap gaps), and deploys to
+GitHub Pages on every push to `main`.

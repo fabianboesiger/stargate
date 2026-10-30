@@ -1,0 +1,40 @@
+---
+layout: null
+sitemap: false
+---
+# Stargate (full text)
+
+Source: {{ '/' | absolute_url }} (relative links below are relative to this URL).
+Last built: {{ site.time | date: "%Y-%m-%d" }}
+
+{% include llms-summary.md %}
+
+## Links
+
+- Website: {{ '/' | absolute_url }}
+- Download: {{ site.links.releases }}
+- Source code: {{ site.links.github }}
+{% assign guides = site.pages | where: "layout", "guide" | sort: "order" %}
+{%- for g in guides %}
+{%- assign slug = g.url | remove: "/guides/" | remove: "/" %}
+
+---
+
+# {{ g.h1 }}
+
+URL: {{ g.url | absolute_url }}
+Updated: {{ g.last_modified_at | date: "%Y-%m-%d" }}
+
+{{ g.lede | strip }}
+
+{% include guides/{{ slug }}.md %}
+{%- endfor %}
+
+---
+
+# Frequently asked questions
+{% for item in site.data.faq %}
+## {{ item.q }}
+
+{{ item.a | strip_html | normalize_whitespace }}
+{% endfor %}
