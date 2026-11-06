@@ -6,8 +6,8 @@
       "@type": "WebSite",
       "@id": {{ id_website | jsonify }},
       "url": {{ '/' | absolute_url | jsonify }},
-      "name": "Stargate",
-      "alternateName": ["Stargate client", "Stargate for SpacetimeDB", "Stargate SpacetimeDB GUI"],
+      "name": {{ site.site_name | jsonify }},
+      "alternateName": ["Stargate", "Stargate client", "Stargate SpacetimeDB GUI"],
       "description": {{ site.description | strip | jsonify }},
       "inLanguage": "en",
       "publisher": { "@id": {{ id_author | jsonify }} }
@@ -52,11 +52,12 @@
         "description": "Free read-only access: browse, inspect, and query any SpacetimeDB database. A per-device license unlocks write operations."
       },
       "featureList": [
-        "Browse and filter tables",
+        "Browse and filter tables with live updates",
+        "Insert, edit, and delete rows",
         "Inspect the full schema (tables, reducers, indexes, constraints)",
         "Invoke reducers with typed arguments",
-        "Stream and follow logs in real time",
-        "Run SQL queries with CSV and JSON export",
+        "Stream, follow, and filter logs in real time",
+        "Run SQL queries with history and CSV and JSON export",
         "Live view of subscribed data over WebSocket",
         "Manage scheduled tasks",
         "Generate an OpenAPI document for the connected database",

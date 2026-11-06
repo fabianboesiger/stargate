@@ -16,6 +16,7 @@ order: 4
 faq_group: debug
 permalink: /guides/debug-spacetimedb/
 last_modified_at: 2026-10-30
+og_image: /images/og/debug-spacetimedb.png
 ---
 
 {% include guides/debug-spacetimedb.md %}

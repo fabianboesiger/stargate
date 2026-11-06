@@ -15,6 +15,7 @@ order: 1
 faq_group: self-hosted
 permalink: /guides/self-hosted-spacetimedb/
 last_modified_at: 2026-10-30
+og_image: /images/og/self-hosted-spacetimedb.png
 ---
 
 {% include guides/self-hosted-spacetimedb.md %}

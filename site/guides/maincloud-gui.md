@@ -15,6 +15,7 @@ order: 2
 faq_group: maincloud
 permalink: /guides/maincloud-gui/
 last_modified_at: 2026-10-30
+og_image: /images/og/maincloud-gui.png
 ---
 
 {% include guides/maincloud-gui.md %}

@@ -9,6 +9,8 @@ Fails (exit code 1) and lists every problem when:
 - a page lacks a title, description, canonical URL, or exactly one <h1>,
 - Liquid tags leaked into the output,
 - sitemap.xml, robots.txt, or llms.txt reference URLs that were not built,
+- a page's og:image was not built (render cards with scripts/render_og.py),
+- the IndexNow key file is missing or malformed,
 - an indexable page is missing from sitemap.xml.
 Uses only the standard library so it runs on a bare CI runner.
 """
@@ -32,6 +34,7 @@ class PageParser(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.title = ""
         self.meta = {}
+        self.og = {}
         self.canonical = None
         self.h1_count = 0
         self.jsonld_blocks = []
@@ -49,6 +52,8 @@ class PageParser(HTMLParser):
             self._in_title = True
         elif tag == "meta" and "name" in a:
             self.meta[a["name"]] = a.get("content", "")
+        elif tag == "meta" and "property" in a:
+            self.og[a["property"]] = a.get("content", "")
         elif tag == "link" and a.get("rel") == "canonical":
             self.canonical = a.get("href")
         elif tag == "h1":
@@ -136,6 +141,9 @@ def check_page(path: Path, root: Path, errors: list) -> bool:
         errors.append(f"{rel}: description is {len(desc)} chars (want {DESCRIPTION_RANGE})")
     if p.h1_count != 1:
         errors.append(f"{rel}: has {p.h1_count} <h1> elements (want 1)")
+    og_image = p.og.get("og:image", "")
+    if not og_image.startswith(SITE_URL + "/") or not built_path(og_image, root).exists():
+        errors.append(f"{rel}: og:image {og_image!r} was not built")
     for name in p.empty_icons:
         errors.append(f"{rel}: icon {name!r} rendered empty (missing in _data/icons.yml?)")
 
@@ -200,6 +208,9 @@ def main() -> int:
 
     for name in ("robots.txt", "llms.txt", "llms-full.txt"):
         check_text_links(name, root, errors)
+    key_file = root / "indexnow-key.txt"
+    if not key_file.exists() or not re.fullmatch(r"[a-zA-Z0-9-]{8,128}", key_file.read_text(encoding="utf-8").strip()):
+        errors.append("indexnow-key.txt: missing or not a valid IndexNow key")
     if "Sitemap: " + SITE_URL + "/sitemap.xml" not in (root / "robots.txt").read_text(encoding="utf-8"):
         errors.append("robots.txt: missing Sitemap line")
 

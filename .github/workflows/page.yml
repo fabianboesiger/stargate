@@ -47,3 +47,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+      # Runs after the deploy so search engines can fetch the key file from the live site.
+      - name: Notify search engines (IndexNow)
+        run: python3 scripts/indexnow.py ./_site

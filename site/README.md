@@ -35,21 +35,27 @@ docker run --rm -v "$PWD/site":/src:ro -v "$PWD/_site":/out --entrypoint "" \
 | `guides/*.md` | Guide front matter (title, description, lede, card text, order, dates). |
 | `guides/index.html` | Guide overview. |
 | `sitemap.xml`, `robots.txt`, `llms.txt`, `llms-full.txt` | Generated from templates. |
-| `images/`, `fonts/`, `og-image.png` | Hero screenshots (WebP), self-hosted Inter (SIL OFL), social card. |
+| `images/`, `fonts/` | Hero screenshots (WebP) and self-hosted Inter (SIL OFL). |
+| `og-image.png`, `images/og/` | Social cards, rendered by `scripts/render_og.py` from `scripts/og/card.html`. |
+| `indexnow-key.txt` | IndexNow key file, rendered from `indexnow_key` in `_config.yml`. |
 
 ## Common edits
 
 - **New guide:** add `_includes/guides/<slug>.md` with the body and `guides/<slug>.md` with front
-  matter (copy an existing one, set `order`, `permalink`, `last_modified_at`). It appears in the
+  matter (copy an existing one, set `order`, `permalink`, `last_modified_at`, `og_image`), then
+  render its social card. It appears in the
   nav cards, footer, sitemap, `llms.txt`, and `llms-full.txt` automatically.
 - **Edit a page:** bump its `last_modified_at`, which feeds the sitemap and the "Updated" line.
 - **FAQ:** edit `_data/faq.yml`. Each question belongs to exactly one page (`page:` group).
 - **Icon:** copy the child elements of `lucide-static/icons/<name>.svg` into `_data/icons.yml`.
-- **Social card:** edit `og-image.svg`, then re-render `og-image.png` at 1200x630.
+- **Social cards:** every page with `og_image` in its front matter gets a card (headline from
+  `og_headline` or `h1`). After changing a headline or adding a guide, run
+  `python3 scripts/render_og.py` (needs Google Chrome) and commit the PNGs.
 - **Domain change:** update `CNAME`, `url` in `_config.yml`, and `SITE_URL` in `scripts/check_site.py`.
 
 ## Deployment
 
 `.github/workflows/page.yml` builds the site, runs `scripts/check_site.py` (fails on invalid
 JSON-LD, missing titles/descriptions/canonicals, empty icons, or sitemap gaps), and deploys to
-GitHub Pages on every push to `main`.
+GitHub Pages on every push to `main`. After the deploy, `scripts/indexnow.py` submits every
+sitemap URL to IndexNow (Bing, Yandex, and others) so changes get crawled quickly.

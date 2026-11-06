@@ -21,11 +21,12 @@
 
 ## Features
 
-- Table browser: page through tables, filter rows, export to CSV or JSON.
+- Table browser: page through tables, filter rows, export to CSV or JSON; rows update live.
+- Row editing: insert, edit, and delete rows (read-write mode); an edit or delete only runs when it matches exactly one row.
 - Schema inspector: view tables, reducers, indexes, and constraints, kept in sync with the database.
 - Reducer console: call any reducer by name with typed arguments (write calls need read-write mode).
-- Live logs: tail recent log lines or follow them live.
-- SQL console: run SQL queries and export the results.
+- Live logs: tail recent log lines or follow them live, filter by text.
+- SQL console: run SQL queries, export the results, and rerun queries from the history.
 - Live view: subscribe over WebSocket and watch rows update live.
 - Scheduled tasks: see which reducers are scheduled to run, and when.
 - OpenAPI export: generate an OpenAPI 3.1 document for the connected database.

@@ -42,8 +42,9 @@
 - page: home
   q: Is Stargate free?
   a: >-
-    Reading is free. A per-device license unlocks read-write mode for mutating reducers and write
-    SQL. You can connect, browse, and query without paying.
+    Reading is free. A per-device license unlocks read-write mode for mutating reducers, write SQL,
+    and row editing. You can connect, browse, and query without paying.
+    <a href="/guides/spacetimedb-gui-clients/">How Stargate compares to other SpacetimeDB tools</a>.
 
 - page: home
   q: How does Stargate connect to my database?
@@ -57,7 +58,8 @@
   a: >-
     Yes. Stargate connects to any SpacetimeDB host. Point it at a database on Maincloud, at a
     server you self-host, or at a local instance on localhost while you develop. You just enter
-    the server URL and sign in.
+    the server URL and sign in. See the guides for <a href="/guides/maincloud-gui/">Maincloud</a>
+    and for <a href="/guides/self-hosted-spacetimedb/">self-hosted servers and Docker</a>.
 
 - page: home
   q: Is my data safe?
@@ -78,7 +80,8 @@
   a: >-
     Yes. Stargate connects to the database your game talks to, not to the game engine, so it
     works alongside any Unity, Unreal, or custom client. While you playtest, watch the live view
-    to see rows change as players connect and move, and call reducers by hand to reproduce bugs.
+    to see rows change as players connect and move, and call reducers by hand to reproduce bugs,
+    as described in <a href="/guides/debug-spacetimedb/">debugging a SpacetimeDB module</a>.
 
 - page: home
   q: Can I use Stargate for real-time apps, not just games?
@@ -204,3 +207,28 @@
     Browse the table or run a SQL query, then use the export action to save the rows as a CSV or
     JSON file through the native save dialog. It is handy for sharing data, attaching it to a bug
     report, or analysing it elsewhere.
+
+# ── /guides/spacetimedb-gui-clients/ ──
+
+- page: compare
+  q: What GUI clients are there for SpacetimeDB?
+  a: >-
+    Besides the official spacetime CLI and the Maincloud web dashboard, there are two desktop
+    GUIs: Spacetime Studio, an open-source (MIT) admin client focused on browsing and editing
+    table data, and Stargate, a source-available client focused on inspecting and debugging
+    live databases with a read-only default.
+
+- page: compare
+  q: Is there a free GUI for SpacetimeDB?
+  a: >-
+    Yes. Spacetime Studio is free and open source, including writes. Stargate is free for
+    everything that reads (tables, schema, SQL queries, logs, live view, scheduled tasks); a
+    per-device license unlocks writes. The Maincloud dashboard is included with a Maincloud
+    account.
+
+- page: compare
+  q: Can I edit SpacetimeDB table rows in a GUI?
+  a: >-
+    Yes. Spacetime Studio edits cells inline. Stargate can insert, edit, and delete rows in
+    read-write mode and refuses an edit or delete unless it matches exactly one row. With the
+    CLI, use <code>spacetime sql</code> or call a reducer.

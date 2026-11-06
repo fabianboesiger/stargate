@@ -10,7 +10,7 @@
       "description": {{ page.description | strip | jsonify }},
       "url": {{ page_url | jsonify }},
       "mainEntityOfPage": {{ page_url | jsonify }},
-      "image": {{ '/og-image.png' | absolute_url | jsonify }},
+      "image": {{ page.og_image | default: '/og-image.png' | absolute_url | jsonify }},
       "dateModified": {{ page.last_modified_at | date_to_xmlschema | jsonify }},
       "datePublished": {{ page.published_at | default: page.last_modified_at | date_to_xmlschema | jsonify }},
       "inLanguage": "en",

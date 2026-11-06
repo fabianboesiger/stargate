@@ -15,6 +15,7 @@ order: 3
 faq_group: cli-alternative
 permalink: /guides/spacetime-cli-alternative/
 last_modified_at: 2026-10-30
+og_image: /images/og/spacetime-cli-alternative.png
 ---
 
 {% include guides/spacetime-cli-alternative.md %}

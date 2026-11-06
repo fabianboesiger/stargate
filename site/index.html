@@ -9,7 +9,10 @@ social_description: >-
   SpacetimeDB client for Maincloud and self-hosted instances, on macOS, Windows, and Linux.
 hero: true
 jsonld: jsonld-home.html
-last_modified_at: 2026-10-30
+last_modified_at: 2026-11-06
+og_image: /og-image.png
+og_eyebrow: Desktop client · SpacetimeDB
+og_headline: The native GUI for SpacetimeDB.
 ---
 <main id="top">
   <!-- ── HERO ── -->
@@ -53,7 +56,7 @@ last_modified_at: 2026-10-30
         <article class="feature">
           <div class="ic" aria-hidden="true">{% include icon.html name="table" %}</div>
           <h3>Table browser</h3>
-          <p>Page through tables, filter rows, and export to CSV or JSON.</p>
+          <p>Page through tables, filter rows, and export to CSV or JSON. Rows update live while you look at them.</p>
         </article>
         <article class="feature">
           <div class="ic" aria-hidden="true">{% include icon.html name="file-text" %}</div>
@@ -68,12 +71,12 @@ last_modified_at: 2026-10-30
         <article class="feature">
           <div class="ic" aria-hidden="true">{% include icon.html name="list" %}</div>
           <h3>Live logs</h3>
-          <p>Tail recent log lines or follow them live, with levels highlighted as they arrive.</p>
+          <p>Tail recent log lines or follow them live, filter by text, with levels highlighted as they arrive.</p>
         </article>
         <article class="feature">
           <div class="ic" aria-hidden="true">{% include icon.html name="terminal" %}</div>
           <h3>SQL console</h3>
-          <p>Run SQL against the database, view the results in a table, and export them.</p>
+          <p>Run SQL against the database, view the results in a table, export them, and rerun earlier queries from the history.</p>
         </article>
         <article class="feature">
           <div class="ic" aria-hidden="true">{% include icon.html name="eye" %}</div>
@@ -91,9 +94,9 @@ last_modified_at: 2026-10-30
           <p>Generate an OpenAPI 3.1 document for the connected database, covering every table and reducer.</p>
         </article>
         <article class="feature">
-          <div class="ic" aria-hidden="true">{% include icon.html name="moon" %}</div>
-          <h3>Light &amp; dark themes</h3>
-          <p>Light and dark themes, both clean and easy to read during long sessions.</p>
+          <div class="ic" aria-hidden="true">{% include icon.html name="pencil" %}</div>
+          <h3>Row editing</h3>
+          <p>Insert, edit, and delete rows from the table browser. An edit or delete only runs when it matches exactly one row. Needs read-write mode.</p>
         </article>
         <article class="feature">
           <div class="ic" aria-hidden="true">{% include icon.html name="lock" %}</div>
@@ -193,6 +196,7 @@ last_modified_at: 2026-10-30
             <li>{% include icon.html name="check" stroke="2.5" %} Everything in read-only</li>
             <li>{% include icon.html name="check" stroke="2.5" %} Call mutating reducers</li>
             <li>{% include icon.html name="check" stroke="2.5" %} Run write SQL</li>
+            <li>{% include icon.html name="check" stroke="2.5" %} Insert, edit, and delete rows</li>
             <li>{% include icon.html name="check" stroke="2.5" %} Move the license between devices</li>
           </ul>
           <a class="btn btn-primary" href="{{ site.links.license }}" rel="noopener">Get a license</a>

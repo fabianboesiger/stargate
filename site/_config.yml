@@ -3,6 +3,8 @@
 # which uses the github-pages gem set (Jekyll 3.x), so keep templates compatible with it.
 
 title: Stargate
+# Name shown as the site name in search results; distinguishes the app from other "Stargate"s.
+site_name: Stargate for SpacetimeDB
 description: >-
   Stargate is a desktop GUI client for SpacetimeDB that works with Maincloud and
   self-hosted servers. Browse tables, run SQL, call reducers, stream logs, and watch
@@ -23,6 +25,9 @@ links:
   license: https://buy.polar.sh/polar_cl_OQ4RGE0k5zSAQaUr8Gz6MCz6uewuBKbsFk8rx0AcqLZ
   spacetimedb: https://spacetimedb.com
   spacetimedb_docs: https://spacetimedb.com/docs
+
+# IndexNow (Bing, Yandex, and others): served at /indexnow-key.txt, used by scripts/indexnow.py.
+indexnow_key: 577c79a82c1995be2d5bdd681c1c00cf
 
 # Hero screenshot, also used as JSON-LD screenshot. Keep width/height in sync with the files.
 screenshot:
